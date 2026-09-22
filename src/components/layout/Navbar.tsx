@@ -11,7 +11,11 @@ import {
   RotateCcw,
   Zap,
   Menu,
-  X
+  X,
+  BarChart3,
+  Upload,
+  BookOpen,
+  Layers
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -51,9 +55,13 @@ export const Navbar: React.FC = () => {
 
   const navItems = [
     { id: 'marketing', label: 'Overview', icon: null },
+    { id: 'marks', label: 'Marks', icon: BarChart3, role: 'student' as const },
+    { id: 'syllabus', label: 'Syllabus', icon: Upload, role: 'student' as const },
+    { id: 'books', label: 'Read Book', icon: BookOpen, role: 'student' as const },
+    { id: 'questions', label: 'Question Sets', icon: Layers, role: 'student' as const },
+    { id: 'student', label: 'Test Room', icon: UserCheck, role: 'student' as const },
     { id: 'teacher', label: 'Teacher Hub', icon: GraduationCap, role: 'teacher' as const },
-    { id: 'student', label: 'Student Test', icon: UserCheck, role: 'student' as const },
-    { id: 'parent', label: 'Parent & AI Tutor', icon: Users, role: 'parent' as const },
+    { id: 'parent', label: 'Parent & Tutor', icon: Users, role: 'parent' as const },
     { id: 'admin', label: 'Admin', icon: Building2, role: 'admin' as const },
   ];
 
@@ -77,7 +85,7 @@ export const Navbar: React.FC = () => {
             : 'bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[60px] flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-[60px] flex items-center justify-between gap-3">
           
           {/* Brand */}
           <button
@@ -90,27 +98,27 @@ export const Navbar: React.FC = () => {
                 <img src="/logo.png" alt="EduPulse AI Logo" className="w-8 h-8 object-contain" />
               </div>
             </div>
-            <div className="hidden sm:block">
+            <div className="hidden sm:block text-left">
               <div className="flex items-center gap-1.5">
-                <span className="font-display font-black text-[19px] tracking-tight text-white leading-none">
+                <span className="font-display font-black text-[18px] tracking-tight text-white leading-none">
                   Edu<span className="gradient-text-emerald">Pulse</span>
                 </span>
-                <span className="badge badge-emerald" style={{fontSize:'9px',padding:'2px 6px'}}>AI K-12</span>
+                <span className="badge badge-emerald" style={{fontSize:'8px',padding:'1px 5px'}}>AI K-12</span>
               </div>
-              <p className="text-[9px] text-slate-500 font-medium mt-0.5">CBSE • ICSE • State Boards</p>
+              <p className="text-[9px] text-slate-500 font-medium mt-0.5">CBSE • ICSE • State</p>
             </div>
           </button>
 
           {/* Desktop Nav Tabs */}
-          <nav className="hidden lg:flex tab-bar flex-1 max-w-[580px]">
+          <nav className="hidden lg:flex tab-bar flex-1 max-w-[740px] overflow-x-auto py-1 px-1">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item)}
-                className={`tab-item flex items-center gap-1.5 ${currentView === item.id ? 'active' : ''}`}
+                className={`tab-item flex items-center gap-1.5 px-2.5 py-1.5 text-xs ${currentView === item.id ? 'active' : ''}`}
               >
                 {item.icon && <item.icon style={{width:'12px',height:'12px'}} />}
-                {item.label}
+                <span>{item.label}</span>
               </button>
             ))}
           </nav>
@@ -177,13 +185,13 @@ export const Navbar: React.FC = () => {
               )}
             </div>
 
-            {/* CTA Button */}
+            {/* Quick Practice CTA */}
             <button
-              onClick={() => { setUserRole('teacher'); setCurrentView('teacher'); }}
-              className="btn-primary hidden sm:flex"
+              onClick={() => { setUserRole('student'); setCurrentView('questions'); }}
+              className="btn-primary hidden sm:flex text-xs py-1.5 px-3"
             >
-              <Zap style={{width:'13px',height:'13px'}} />
-              <span>AI Builder</span>
+              <Zap style={{width:'12px',height:'12px'}} />
+              <span>Practice</span>
             </button>
 
             {/* Mobile hamburger */}
@@ -205,14 +213,14 @@ export const Navbar: React.FC = () => {
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item)}
-                className={`w-full flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                className={`w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   currentView === item.id
                     ? 'bg-brand-500 text-slate-950 font-bold'
                     : 'text-slate-300 hover:bg-white/[0.05] hover:text-white'
                 }`}
               >
-                {item.icon && <item.icon style={{width:'15px',height:'15px'}} />}
-                {item.label}
+                {item.icon && <item.icon style={{width:'14px',height:'14px'}} />}
+                <span>{item.label}</span>
               </button>
             ))}
           </div>

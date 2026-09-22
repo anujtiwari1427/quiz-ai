@@ -10,12 +10,19 @@ import {
   ProctorViolation, 
   StudentAnswer,
   SubscriptionPlan,
-  Question
+  Question,
+  ActiveAppView,
+  MarkRecord,
+  Syllabus,
+  Book,
+  BookHighlight,
+  BookNote,
+  QuestionSet,
+  QuestionSetAttempt
 } from '../types';
 import { STORAGE_SERVICE } from '../services/storageService';
 import { SUBSCRIPTION_PLANS } from '../mock/initialData';
-
-export type ActiveAppView = 'marketing' | 'teacher' | 'student' | 'parent' | 'admin';
+import { calculateGrade } from '../utils/gradeUtils';
 
 interface AppContextType {
   // Navigation & Role
@@ -47,6 +54,34 @@ interface AppContextType {
   auditLogs: AuditLog[];
   notifications: NotificationItem[];
   organizations: Organization[];
+
+  // Student Feature Collections
+  marks: MarkRecord[];
+  syllabi: Syllabus[];
+  books: Book[];
+  questionSets: QuestionSet[];
+  questionSetAttempts: QuestionSetAttempt[];
+
+  // Active Cross-Feature Selections
+  activeBookToRead: Book | null;
+  setActiveBookToRead: (book: Book | null) => void;
+  activeQuestionSetToPractice: QuestionSet | null;
+  setActiveQuestionSetToPractice: (set: QuestionSet | null) => void;
+
+  // Student Features Handlers
+  addMarkRecord: (record: MarkRecord) => void;
+  saveSyllabus: (syl: Syllabus) => void;
+  deleteSyllabus: (id: string) => void;
+  saveBook: (book: Book) => void;
+  updateReadingProgress: (bookId: string, progressPct: number, currentChapterId?: string, isCompletedChapterId?: string) => void;
+  addBookHighlight: (bookId: string, highlight: BookHighlight) => void;
+  addBookNote: (bookId: string, note: BookNote) => void;
+  toggleBookBookmark: (bookId: string, chapterId: string) => void;
+  saveQuestionSet: (set: QuestionSet) => void;
+  deleteQuestionSet: (id: string) => void;
+  saveQuestionSetAttempt: (att: QuestionSetAttempt) => void;
+  startQuizFromSyllabus: (subject: string, chapter?: string, topic?: string) => void;
+  openBookForSubjectOrChapter: (subject: string, chapter?: string) => void;
 
   // Active Student Test Taking State
   activeTestToken: string | null;
@@ -105,7 +140,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => STORAGE_SERVICE.getAuditLogs());
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => STORAGE_SERVICE.getNotifications());
   const [organizations, setOrganizations] = useState<Organization[]>(() => STORAGE_SERVICE.getOrganizations());
-  const [activePlan, setActivePlan] = useState<SubscriptionPlan>(SUBSCRIPTION_PLANS[1]); // Default to Parent Pro
+  const [activePlan, setActivePlan] = useState<SubscriptionPlan>(SUBSCRIPTION_PLANS[1]);
+
+  // Student Features Data
+  const [marks, setMarks] = useState<MarkRecord[]>(() => STORAGE_SERVICE.getMarks());
+  const [syllabi, setSyllabi] = useState<Syllabus[]>(() => STORAGE_SERVICE.getSyllabi());
+  const [books, setBooks] = useState<Book[]>(() => STORAGE_SERVICE.getBooks());
+  const [questionSets, setQuestionSets] = useState<QuestionSet[]>(() => STORAGE_SERVICE.getQuestionSets());
+  const [questionSetAttempts, setQuestionSetAttempts] = useState<QuestionSetAttempt[]>(() => STORAGE_SERVICE.getQuestionSetAttempts());
+
+  // Cross-feature active selections
+  const [activeBookToRead, setActiveBookToRead] = useState<Book | null>(null);
+  const [activeQuestionSetToPractice, setActiveQuestionSetToPractice] = useState<QuestionSet | null>(null);
 
   // Student test runner state
   const [activeTestToken, setActiveTestToken] = useState<string | null>(null);
@@ -132,12 +178,157 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     STORAGE_SERVICE.saveStudents(students);
   }, [students]);
 
+  // Student feature syncs
+  useEffect(() => {
+    STORAGE_SERVICE.saveMarks(marks);
+  }, [marks]);
+
+  useEffect(() => {
+    STORAGE_SERVICE.saveSyllabi(syllabi);
+  }, [syllabi]);
+
+  useEffect(() => {
+    STORAGE_SERVICE.saveBooks(books);
+  }, [books]);
+
+  useEffect(() => {
+    STORAGE_SERVICE.saveQuestionSets(questionSets);
+  }, [questionSets]);
+
+  // ── Student Feature Action Handlers ──
+  const addMarkRecord = (record: MarkRecord) => {
+    setMarks(prev => [record, ...prev]);
+    logAuditEvent('MARKS_RECORD_ADDED', 'Grade', `New score record added: ${record.testName} (${record.percentage}%, Grade ${record.grade})`);
+    addNotification('Marks Updated', `Recorded ${record.percentage}% in ${record.testName}.`, 'result_ready');
+  };
+
+  const saveSyllabusHandler = (syl: Syllabus) => {
+    const updated = STORAGE_SERVICE.saveSyllabus(syl);
+    setSyllabi(updated);
+    addNotification('Syllabus Updated', `Saved syllabus "${syl.name}".`, 'test_published');
+  };
+
+  const deleteSyllabusHandler = (id: string) => {
+    const updated = STORAGE_SERVICE.deleteSyllabus(id);
+    setSyllabi(updated);
+  };
+
+  const saveBookHandler = (book: Book) => {
+    const updated = STORAGE_SERVICE.saveBook(book);
+    setBooks(updated);
+  };
+
+  const updateReadingProgressHandler = (bookId: string, progressPct: number, currentChapterId?: string, isCompletedChapterId?: string) => {
+    const updated = STORAGE_SERVICE.updateReadingProgress(bookId, progressPct, currentChapterId, isCompletedChapterId);
+    setBooks(updated);
+  };
+
+  const addBookHighlightHandler = (bookId: string, highlight: BookHighlight) => {
+    const updated = STORAGE_SERVICE.addBookHighlight(bookId, highlight);
+    setBooks(updated);
+  };
+
+  const addBookNoteHandler = (bookId: string, note: BookNote) => {
+    const updated = STORAGE_SERVICE.addBookNote(bookId, note);
+    setBooks(updated);
+  };
+
+  const toggleBookBookmarkHandler = (bookId: string, chapterId: string) => {
+    const updated = STORAGE_SERVICE.toggleBookBookmark(bookId, chapterId);
+    setBooks(updated);
+  };
+
+  const saveQuestionSetHandler = (set: QuestionSet) => {
+    const updated = STORAGE_SERVICE.saveQuestionSet(set);
+    setQuestionSets(updated);
+  };
+
+  const deleteQuestionSetHandler = (id: string) => {
+    const updated = STORAGE_SERVICE.deleteQuestionSet(id);
+    setQuestionSets(updated);
+  };
+
+  const saveQuestionSetAttemptHandler = (att: QuestionSetAttempt) => {
+    const updated = STORAGE_SERVICE.saveQuestionSetAttempt(att);
+    setQuestionSetAttempts(updated);
+    // Refresh questionSets as attempt count & best score may have changed
+    setQuestionSets(STORAGE_SERVICE.getQuestionSets());
+  };
+
+  // Cross-feature: Generate quiz from Syllabus
+  const startQuizFromSyllabus = (subject: string, chapter?: string, topic?: string) => {
+    // Find if a matching question set already exists or generate one
+    const matchingSet = questionSets.find(s => 
+      s.subject.toLowerCase() === subject.toLowerCase() && 
+      (!chapter || (s.chapter && s.chapter.toLowerCase().includes(chapter.toLowerCase())))
+    );
+
+    if (matchingSet) {
+      setActiveQuestionSetToPractice(matchingSet);
+    } else {
+      // Create targeted set
+      const newSet: QuestionSet = {
+        id: `qset_syl_${Date.now()}`,
+        title: `${subject}: ${chapter || 'Comprehensive'} Practice`,
+        subject,
+        chapter,
+        topic,
+        difficulty: 'medium',
+        questionCount: 10,
+        totalMarks: 10,
+        timeLimit: 15,
+        presetType: 'custom',
+        isCustom: true,
+        createdAt: new Date().toISOString().split('T')[0],
+        questions: Array.from({ length: 10 }).map((_, i) => ({
+          id: `q_syl_${Date.now()}_${i}`,
+          type: 'mcq',
+          chapter: chapter || `${subject} Core Unit`,
+          topic,
+          marks: 1,
+          difficulty: 'medium',
+          bloomsLevel: 'Understand',
+          questionText: `Syllabus aligned question ${i + 1} on ${chapter || subject}: In accordance with board curriculum standards, which principle correctly characterizes this concept?`,
+          options: [
+            { id: 'opt_1', text: 'Option A: Primary board derivation holds true', isCorrect: true },
+            { id: 'opt_2', text: 'Option B: Magnitude varies inversely with boundary state', isCorrect: false },
+            { id: 'opt_3', text: 'Option C: Null effect under standard ambient temperature', isCorrect: false },
+            { id: 'opt_4', text: 'Option D: Excluded from general curriculum guidelines', isCorrect: false }
+          ],
+          correctAnswer: 'Option A: Primary board derivation holds true',
+          explanation: 'Aligned with the official syllabus learning outcomes and NCERT chapter objectives.'
+        }))
+      };
+      saveQuestionSetHandler(newSet);
+      setActiveQuestionSetToPractice(newSet);
+    }
+
+    setUserRole('student');
+    setCurrentView('questions');
+  };
+
+  // Cross-feature: Open matching book from Syllabus
+  const openBookForSubjectOrChapter = (subject: string, chapter?: string) => {
+    const matchedBook = books.find(b => b.subject.toLowerCase() === subject.toLowerCase()) || books[0];
+    if (matchedBook) {
+      if (chapter) {
+        const matchedCh = matchedBook.chapters.find(ch => ch.title.toLowerCase().includes(chapter.toLowerCase()));
+        if (matchedCh) {
+          matchedBook.currentChapterId = matchedCh.id;
+        }
+      }
+      setActiveBookToRead(matchedBook);
+    }
+    setUserRole('student');
+    setCurrentView('books');
+  };
+
   const logAuditEvent = (action: string, entityType: AuditLog['entityType'], details: string) => {
     const newLog: AuditLog = {
       id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
       timestamp: new Date().toISOString(),
       actorRole: userRole,
-      actorName: userRole === 'teacher' ? 'Dr. Ramesh Kulkarni' : userRole === 'admin' ? 'Principal Archana Iyer' : 'Parent Vikram Sharma',
+      actorName: userRole === 'teacher' ? 'Dr. Ramesh Kulkarni' : userRole === 'admin' ? 'Principal Archana Iyer' : 'Student Aarav Sharma',
       action,
       entityType,
       details,
@@ -202,7 +393,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }): TestAttempt => {
     if (!activeTestToTake) throw new Error("No active test");
 
-    // Calculate total score
     let totalScore = 0;
     const maxScore = activeTestToTake.questions.reduce((acc, q) => acc + q.marks, 0);
 
@@ -224,7 +414,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           aiFeedback: isCorrect ? 'Correct option chosen.' : `Incorrect. Correct answer is: ${q.correctAnswer || 'Option A'}`
         };
       } else {
-        // Subjective: assign auto heuristic score for instant submission feedback
         const words = (ans.answerText || '').trim().split(/\s+/).length;
         const ratio = Math.min(1, Math.max(0.3, words / 30));
         const score = Number((q.marks * ratio).toFixed(1));
@@ -239,6 +428,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     });
 
+    const calculatedPercentage = Math.round((totalScore / maxScore) * 100);
+
     const newAttempt: TestAttempt = {
       id: `att_${Date.now()}`,
       testId: activeTestToTake.id,
@@ -252,7 +443,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       answers: gradedAnswers,
       totalScore: Number(totalScore.toFixed(1)),
       maxScore,
-      percentage: Math.round((totalScore / maxScore) * 100),
+      percentage: calculatedPercentage,
       violations: attemptData.violations,
       timeSpentSeconds: attemptData.timeSpentSeconds,
       isReviewedByTeacher: false
@@ -261,6 +452,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setAttempts(prev => [newAttempt, ...prev]);
     logAuditEvent('TEST_ATTEMPT_SUBMITTED', 'Test', `Student ${attemptData.studentName} submitted test ${activeTestToTake.title} with score ${newAttempt.totalScore}/${maxScore}`);
     addNotification('New Test Submission', `${attemptData.studentName} scored ${newAttempt.percentage}% in ${activeTestToTake.title}.`, 'result_ready');
+
+    // ── AUTO-SYNC TO MARKS DASHBOARD ──
+    const newMarkRecord: MarkRecord = {
+      id: `mark_${Date.now()}`,
+      testId: activeTestToTake.id,
+      testName: activeTestToTake.title,
+      subject: activeTestToTake.subject,
+      date: new Date().toISOString().split('T')[0],
+      totalMarks: maxScore,
+      obtainedMarks: Number(totalScore.toFixed(1)),
+      percentage: calculatedPercentage,
+      grade: calculateGrade(calculatedPercentage).grade,
+      timeSpentSeconds: attemptData.timeSpentSeconds,
+      questionCount: activeTestToTake.questions.length,
+      correctCount: gradedAnswers.filter(a => a.isCorrect).length,
+      incorrectCount: gradedAnswers.filter(a => a.isCorrect === false).length,
+      skippedCount: gradedAnswers.filter(a => !a.selectedOptionId && !a.answerText).length
+    };
+    addMarkRecord(newMarkRecord);
 
     return newAttempt;
   };
@@ -373,6 +583,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         auditLogs,
         notifications,
         organizations,
+        marks,
+        syllabi,
+        books,
+        questionSets,
+        questionSetAttempts,
+        activeBookToRead,
+        setActiveBookToRead,
+        activeQuestionSetToPractice,
+        setActiveQuestionSetToPractice,
+        addMarkRecord,
+        saveSyllabus: saveSyllabusHandler,
+        deleteSyllabus: deleteSyllabusHandler,
+        saveBook: saveBookHandler,
+        updateReadingProgress: updateReadingProgressHandler,
+        addBookHighlight: addBookHighlightHandler,
+        addBookNote: addBookNoteHandler,
+        toggleBookBookmark: toggleBookBookmarkHandler,
+        saveQuestionSet: saveQuestionSetHandler,
+        deleteQuestionSet: deleteQuestionSetHandler,
+        saveQuestionSetAttempt: saveQuestionSetAttemptHandler,
+        startQuizFromSyllabus,
+        openBookForSubjectOrChapter,
         activeTestToken,
         activeTestToTake,
         launchStudentTestRoom,

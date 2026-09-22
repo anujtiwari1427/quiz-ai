@@ -2,6 +2,8 @@ export type BoardType = 'CBSE' | 'ICSE' | 'State Board (Maharashtra)' | 'State B
 
 export type UserRole = 'teacher' | 'admin' | 'parent' | 'student';
 
+export type ActiveAppView = 'marketing' | 'teacher' | 'student' | 'parent' | 'admin' | 'marks' | 'syllabus' | 'books' | 'questions';
+
 export type QuestionType = 'mcq' | 'short_answer' | 'long_answer' | 'case_study' | 'assertion_reason';
 
 export type DifficultyLevel = 'easy' | 'medium' | 'hard';
@@ -192,3 +194,162 @@ export interface TutorChatMessage {
   suggestedPrompts?: string[];
   relatedQuestionId?: string;
 }
+
+// ──────────────────────────────────────────────
+// STUDENT FEATURE 1: MARKS & SCORES
+// ──────────────────────────────────────────────
+export interface MarkRecord {
+  id: string;
+  testId: string;
+  testName: string;
+  subject: string;
+  date: string;
+  totalMarks: number;
+  obtainedMarks: number;
+  percentage: number;
+  grade: string;
+  timeSpentSeconds?: number;
+  questionCount?: number;
+  correctCount?: number;
+  incorrectCount?: number;
+  skippedCount?: number;
+}
+
+export interface SubjectMarksSummary {
+  subject: string;
+  testsAttempted: number;
+  totalMarks: number;
+  marksObtained: number;
+  percentage: number;
+  grade: string;
+  highestScore: number;
+  lowestScore: number;
+}
+
+// ──────────────────────────────────────────────
+// STUDENT FEATURE 2: SYLLABUS
+// ──────────────────────────────────────────────
+export interface SyllabusChapter {
+  id: string;
+  name: string;
+  topics: string[];
+  unitName?: string;
+  completionPercentage?: number;
+  isCompleted?: boolean;
+}
+
+export interface SyllabusSubject {
+  id: string;
+  name: string;
+  board?: string;
+  grade?: number;
+  chapters: SyllabusChapter[];
+}
+
+export interface Syllabus {
+  id: string;
+  name: string;
+  fileName: string;
+  fileSize?: string;
+  fileType?: string;
+  uploadedAt: string;
+  board?: string;
+  grade?: number;
+  subjects: SyllabusSubject[];
+}
+
+// ──────────────────────────────────────────────
+// STUDENT FEATURE 3: READ THE BOOK
+// ──────────────────────────────────────────────
+export interface BookHighlight {
+  id: string;
+  chapterId: string;
+  text: string;
+  color: 'yellow' | 'emerald' | 'indigo' | 'rose';
+  createdAt: string;
+}
+
+export interface BookNote {
+  id: string;
+  chapterId: string;
+  selectedText?: string;
+  noteText: string;
+  createdAt: string;
+}
+
+export interface BookChapter {
+  id: string;
+  chapterNumber: number;
+  title: string;
+  content: string; // Markdown or text content
+  sections?: string[];
+  isCompleted?: boolean;
+  estimatedReadTimeMinutes?: number;
+}
+
+export interface Book {
+  id: string;
+  title: string;
+  author?: string;
+  subject: string;
+  grade?: number;
+  coverGradient?: string;
+  coverIcon?: string;
+  fileName?: string;
+  progress: number; // 0-100%
+  currentChapterId?: string;
+  lastOpened?: string;
+  chapters: BookChapter[];
+  bookmarks?: string[]; // chapter IDs
+  highlights?: BookHighlight[];
+  notes?: BookNote[];
+}
+
+// ──────────────────────────────────────────────
+// STUDENT FEATURE 4: QUESTION SETS
+// ──────────────────────────────────────────────
+export type QuestionSetDifficulty = 'easy' | 'medium' | 'hard';
+export type QuestionSetPreset = 'quick' | 'chapter' | 'revision' | 'exam' | 'important' | 'previous' | 'custom';
+
+export interface QuestionSet {
+  id: string;
+  title: string;
+  subject: string;
+  chapter?: string;
+  topic?: string;
+  difficulty: QuestionSetDifficulty;
+  questionCount: number;
+  totalMarks: number;
+  timeLimit: number; // in minutes
+  questions: Question[];
+  createdAt: string;
+  presetType?: QuestionSetPreset;
+  attemptsCount?: number;
+  bestScore?: number;
+  isCustom?: boolean;
+}
+
+export interface QuestionSetAttempt {
+  id: string;
+  questionSetId: string;
+  questionSetTitle: string;
+  subject: string;
+  chapter?: string;
+  totalMarks: number;
+  obtainedMarks: number;
+  percentage: number;
+  grade: string;
+  correctAnswers: number;
+  incorrectAnswers: number;
+  unansweredQuestions: number;
+  timeTakenSeconds: number;
+  submittedAt: string;
+  userAnswers: {
+    questionId: string;
+    selectedOptionId?: string;
+    answerText: string;
+    isCorrect: boolean;
+    marksAwarded: number;
+  }[];
+}
+

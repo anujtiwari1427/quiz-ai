@@ -7,6 +7,7 @@ import {
 import { useApp } from '../../context/AppContext';
 import { PricingSection } from './PricingSection';
 import { SecurityTrust } from './SecurityTrust';
+import { StudyToolsSection } from '../dashboard/StudyToolsSection';
 
 /* ── tiny hook: animate-on-scroll ── */
 function useReveal() {
@@ -281,6 +282,11 @@ export const MarketingLanding: React.FC = () => {
 
         </div>
       </section>
+
+      {/* ──────────────────────────────────────
+          STUDENT STUDY TOOLS (4 MAJOR FEATURES)
+      ────────────────────────────────────── */}
+      <StudyToolsSection />
 
       {/* ──────────────────────────────────────
           THREE PILLARS
