@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Sparkles, ArrowRight, CheckCircle2, GraduationCap, Users, 
   Smartphone, Play, FileCheck2, Zap, ShieldCheck, BarChart3,
-  Star, Quote, ChevronRight, Award, Globe, Lock
+  Star, Quote, ChevronRight, Award, Globe, Lock, Upload, BookOpen, Layers
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PricingSection } from './PricingSection';
@@ -85,17 +85,17 @@ export const MarketingLanding: React.FC = () => {
     <div className="relative">
 
       {/* ──────────────────────────────────────
-          HERO
+          HERO (Apple Aesthetic)
       ────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-16 pb-24 overflow-hidden">
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-14 pb-20 overflow-hidden">
 
-        {/* Background orbs */}
-        <div className="orb absolute w-[600px] h-[400px] top-[-80px] left-1/2 -translate-x-1/2" style={{background:'radial-gradient(ellipse, rgba(16,185,129,0.12) 0%, transparent 70%)', animationDuration:'7s'}} />
-        <div className="orb absolute w-[400px] h-[300px] top-[30%] right-[-100px]" style={{background:'radial-gradient(ellipse, rgba(99,102,241,0.10) 0%, transparent 70%)', animationDuration:'9s', animationDelay:'-3s'}} />
-        <div className="orb absolute w-[300px] h-[200px] bottom-[10%] left-[-50px]" style={{background:'radial-gradient(ellipse, rgba(245,158,11,0.07) 0%, transparent 70%)', animationDuration:'8s', animationDelay:'-5s'}} />
+        {/* Apple Keynote Spotlight mesh */}
+        <div className="orb absolute w-[700px] h-[450px] top-[-100px] left-1/2 -translate-x-1/2" style={{background:'radial-gradient(ellipse, rgba(0, 113, 227, 0.16) 0%, transparent 68%)', animationDuration:'8s'}} />
+        <div className="orb absolute w-[450px] h-[350px] top-[25%] right-[-100px]" style={{background:'radial-gradient(ellipse, rgba(94, 92, 230, 0.12) 0%, transparent 68%)', animationDuration:'10s', animationDelay:'-3s'}} />
+        <div className="orb absolute w-[350px] h-[250px] bottom-[10%] left-[-50px]" style={{background:'radial-gradient(ellipse, rgba(41, 151, 255, 0.08) 0%, transparent 70%)', animationDuration:'9s', animationDelay:'-5s'}} />
 
         {/* Animated grid */}
-        <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+        <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
 
         {/* Particle dots */}
         {[...Array(6)].map((_, i) => (
@@ -107,34 +107,34 @@ export const MarketingLanding: React.FC = () => {
 
         <div ref={heroReveal.ref} className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
-          {/* Top badge */}
+          {/* Top Apple pill badge */}
           <div className={`flex justify-center mb-6 transition-all duration-700 ${heroReveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <div className="section-label glass border border-blue-500/20 text-blue-200 flex items-center gap-2 px-3 py-1.5 rounded-full shadow-lg">
-              <div className="w-5 h-5 rounded-md bg-white p-0.5 flex items-center justify-center shadow-sm">
-                <img src="/logo.png" alt="EduPulse AI Logo" className="w-4 h-4 object-contain" />
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.1] backdrop-blur-xl shadow-sm text-xs text-[#f5f5f7]">
+              <div className="w-5 h-5 rounded-full bg-[#1c1c1e] p-0.5 flex items-center justify-center shadow-sm border border-white/10">
+                <img src="/logo.png" alt="EduPulse AI Logo" className="w-3.5 h-3.5 object-contain" />
               </div>
               <div className="status-dot-live" />
-              <span className="font-semibold text-xs text-slate-200">Next-Generation K-12 AI Platform for India</span>
+              <span className="font-medium text-xs text-[#f5f5f7]">Next-Generation K-12 AI Platform for India</span>
             </div>
           </div>
 
-          {/* Headline */}
+          {/* Headline (Apple Keynote Style) */}
           <div className={`transition-all duration-700 delay-100 ${heroReveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            <h1 className="hero-headline text-white mb-2">
+            <h1 className="hero-headline text-[#f5f5f7] mb-2 tracking-tight">
               Instant AI Assessments for
             </h1>
-            <h1 className="hero-headline gradient-text-emerald mb-6">
-              Schools, Teachers & Parents
+            <h1 className="hero-headline gradient-text-apple mb-6 tracking-tight">
+              Schools, Teachers &amp; Parents.
             </h1>
           </div>
 
           {/* Sub-headline */}
-          <p className={`text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10 transition-all duration-700 delay-200 ${heroReveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            Generate blueprint-accurate CBSE &amp; ICSE tests in <strong className="text-white">30 seconds</strong>, proctor in real-time, auto-grade subjective answers with Claude 3.5, and empower parents with targeted AI mistake tutoring in <strong className="text-white">12 languages</strong>.
+          <p className={`text-base sm:text-lg text-[#86868b] max-w-2xl mx-auto leading-relaxed mb-10 transition-all duration-700 delay-200 ${heroReveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            Generate blueprint-accurate CBSE &amp; ICSE tests in <strong className="text-[#f5f5f7] font-semibold">30 seconds</strong>, proctor in real-time, auto-grade subjective answers with Claude 3.5, and empower parents with targeted AI mistake tutoring in <strong className="text-[#f5f5f7] font-semibold">12 languages</strong>.
           </p>
 
           {/* Decision Aid + CTA */}
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 mb-14 transition-all duration-700 delay-300 ${heroReveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 mb-12 transition-all duration-700 delay-300 ${heroReveal.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {/* Role switcher */}
             <div className="tab-bar">
               <button
@@ -153,16 +153,51 @@ export const MarketingLanding: React.FC = () => {
               </button>
             </div>
 
-            {/* Primary CTA */}
+            {/* Primary CTA - Apple Pill */}
             <button
               onClick={() => {
                 if (activeAudience === 'schools') { setUserRole('teacher'); setCurrentView('teacher'); }
                 else { setUserRole('parent'); setCurrentView('parent'); }
               }}
-              className="btn-primary text-sm px-5 py-3 rounded-xl"
+              className="btn-primary text-sm px-6 py-2.5 rounded-full"
             >
               <span>{activeAudience === 'schools' ? 'Launch Teacher Console' : 'Open Parent Portal'}</span>
-              <ArrowRight style={{width:'15px',height:'15px'}} />
+              <ArrowRight style={{width:'14px',height:'14px'}} />
+            </button>
+          </div>
+
+          {/* ── 4 Major Student Features Quick Navigation Strip (Apple Capsules) ── */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-3xl mx-auto mb-14 animate-fade-in-up">
+            <button
+              onClick={() => { setUserRole('student'); setCurrentView('marks'); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.16] text-xs font-medium text-[#f5f5f7] transition-all shadow-sm active:scale-95"
+            >
+              <BarChart3 style={{ width: '13px', height: '13px', color: '#2997ff' }} />
+              <span>Marks &amp; Official Transcript</span>
+            </button>
+
+            <button
+              onClick={() => { setUserRole('student'); setCurrentView('syllabus'); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.16] text-xs font-medium text-[#f5f5f7] transition-all shadow-sm active:scale-95"
+            >
+              <Upload style={{ width: '13px', height: '13px', color: '#bf5af2' }} />
+              <span>Upload Syllabus &amp; Blueprint</span>
+            </button>
+
+            <button
+              onClick={() => { setUserRole('student'); setCurrentView('books'); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.16] text-xs font-medium text-[#f5f5f7] transition-all shadow-sm active:scale-95"
+            >
+              <BookOpen style={{ width: '13px', height: '13px', color: '#ff9f0a' }} />
+              <span>Read Book &amp; Audio Player</span>
+            </button>
+
+            <button
+              onClick={() => { setUserRole('student'); setCurrentView('questions'); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.16] text-xs font-medium text-[#f5f5f7] transition-all shadow-sm active:scale-95"
+            >
+              <Layers style={{ width: '13px', height: '13px', color: '#30d158' }} />
+              <span>Question Sets &amp; Negative Marking</span>
             </button>
           </div>
 

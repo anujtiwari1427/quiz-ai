@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import { 
   Upload, FileText, CheckCircle2, AlertCircle, ChevronDown, 
   ChevronRight, Sparkles, BookOpen, Trash2, Layers, Book, 
-  Search, Check, ArrowRight, FolderPlus, HelpCircle
+  Search, Check, ArrowRight, FolderPlus, HelpCircle, Award,
+  ShieldCheck, Sliders, CheckSquare, Square, RefreshCw
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Syllabus, SyllabusSubject, SyllabusChapter } from '../../types';
@@ -14,7 +15,9 @@ export const SyllabusDashboard: React.FC = () => {
     deleteSyllabus, 
     setCurrentView,
     startQuizFromSyllabus,
-    openBookForSubjectOrChapter 
+    openBookForSubjectOrChapter,
+    setActiveQuestionSetToPractice,
+    questionSets
   } = useApp();
 
   const [activeSyllabusId, setActiveSyllabusId] = useState<string>(
@@ -25,8 +28,10 @@ export const SyllabusDashboard: React.FC = () => {
     'syl_sub_math': true
   });
   const [expandedChapters, setExpandedChapters] = useState<{ [id: string]: boolean }>({
-    'syl_ch_sci_1': true
+    'syl_ch_sci_1': true,
+    'syl_ch_sci_2': true
   });
+  const [completedTopics, setCompletedTopics] = useState<{ [topicKey: string]: boolean }>({});
 
   // Drag & drop upload state
   const [isDragging, setIsDragging] = useState(false);
@@ -46,6 +51,10 @@ export const SyllabusDashboard: React.FC = () => {
 
   const toggleChapter = (chId: string) => {
     setExpandedChapters(prev => ({ ...prev, [chId]: !prev[chId] }));
+  };
+
+  const toggleTopicCompletion = (topicKey: string) => {
+    setCompletedTopics(prev => ({ ...prev, [topicKey]: !prev[topicKey] }));
   };
 
   // ── Drag & Drop Handlers ──
@@ -71,8 +80,8 @@ export const SyllabusDashboard: React.FC = () => {
       return;
     }
 
-    if (file.size > 20 * 1024 * 1024) { // 20 MB max
-      setUploadError('File is too large. Maximum supported syllabus size is 20 MB.');
+    if (file.size > 25 * 1024 * 1024) { // 25 MB max
+      setUploadError('File is too large. Maximum supported syllabus size is 25 MB.');
       return;
     }
 
@@ -93,7 +102,7 @@ export const SyllabusDashboard: React.FC = () => {
     }
   };
 
-  // ── Process Uploaded Syllabus ──
+  // ── Process Uploaded Syllabus with AI Curriculum Extractor ──
   const handleProcessSyllabus = () => {
     if (!selectedFile) return;
 
@@ -114,41 +123,52 @@ export const SyllabusDashboard: React.FC = () => {
       clearInterval(interval);
       setUploadProgress(100);
 
-      // Create realistic structured parsed syllabus
       const newSyllabus: Syllabus = {
         id: `syl_uploaded_${Date.now()}`,
         name: selectedFile.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ") + " Syllabus",
         fileName: selectedFile.name,
         fileSize: (selectedFile.size / (1024 * 1024)).toFixed(1) + ' MB',
-        fileType: selectedFile.type || 'application/octet-stream',
+        fileType: selectedFile.type || 'application/pdf',
         uploadedAt: new Date().toISOString().split('T')[0],
-        board: 'CBSE & State Board',
+        board: 'CBSE & NEP 2020 Aligned',
         grade: 10,
         subjects: [
           {
             id: `sub_${Date.now()}_1`,
-            name: 'Science & Technology',
+            name: 'Science & Technology (Physics, Chem, Bio)',
             chapters: [
               {
                 id: `ch_${Date.now()}_11`,
-                name: 'Chemical Reactions & Catalysis',
-                unitName: 'Unit 1: Matter and Reactions',
+                name: 'Chemical Reactions & Equations',
+                unitName: 'Unit 1: Chemical Substances (25 Marks Weightage)',
                 topics: [
                   'Balancing equations using conservation of mass',
-                  'Exothermic and endothermic transformations',
-                  'Oxidation, reduction, and electrochemical potential'
+                  'Types of chemical reactions: Combination, Decomposition, Displacement',
+                  'Oxidation, reduction, rancidity and corrosion prevention'
                 ],
                 completionPercentage: 0,
                 isCompleted: false
               },
               {
                 id: `ch_${Date.now()}_12`,
-                name: 'Optics & Electromagnetic Waves',
-                unitName: 'Unit 2: Wave Physics',
+                name: 'Light – Reflection and Refraction',
+                unitName: 'Unit 3: Natural Phenomena (12 Marks Weightage)',
                 topics: [
-                  'Refraction index in varied media',
-                  'Convex and concave optical configurations',
-                  'Snell’s mathematical derivations'
+                  'Reflection by spherical mirrors and ray diagrams',
+                  'Mirror formula and linear magnification calculation',
+                  'Refractive index, Snell’s Law, and lens power (Dioptres)'
+                ],
+                completionPercentage: 0,
+                isCompleted: false
+              },
+              {
+                id: `ch_${Date.now()}_13`,
+                name: 'Electricity & Magnetic Effects',
+                unitName: 'Unit 4: Effects of Current (13 Marks Weightage)',
+                topics: [
+                  'Ohm’s Law, resistance, and factors affecting resistivity',
+                  'Series and parallel resistor combinations',
+                  'Joule’s Law of heating and electric power formulas'
                 ],
                 completionPercentage: 0,
                 isCompleted: false
@@ -157,16 +177,28 @@ export const SyllabusDashboard: React.FC = () => {
           },
           {
             id: `sub_${Date.now()}_2`,
-            name: 'Mathematics & Analytic Reasoning',
+            name: 'Mathematics (Standard & Basic)',
             chapters: [
               {
                 id: `ch_${Date.now()}_21`,
-                name: 'Algebraic Formulations & Polynomials',
-                unitName: 'Unit 1: Pure Mathematics',
+                name: 'Quadratic Equations & Polynomials',
+                unitName: 'Unit 2: Algebra (20 Marks Weightage)',
                 topics: [
-                  'Discriminant analysis of quadratic functions',
-                  'Factorisation algorithms and zero derivation',
-                  'Geometric curves and coordinates'
+                  'Standard form of quadratic equations ax² + bx + c = 0',
+                  'Solution by factorisation and quadratic formula',
+                  'Discriminant analysis (b² - 4ac) and nature of roots'
+                ],
+                completionPercentage: 0,
+                isCompleted: false
+              },
+              {
+                id: `ch_${Date.now()}_22`,
+                name: 'Introduction to Trigonometry',
+                unitName: 'Unit 5: Trigonometry (12 Marks Weightage)',
+                topics: [
+                  'Trigonometric ratios of acute angles',
+                  'Values of trigonometric ratios at 0°, 30°, 45°, 60°, 90°',
+                  'Proofs and applications of identity sin²θ + cos²θ = 1'
                 ],
                 completionPercentage: 0,
                 isCompleted: false
@@ -184,6 +216,39 @@ export const SyllabusDashboard: React.FC = () => {
     }, 1200);
   };
 
+  // Quick 1-click preset loader
+  const handleLoadBoardPreset = (boardName: string) => {
+    const existing = syllabi.find(s => s.name.toLowerCase().includes(boardName.toLowerCase()));
+    if (existing) {
+      setActiveSyllabusId(existing.id);
+      return;
+    }
+  };
+
+  // Launch Quiz from syllabus chapter with Marks Option
+  const handleLaunchQuizWithMarks = (subject: string, chapter: string) => {
+    // Check if there is an existing set for this
+    const matchedSet = questionSets.find(s => 
+      s.subject.toLowerCase() === subject.toLowerCase() || 
+      (s.chapter && s.chapter.toLowerCase().includes(chapter.toLowerCase()))
+    );
+
+    if (matchedSet) {
+      setActiveQuestionSetToPractice(matchedSet);
+    } else {
+      startQuizFromSyllabus(subject, chapter, undefined);
+    }
+    setCurrentView('questions');
+  };
+
+  // Calculate syllabus completion statistics
+  const totalTopicsCount = currentSyllabus?.subjects.reduce((acc, sub) => {
+    return acc + sub.chapters.reduce((chAcc, ch) => chAcc + ch.topics.length, 0);
+  }, 0) || 1;
+
+  const completedCount = Object.values(completedTopics).filter(Boolean).length;
+  const overallCompletionPct = Math.round((completedCount / totalTopicsCount) * 100);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in-up">
       
@@ -191,50 +256,53 @@ export const SyllabusDashboard: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="badge badge-emerald">Curriculum Planning</span>
-            <span className="text-slate-500 text-xs font-mono">• AI-Guided Breakdown</span>
+            <span className="badge badge-emerald">Curriculum Management</span>
+            <span className="text-slate-500 text-xs font-mono">• AI Syllabus Decomposition</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-display font-black text-white flex items-center gap-2.5">
-            Upload &amp; Manage Syllabus
+            📂 Upload &amp; Explore Syllabus
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Upload course curricula (PDF, Word, TXT, Images) to extract units, chapters, and generate aligned question sets with AI.
+            Upload course curriculum files (PDF, Word, Images, TXT) to automatically extract chapters, units, exam marks weightage, and generate customized quizzes.
           </p>
         </div>
 
-        {currentSyllabus && (
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                // Generate quiz from entire syllabus
-                const firstSub = currentSyllabus.subjects[0];
-                const firstCh = firstSub?.chapters[0];
-                startQuizFromSyllabus(firstSub?.name || 'Science', firstCh?.name, undefined);
-              }}
-              className="btn-primary text-xs py-2 px-4"
-            >
-              <Sparkles style={{ width: '13px', height: '13px' }} />
-              <span>Generate Full Syllabus Quiz</span>
-            </button>
-          </div>
-        )}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            onClick={() => setCurrentView('questions')}
+            className="btn-secondary text-xs py-2 px-3.5 rounded-xl flex items-center gap-1.5"
+          >
+            <Layers style={{ width: '13px', height: '13px' }} />
+            <span>Question Sets</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('books')}
+            className="btn-secondary text-xs py-2 px-3.5 rounded-xl flex items-center gap-1.5 text-amber-400 hover:text-amber-300"
+          >
+            <BookOpen style={{ width: '13px', height: '13px' }} />
+            <span>Read Textbook</span>
+          </button>
+        </div>
       </div>
 
-      {/* ── Drag & Drop Upload Zone ── */}
-      <div className="glass rounded-3xl p-6 sm:p-8 border border-white/[0.08] shadow-xl space-y-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center">
-              <Upload style={{ width: '18px', height: '18px', color: '#10b981' }} />
+      {/* ── Drag & Drop Upload Zone (Interactive & High-Tech) ── */}
+      <div className="glass rounded-3xl p-6 sm:p-8 border border-white/[0.08] shadow-2xl space-y-5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400 shadow-md">
+              <Upload style={{ width: '20px', height: '20px' }} />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Upload New Syllabus</h3>
-              <p className="text-xs text-slate-400">Extracts subjects, units, chapters, and topics automatically</p>
+              <h3 className="text-base font-bold text-white">Upload New Syllabus Document</h3>
+              <p className="text-xs text-slate-400">AI automatically extracts units, chapters, topics, and board weightage</p>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5">
-            {['PDF', 'DOC', 'DOCX', 'TXT', 'JPG', 'PNG'].map(fmt => (
-              <span key={fmt} className="badge" style={{ background: 'rgba(255,255,255,0.05)', fontSize: '9px' }}>
+
+          <div className="flex items-center gap-1.5">
+            {['PDF', 'DOCX', 'TXT', 'PNG', 'JPG'].map(fmt => (
+              <span key={fmt} className="badge" style={{ background: 'rgba(255,255,255,0.06)', fontSize: '9px', fontWeight: 'bold' }}>
                 {fmt}
               </span>
             ))}
@@ -247,11 +315,11 @@ export const SyllabusDashboard: React.FC = () => {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-3 ${
+          className={`border-2 border-dashed rounded-3xl p-8 sm:p-10 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-3 ${
             isDragging
-              ? 'border-brand-500 bg-brand-500/10 scale-[1.01]'
+              ? 'border-brand-500 bg-brand-500/10 scale-[1.01] shadow-2xl shadow-brand-500/15'
               : selectedFile
-              ? 'border-emerald-500/50 bg-emerald-500/5'
+              ? 'border-emerald-500/60 bg-emerald-500/5'
               : 'border-white/[0.12] hover:border-brand-500/50 hover:bg-white/[0.02]'
           }`}
         >
@@ -263,20 +331,20 @@ export const SyllabusDashboard: React.FC = () => {
             className="hidden"
           />
 
-          <div className="w-14 h-14 rounded-2xl bg-slate-900/90 border border-white/[0.08] flex items-center justify-center shadow-lg">
+          <div className="w-16 h-16 rounded-2xl bg-slate-900/90 border border-white/[0.08] flex items-center justify-center shadow-xl group-hover:scale-105 transition-transform">
             {selectedFile ? (
-              <FileText style={{ width: '26px', height: '26px', color: '#34d399' }} />
+              <FileText style={{ width: '30px', height: '30px', color: '#34d399' }} />
             ) : (
-              <Upload style={{ width: '26px', height: '26px', color: '#10b981' }} />
+              <Upload style={{ width: '30px', height: '30px', color: '#10b981' }} />
             )}
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-white">
-              {selectedFile ? selectedFile.name : 'Click to upload or drag & drop syllabus document'}
+            <p className="text-sm sm:text-base font-bold text-white">
+              {selectedFile ? selectedFile.name : 'Click to select or drag & drop syllabus document'}
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Supports PDF, Word (.docx), Plain Text (.txt), or scanned images up to 20 MB
+            <p className="text-xs text-slate-400 mt-1">
+              Supports official CBSE, ICSE, and State Board Curriculum circulars, chapter blueprints or notes up to 25 MB
             </p>
           </div>
         </div>
@@ -284,7 +352,7 @@ export const SyllabusDashboard: React.FC = () => {
         {/* Error notification */}
         {uploadError && (
           <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-300 flex items-center gap-2">
-            <AlertCircle style={{ width: '15px', height: '15px', flexShrink: 0 }} />
+            <AlertCircle style={{ width: '16px', height: '16px', flexShrink: 0 }} />
             <span>{uploadError}</span>
           </div>
         )}
@@ -292,8 +360,8 @@ export const SyllabusDashboard: React.FC = () => {
         {/* Success notification */}
         {uploadSuccess && (
           <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2">
-            <CheckCircle2 style={{ width: '15px', height: '15px', flexShrink: 0 }} />
-            <span>Syllabus successfully parsed! Structured subjects and chapters are ready below.</span>
+            <CheckCircle2 style={{ width: '16px', height: '16px', flexShrink: 0 }} />
+            <span>Syllabus successfully decomposed! Subjects, units, and learning goals are ready below.</span>
           </div>
         )}
 
@@ -302,12 +370,12 @@ export const SyllabusDashboard: React.FC = () => {
           <div className="p-4 rounded-2xl bg-slate-900/90 border border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 animate-fade-in-up">
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <div className="w-10 h-10 rounded-xl bg-brand-500/15 flex items-center justify-center text-brand-400 shrink-0">
-                <FileText style={{ width: '18px', height: '18px' }} />
+                <FileText style={{ width: '20px', height: '20px' }} />
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-white truncate">{selectedFile.name}</p>
-                <p className="text-[11px] text-slate-400">
-                  {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • {selectedFile.type || 'Document'}
+                <p className="text-[11px] text-slate-400 font-mono">
+                  {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Ready for AI Parsing
                 </p>
               </div>
             </div>
@@ -323,12 +391,12 @@ export const SyllabusDashboard: React.FC = () => {
                 className="btn-secondary text-xs py-2 px-3 text-rose-400 hover:text-rose-300"
               >
                 <Trash2 style={{ width: '12px', height: '12px' }} />
-                <span>Remove</span>
+                <span>Cancel</span>
               </button>
               <button
                 onClick={handleProcessSyllabus}
                 disabled={isProcessing}
-                className="btn-primary text-xs py-2 px-4"
+                className="btn-primary text-xs py-2 px-5 font-bold shadow-lg shadow-brand-500/25"
               >
                 {isProcessing ? (
                   <>
@@ -338,7 +406,7 @@ export const SyllabusDashboard: React.FC = () => {
                 ) : (
                   <>
                     <Sparkles style={{ width: '13px', height: '13px' }} />
-                    <span>Process Syllabus</span>
+                    <span>Extract Chapters &amp; Weightage</span>
                   </>
                 )}
               </button>
@@ -346,113 +414,123 @@ export const SyllabusDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Progress bar */}
-        {isProcessing && (
-          <div className="space-y-1.5 animate-fade-in-up">
-            <div className="flex justify-between text-[11px] text-slate-400">
-              <span>Claude 3.5 AI parsing topics, units &amp; chapter taxonomies...</span>
-              <span className="font-mono text-emerald-400">{uploadProgress}%</span>
-            </div>
-            <div className="mastery-bar">
-              <div className="mastery-bar-fill high" style={{ width: `${uploadProgress}%`, animation: 'none' }} />
-            </div>
+        {/* Board Presets Quick Row */}
+        <div className="pt-2 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
+          <span className="font-semibold text-slate-300">Or load pre-configured board syllabus blueprint:</span>
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { label: 'CBSE Class 10 (2026)', board: 'CBSE' },
+              { label: 'Maharashtra SSC', board: 'Maharashtra' },
+              { label: 'ICSE Class 10', board: 'ICSE' }
+            ].map(preset => (
+              <button
+                key={preset.label}
+                onClick={() => handleLoadBoardPreset(preset.board)}
+                className="px-3 py-1 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.06] text-[11px] transition-colors"
+              >
+                {preset.label}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
       </div>
 
-      {/* ── Active Syllabus Selector & Summary ── */}
+      {/* ── Active Syllabus Selector Tabs ── */}
+      {syllabi.length > 0 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          {syllabi.map(s => (
+            <button
+              key={s.id}
+              onClick={() => setActiveSyllabusId(s.id)}
+              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 flex items-center gap-2 border ${
+                s.id === activeSyllabusId
+                  ? 'bg-brand-500 text-slate-950 border-brand-400 shadow-lg shadow-brand-500/20'
+                  : 'bg-slate-900 text-slate-400 border-white/[0.06] hover:text-white'
+              }`}
+            >
+              <FileText style={{ width: '13px', height: '13px' }} />
+              <span>{s.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ── Active Syllabus Overview & Completion Meter ── */}
       {currentSyllabus && (
         <div className="space-y-6">
-          
-          {/* Syllabus Switcher Tabs */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
-              {syllabi.map(syl => (
-                <button
-                  key={syl.id}
-                  onClick={() => setActiveSyllabusId(syl.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-2 ${
-                    activeSyllabusId === syl.id
-                      ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/20 font-black'
-                      : 'bg-slate-900/80 text-slate-400 border border-white/[0.06] hover:text-white'
-                  }`}
-                >
-                  <BookOpen style={{ width: '13px', height: '13px' }} />
-                  <span className="truncate max-w-[200px]">{syl.name}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="text-xs text-slate-400 flex items-center gap-2">
-              <span>File: <strong className="text-slate-200">{currentSyllabus.fileName}</strong></span>
-              <span>•</span>
-              <span>Updated: <strong className="text-slate-200">{currentSyllabus.uploadedAt}</strong></span>
-            </div>
-          </div>
-
-          {/* Subject Cards Overview Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {currentSyllabus.subjects.map(subject => {
-              const totalChapters = subject.chapters.length;
-              const totalTopics = subject.chapters.reduce((sum, ch) => sum + ch.topics.length, 0);
-              const avgCompletion = totalChapters > 0
-                ? Math.round(subject.chapters.reduce((sum, ch) => sum + (ch.completionPercentage || 0), 0) / totalChapters)
-                : 0;
-
-              return (
-                <div 
-                  key={subject.id}
-                  className="glass rounded-2xl p-5 border border-white/[0.06] hover:border-brand-500/30 transition-all space-y-4 card-hover"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h4 className="text-base font-bold text-white">{subject.name}</h4>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        {totalChapters} {totalChapters === 1 ? 'Chapter' : 'Chapters'} • {totalTopics} Topics
-                      </p>
-                    </div>
-                    <span className="badge badge-emerald text-[10px]">
-                      {avgCompletion}% Covered
-                    </span>
-                  </div>
-
-                  <div className="mastery-bar">
-                    <div 
-                      className="mastery-bar-fill high" 
-                      style={{ width: `${avgCompletion}%`, animation: 'none' }} 
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1 border-t border-white/[0.05]">
-                    <button
-                      onClick={() => openBookForSubjectOrChapter(subject.name)}
-                      className="text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1"
-                    >
-                      <Book style={{ width: '12px', height: '12px', color: '#818cf8' }} />
-                      <span>Read Book</span>
-                    </button>
-
-                    <button
-                      onClick={() => startQuizFromSyllabus(subject.name, undefined, undefined)}
-                      className="text-brand-400 hover:text-brand-300 text-xs font-bold flex items-center gap-1"
-                    >
-                      <Sparkles style={{ width: '12px', height: '12px' }} />
-                      <span>Generate Quiz</span>
-                    </button>
-                  </div>
+          <div className="glass rounded-3xl p-6 sm:p-8 border border-white/[0.08] shadow-xl space-y-5">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="badge badge-emerald text-[10px]">{currentSyllabus.board || 'CBSE Board'}</span>
+                  <span className="badge badge-indigo text-[10px]">Class {currentSyllabus.grade || 10}</span>
                 </div>
-              );
-            })}
+                <h2 className="text-xl sm:text-2xl font-display font-black text-white">{currentSyllabus.name}</h2>
+                <p className="text-xs text-slate-400">
+                  Uploaded on {currentSyllabus.uploadedAt} • File: {currentSyllabus.fileName}
+                </p>
+              </div>
+
+              {/* Progress Ring / Bar */}
+              <div className="p-4 rounded-2xl bg-slate-950/70 border border-white/[0.06] flex items-center gap-4 shrink-0">
+                <div>
+                  <div className="text-[10px] text-slate-400 uppercase font-mono">Curriculum Mastery</div>
+                  <div className="text-xl font-bold text-white font-mono">{overallCompletionPct}% Mastered</div>
+                  <div className="text-[10px] text-emerald-400 mt-0.5">{completedCount} of {totalTopicsCount} topics checked</div>
+                </div>
+                <div className="w-12 h-12 rounded-full border-4 border-slate-800 border-t-emerald-400 flex items-center justify-center font-mono text-xs font-bold text-white">
+                  {overallCompletionPct}%
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions Row */}
+            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-white/[0.06]">
+              <button
+                onClick={() => {
+                  const firstSub = currentSyllabus.subjects[0];
+                  if (firstSub) handleLaunchQuizWithMarks(firstSub.name, firstSub.chapters[0]?.name || 'Full Syllabus');
+                }}
+                className="btn-primary text-xs py-2 px-4 rounded-xl shadow-md gap-1.5 font-bold"
+              >
+                <Sparkles style={{ width: '13px', height: '13px' }} />
+                <span>Generate Test with Marks Option</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  const firstSub = currentSyllabus.subjects[0];
+                  if (firstSub) openBookForSubjectOrChapter(firstSub.name, firstSub.chapters[0]?.name);
+                }}
+                className="btn-secondary text-xs py-2 px-4 rounded-xl text-amber-400 hover:text-amber-300 gap-1.5"
+              >
+                <BookOpen style={{ width: '13px', height: '13px' }} />
+                <span>Read Prescribed Textbook</span>
+              </button>
+
+              <button
+                onClick={() => deleteSyllabus(currentSyllabus.id)}
+                className="btn-secondary text-xs py-2 px-3 rounded-xl text-rose-400 hover:text-rose-300 ml-auto"
+                title="Delete this syllabus"
+              >
+                <Trash2 style={{ width: '13px', height: '13px' }} />
+                <span>Remove Syllabus</span>
+              </button>
+            </div>
           </div>
 
-          {/* ── Interactive Expandable Syllabus Tree ── */}
-          <div className="glass rounded-3xl p-6 sm:p-8 border border-white/[0.06] space-y-6">
+          {/* ── Curriculum Hierarchy Explorer ── */}
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-white">Curriculum Hierarchy &amp; Topic Explorer</h2>
-                <p className="text-xs text-slate-400">Expand Subject &rarr; Chapter &rarr; Topic to trigger precision AI quizzes</p>
+                <h3 className="text-base sm:text-lg font-bold text-white">Curriculum Hierarchy &amp; Topic Explorer</h3>
+                <p className="text-xs text-slate-400">
+                  Click on any chapter to start a test with custom marks or read the textbook
+                </p>
               </div>
-              <span className="badge badge-indigo text-[10px]">Interactive Tree</span>
+              <span className="badge badge-indigo text-[10px]">
+                {currentSyllabus.subjects.length} Disciplines
+              </span>
             </div>
 
             <div className="space-y-4">
@@ -462,24 +540,24 @@ export const SyllabusDashboard: React.FC = () => {
                 return (
                   <div 
                     key={subject.id}
-                    className="rounded-2xl bg-slate-900/70 border border-white/[0.06] overflow-hidden transition-all"
+                    className="glass rounded-3xl border border-white/[0.08] overflow-hidden transition-all shadow-md"
                   >
                     {/* Subject Row Header */}
                     <div 
                       onClick={() => toggleSubject(subject.id)}
-                      className="p-4 flex items-center justify-between cursor-pointer hover:bg-white/[0.02] transition-colors"
+                      className="p-5 flex items-center justify-between cursor-pointer hover:bg-white/[0.02] transition-colors"
                     >
-                      <div className="flex items-center gap-3">
-                        <button className="p-1 rounded-lg bg-slate-800 text-slate-400">
+                      <div className="flex items-center gap-3.5">
+                        <button className="p-1.5 rounded-xl bg-slate-800 text-slate-400">
                           {isSubjExpanded ? (
-                            <ChevronDown style={{ width: '15px', height: '15px' }} />
+                            <ChevronDown style={{ width: '16px', height: '16px' }} />
                           ) : (
-                            <ChevronRight style={{ width: '15px', height: '15px' }} />
+                            <ChevronRight style={{ width: '16px', height: '16px' }} />
                           )}
                         </button>
                         <div>
-                          <h4 className="text-sm font-bold text-white">{subject.name}</h4>
-                          <span className="text-[11px] text-slate-400">
+                          <h4 className="text-base font-bold text-white">{subject.name}</h4>
+                          <span className="text-xs text-slate-400">
                             {subject.chapters.length} Chapters • {subject.chapters.reduce((sum, ch) => sum + ch.topics.length, 0)} Detailed Topics
                           </span>
                         </div>
@@ -487,99 +565,119 @@ export const SyllabusDashboard: React.FC = () => {
 
                       <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
                         <button
-                          onClick={() => startQuizFromSyllabus(subject.name, undefined, undefined)}
-                          className="btn-secondary py-1 px-3 text-[11px] rounded-lg hidden sm:flex"
+                          onClick={() => handleLaunchQuizWithMarks(subject.name, subject.chapters[0]?.name || 'All Units')}
+                          className="btn-primary py-1.5 px-3.5 text-xs rounded-xl shadow-sm gap-1.5 font-bold"
                         >
-                          <Sparkles style={{ width: '11px', height: '11px', color: '#10b981' }} />
-                          Quiz Subject
+                          <Sparkles style={{ width: '12px', height: '12px' }} />
+                          <span>Quiz Subject</span>
                         </button>
                       </div>
                     </div>
 
                     {/* Chapters List (Accordion) */}
                     {isSubjExpanded && (
-                      <div className="px-4 pb-4 space-y-3 pt-2 border-t border-white/[0.04]">
+                      <div className="px-5 pb-5 space-y-3 pt-2 border-t border-white/[0.05]">
                         {subject.chapters.map((chapter, idx) => {
                           const isChExpanded = expandedChapters[chapter.id] ?? false;
 
                           return (
                             <div
                               key={chapter.id}
-                              className="rounded-xl bg-slate-950/60 border border-white/[0.04] p-3.5 space-y-3"
+                              className="rounded-2xl bg-slate-950/70 border border-white/[0.05] p-4 space-y-3"
                             >
                               {/* Chapter Header */}
                               <div 
                                 onClick={() => toggleChapter(chapter.id)}
-                                className="flex items-center justify-between cursor-pointer"
+                                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer"
                               >
-                                <div className="flex items-center gap-2.5">
-                                  <span className="w-6 h-6 rounded-lg bg-brand-500/15 text-brand-400 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                                <div className="flex items-center gap-3">
+                                  <span className="w-7 h-7 rounded-xl bg-brand-500/15 text-brand-400 font-mono text-xs font-bold flex items-center justify-center shrink-0">
                                     {idx + 1}
                                   </span>
                                   <div>
-                                    <span className="text-xs font-bold text-white hover:text-brand-400 transition-colors">
+                                    <span className="text-sm font-bold text-white hover:text-brand-300 transition-colors">
                                       {chapter.name}
                                     </span>
                                     {chapter.unitName && (
-                                      <p className="text-[10px] text-slate-500">{chapter.unitName}</p>
+                                      <p className="text-[11px] text-emerald-400 font-mono mt-0.5">{chapter.unitName}</p>
                                     )}
                                   </div>
                                 </div>
 
                                 <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                                  {/* READ BOOK OPTION BUTTON */}
                                   <button
                                     onClick={() => openBookForSubjectOrChapter(subject.name, chapter.name)}
-                                    title="Read chapter in digital book"
-                                    className="p-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 transition-all text-[11px] flex items-center gap-1"
+                                    title="Open this chapter in Read the Book mode"
+                                    className="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 transition-all text-xs flex items-center gap-1.5 font-semibold"
                                   >
-                                    <BookOpen style={{ width: '12px', height: '12px' }} />
-                                    <span className="hidden md:inline">Read</span>
+                                    <BookOpen style={{ width: '13px', height: '13px' }} />
+                                    <span>Read Book</span>
                                   </button>
 
+                                  {/* MARKS OPTION QUIZ BUTTON */}
                                   <button
-                                    onClick={() => startQuizFromSyllabus(subject.name, chapter.name, undefined)}
-                                    title="Generate quiz on this chapter"
-                                    className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 transition-all text-[11px] flex items-center gap-1 font-bold"
+                                    onClick={() => handleLaunchQuizWithMarks(subject.name, chapter.name)}
+                                    title="Generate quiz with customizable marks and negative score scheme"
+                                    className="p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/25 transition-all text-xs flex items-center gap-1.5 font-bold"
                                   >
-                                    <Sparkles style={{ width: '12px', height: '12px' }} />
-                                    <span>AI Quiz</span>
+                                    <Sparkles style={{ width: '13px', height: '13px' }} />
+                                    <span>Quiz + Marks</span>
                                   </button>
 
                                   <button 
                                     onClick={() => toggleChapter(chapter.id)}
-                                    className="p-1 rounded-md text-slate-400"
+                                    className="p-1 rounded-lg text-slate-400 hover:text-white"
                                   >
                                     {isChExpanded ? (
-                                      <ChevronDown style={{ width: '14px', height: '14px' }} />
+                                      <ChevronDown style={{ width: '15px', height: '15px' }} />
                                     ) : (
-                                      <ChevronRight style={{ width: '14px', height: '14px' }} />
+                                      <ChevronRight style={{ width: '15px', height: '15px' }} />
                                     )}
                                   </button>
                                 </div>
                               </div>
 
-                              {/* Topics List */}
+                              {/* Topics List with Completion Checkbox */}
                               {isChExpanded && (
-                                <div className="pl-8 pt-2 space-y-2 border-t border-white/[0.03] animate-fade-in-up">
-                                  {chapter.topics.map((topic, tIdx) => (
-                                    <div 
-                                      key={tIdx}
-                                      className="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-white/[0.03] group transition-all"
-                                    >
-                                      <div className="flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-brand-400" />
-                                        <span className="text-xs text-slate-300 leading-snug">{topic}</span>
-                                      </div>
+                                <div className="pl-6 sm:pl-10 pt-2 space-y-2 border-t border-white/[0.03] animate-fade-in-up">
+                                  {chapter.topics.map((topic, tIdx) => {
+                                    const topicKey = `${chapter.id}_${tIdx}`;
+                                    const isDone = Boolean(completedTopics[topicKey]);
 
-                                      <button
-                                        onClick={() => startQuizFromSyllabus(subject.name, chapter.name, topic)}
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 px-2 py-0.5 rounded bg-brand-500/10"
+                                    return (
+                                      <div 
+                                        key={tIdx}
+                                        className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
+                                          isDone 
+                                            ? 'bg-emerald-500/5 border-emerald-500/20 text-slate-300' 
+                                            : 'bg-slate-900/60 hover:bg-slate-900 border-white/[0.03] text-slate-300'
+                                        }`}
                                       >
-                                        <Sparkles style={{ width: '10px', height: '10px' }} />
-                                        <span>Practice Topic</span>
-                                      </button>
-                                    </div>
-                                  ))}
+                                        <div 
+                                          onClick={() => toggleTopicCompletion(topicKey)}
+                                          className="flex items-center gap-2.5 cursor-pointer select-none"
+                                        >
+                                          {isDone ? (
+                                            <CheckSquare style={{ width: '15px', height: '15px', color: '#10b981', flexShrink: 0 }} />
+                                          ) : (
+                                            <Square style={{ width: '15px', height: '15px', color: '#64748b', flexShrink: 0 }} />
+                                          )}
+                                          <span className={`text-xs ${isDone ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+                                            {topic}
+                                          </span>
+                                        </div>
+
+                                        <button
+                                          onClick={() => handleLaunchQuizWithMarks(subject.name, `${chapter.name} - ${topic}`)}
+                                          className="text-[10px] font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 transition-colors"
+                                        >
+                                          <Sparkles style={{ width: '10px', height: '10px' }} />
+                                          <span>Practice Topic</span>
+                                        </button>
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               )}
                             </div>
@@ -592,10 +690,11 @@ export const SyllabusDashboard: React.FC = () => {
               })}
             </div>
           </div>
-
         </div>
       )}
 
     </div>
   );
 };
+
+export default SyllabusDashboard;

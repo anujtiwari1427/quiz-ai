@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Clock, CheckCircle2, ChevronRight, ChevronLeft, Bookmark, 
-  Send, AlertTriangle, ArrowLeft, Eye, Flag, HelpCircle, X
+  Send, AlertTriangle, ArrowLeft, Eye, Flag, HelpCircle, X,
+  RotateCcw, ShieldAlert, Award, Sparkles, Check
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { QuestionSet, QuestionSetAttempt, MarkRecord } from '../../types';
@@ -53,8 +54,31 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
   const seconds = timeRemainingSeconds % 60;
   const isLowTime = timeRemainingSeconds < 180; // less than 3 mins
 
+  // Keyboard shortcut listener (A, B, C, D)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!currentQ || !currentQ.options || isSubmitted || showSubmitModal) return;
+      const key = e.key.toUpperCase();
+      const keyIndex = ['A', 'B', 'C', 'D'].indexOf(key);
+      if (keyIndex !== -1 && currentQ.options[keyIndex]) {
+        const opt = currentQ.options[keyIndex];
+        handleSelectOption(currentQ.id, opt.id, opt.text);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex, currentQ, isSubmitted, showSubmitModal]);
+
   const handleSelectOption = (qId: string, optId: string, optText: string) => {
     setUserAnswers(prev => ({ ...prev, [qId]: { optId, text: optText } }));
+  };
+
+  const handleClearOption = (qId: string) => {
+    setUserAnswers(prev => {
+      const copy = { ...prev };
+      delete copy[qId];
+      return copy;
+    });
   };
 
   const handleTextChange = (qId: string, text: string) => {
@@ -71,9 +95,11 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
     }
   };
 
-  // ── Submit Assessment & Auto-Sync Marks ──
+  // ── Submit Assessment & Calculate Marks with Negative Scheme ──
   const handleSubmitAssessment = () => {
-    let obtainedMarks = 0;
+    const negativePenaltyPerWrong = questionSet.negativeMarksPerWrong || 0;
+    let grossMarks = 0;
+    let totalNegativeDeducted = 0;
     let correctCount = 0;
     let incorrectCount = 0;
     let skippedCount = 0;
@@ -89,7 +115,8 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
           selectedOptionId: undefined,
           answerText: '',
           isCorrect: false,
-          marksAwarded: 0
+          marksAwarded: 0,
+          negativeDeducted: 0
         };
       }
 
@@ -99,16 +126,23 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
         const correctOpt = q.options.find(o => o.isCorrect);
         isCorrect = correctOpt ? correctOpt.id === ans.optId : false;
       } else {
-        // Subjective auto-credit
+        // Subjective auto-credit for sensible length
         isCorrect = ans.text.trim().length > 15;
       }
 
-      const marksAwarded = isCorrect ? q.marks : 0;
+      let marksAwarded = 0;
+      let negativeDeducted = 0;
+
       if (isCorrect) {
-        obtainedMarks += marksAwarded;
+        marksAwarded = q.marks;
+        grossMarks += q.marks;
         correctCount++;
       } else {
         incorrectCount++;
+        if (negativePenaltyPerWrong > 0) {
+          negativeDeducted = negativePenaltyPerWrong;
+          totalNegativeDeducted += negativePenaltyPerWrong;
+        }
       }
 
       return {
@@ -116,14 +150,18 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
         selectedOptionId: ans.optId,
         answerText: ans.text,
         isCorrect,
-        marksAwarded
+        marksAwarded,
+        negativeDeducted
       };
     });
 
+    const netObtained = Math.max(0, Math.round((grossMarks - totalNegativeDeducted) * 100) / 100);
     const totalMarks = questionSet.totalMarks || questionSet.questions.reduce((sum, q) => sum + q.marks, 0);
-    const percentage = totalMarks > 0 ? Math.round((obtainedMarks / totalMarks) * 100) : 0;
+    const percentage = totalMarks > 0 ? Math.round((netObtained / totalMarks) * 100) : 0;
     const grade = calculateGrade(percentage).grade;
     const timeTakenSeconds = (questionSet.timeLimit * 60) - timeRemainingSeconds;
+    const passingMarks = questionSet.passingMarks || Math.ceil(totalMarks * 0.33);
+    const isPassed = netObtained >= passingMarks;
 
     const attemptRecord: QuestionSetAttempt = {
       id: `qatt_${Date.now()}`,
@@ -132,7 +170,11 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
       subject: questionSet.subject,
       chapter: questionSet.chapter,
       totalMarks,
-      obtainedMarks,
+      obtainedMarks: netObtained,
+      grossMarks,
+      negativeMarksDeducted: totalNegativeDeducted,
+      passingMarks,
+      isPassed,
       percentage,
       grade,
       correctAnswers: correctCount,
@@ -153,9 +195,12 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
       subject: questionSet.subject,
       date: new Date().toISOString().split('T')[0],
       totalMarks,
-      obtainedMarks,
+      obtainedMarks: netObtained,
+      negativeMarksDeducted: totalNegativeDeducted,
       percentage,
       grade,
+      examType: 'Practice Set',
+      remarks: `${correctCount}/${totalQuestions} correct. ${totalNegativeDeducted > 0 ? `-${totalNegativeDeducted}M negative penalty applied.` : 'No negative penalty.'}`,
       timeSpentSeconds: timeTakenSeconds,
       questionCount: totalQuestions,
       correctCount,
@@ -190,24 +235,27 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
     );
   }
 
+  const marksPerQ = currentQ.marks || 1;
+  const negativePenalty = questionSet.negativeMarksPerWrong || 0;
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 space-y-5 animate-fade-in-up">
+    <div className="max-w-5xl mx-auto px-4 py-6 space-y-6 animate-fade-in-up">
       
-      {/* ── Top HUD ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl glass border border-white/[0.06]">
+      {/* ── Top Exam Navigation Bar ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl glass border border-white/[0.08] shadow-xl">
         <div className="flex items-center gap-3">
           <button
             onClick={onExit}
-            className="p-1.5 rounded-xl hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs"
+            className="p-2 rounded-xl hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold"
           >
             <ArrowLeft style={{ width: '15px', height: '15px' }} />
-            <span className="hidden sm:inline">Exit</span>
+            <span className="hidden sm:inline">Back to Hub</span>
           </button>
 
           <span className="text-slate-700">|</span>
 
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-white truncate max-w-[200px] sm:max-w-xs">
+            <h3 className="text-xs sm:text-sm font-bold text-white truncate max-w-[220px] sm:max-w-xs">
               {questionSet.title}
             </h3>
             <span className="text-[10px] text-slate-400">
@@ -216,43 +264,53 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Timer */}
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono text-xs font-bold transition-all ${
+        <div className="flex items-center gap-3">
+          {/* Marks Scheme Pill */}
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-white/[0.06] text-[11px] font-mono">
+            <span className="text-emerald-400 font-bold">+{marksPerQ}M Correct</span>
+            {negativePenalty > 0 && (
+              <span className="text-rose-400 font-bold">• -{negativePenalty}M Wrong</span>
+            )}
+          </div>
+
+          {/* Timer with Glow warning */}
+          <div className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border font-mono text-xs font-bold transition-all ${
             isLowTime 
-              ? 'bg-rose-500/15 border-rose-500/30 text-rose-400 animate-glow-pulse' 
-              : 'bg-slate-900 border-white/[0.06] text-brand-400'
+              ? 'bg-rose-500/20 border-rose-500/40 text-rose-300 animate-glow-pulse shadow-[0_0_15px_rgba(244,63,94,0.3)]' 
+              : 'bg-slate-900 border-white/[0.08] text-brand-400'
           }`}>
-            <Clock style={{ width: '13px', height: '13px' }} />
+            <Clock style={{ width: '14px', height: '14px' }} />
             <span>{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}</span>
           </div>
 
+          {/* Submit Test Button */}
           <button
             onClick={() => setShowSubmitModal(true)}
-            className="btn-primary py-1.5 px-3.5 text-xs rounded-xl"
+            className="btn-primary py-2 px-4 text-xs rounded-xl shadow-lg shadow-brand-500/20 font-bold flex items-center gap-1.5"
           >
-            <Send style={{ width: '12px', height: '12px' }} />
-            <span>Submit</span>
+            <Send style={{ width: '13px', height: '13px' }} />
+            <span>Submit Test</span>
           </button>
         </div>
       </div>
 
-      {/* ── Progress Indicators ── */}
+      {/* ── Progress Bar & Stats Row ── */}
       <div className="space-y-1.5">
-        <div className="flex justify-between text-[11px] text-slate-400">
-          <span>{answeredCount} of {totalQuestions} answered ({markedCount} marked for review)</span>
-          <span className="font-bold text-white">{progressPct}%</span>
+        <div className="flex justify-between text-[11px] text-slate-400 font-medium">
+          <span>{answeredCount} of {totalQuestions} Answered {markedCount > 0 && `(${markedCount} Marked for Review)`}</span>
+          <span className="font-bold text-white font-mono">{progressPct}% Completed</span>
         </div>
-        <div className="mastery-bar">
+        <div className="mastery-bar" style={{ height: '6px' }}>
           <div 
-            className="mastery-bar-fill high" 
+            className="mastery-bar-fill high transition-all duration-300" 
             style={{ width: `${progressPct}%`, animation: 'none' }} 
           />
         </div>
       </div>
 
-      {/* ── Palette of Question Numbers ── */}
-      <div className="p-3 rounded-2xl glass border border-white/[0.05] flex items-center gap-1.5 overflow-x-auto">
+      {/* ── Question Palette Strip ── */}
+      <div className="p-3.5 rounded-2xl glass border border-white/[0.06] flex items-center gap-2 overflow-x-auto shadow-inner">
+        <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider shrink-0 pr-1">Q-Palette:</span>
         {questionSet.questions.map((q, idx) => {
           const isCurrent = idx === currentIndex;
           const isAnswered = Boolean(userAnswers[q.id]?.optId || userAnswers[q.id]?.text);
@@ -264,12 +322,12 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
               onClick={() => setCurrentIndex(idx)}
               className={`w-9 h-9 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 transition-all ${
                 isCurrent
-                  ? 'bg-brand-500 text-slate-950 shadow-md shadow-brand-500/30 scale-110 font-black'
+                  ? 'bg-brand-500 text-slate-950 shadow-lg shadow-brand-500/35 scale-110 font-black ring-2 ring-emerald-400'
                   : isMarked
-                  ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                  ? 'bg-amber-500/20 text-amber-400 border border-amber-500/50'
                   : isAnswered
                   ? 'bg-brand-500/15 text-brand-400 border border-brand-500/35'
-                  : 'bg-slate-950/60 text-slate-500 border border-white/[0.05] hover:text-slate-300'
+                  : 'bg-slate-950/70 text-slate-500 border border-white/[0.05] hover:text-slate-300'
               }`}
             >
               {idx + 1}
@@ -280,98 +338,122 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
 
       {/* ── Active Question Card ── */}
       {currentQ && (
-        <div className="glass-emerald rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl animate-fade-in-up">
+        <div className="glass-emerald rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl border border-white/[0.08] relative overflow-hidden animate-fade-in-up">
           
-          {/* Header */}
-          <div className="flex items-center justify-between flex-wrap gap-2">
+          {/* Header with Bloom's level and Marks option indicator */}
+          <div className="flex items-center justify-between flex-wrap gap-2 border-b border-white/[0.06] pb-4">
             <div className="flex items-center gap-2">
-              <span className="badge badge-emerald text-[10px]">
+              <span className="badge badge-emerald text-[10px] font-bold">
                 Question {currentIndex + 1} of {totalQuestions}
               </span>
               <span className="text-[11px] text-slate-400 font-mono">{currentQ.chapter}</span>
+              {currentQ.bloomsLevel && (
+                <span className="badge badge-indigo text-[9px]">{currentQ.bloomsLevel}</span>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={() => toggleMarkForReview(currentQ.id)}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-semibold border transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
                   markedForReview[currentQ.id]
-                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/35'
+                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 shadow-sm'
                     : 'bg-slate-900/60 text-slate-400 border-white/[0.06] hover:text-white'
                 }`}
               >
-                <Flag style={{ width: '11px', height: '11px' }} />
-                <span>{markedForReview[currentQ.id] ? 'Marked' : 'Mark for Review'}</span>
+                <Flag style={{ width: '12px', height: '12px' }} />
+                <span>{markedForReview[currentQ.id] ? 'Flagged for Review' : 'Flag Question'}</span>
               </button>
 
-              <span className="px-3 py-1 rounded-xl bg-slate-900 border border-white/[0.06] text-xs font-bold text-white">
-                {currentQ.marks} {currentQ.marks === 1 ? 'Mark' : 'Marks'}
+              <span className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-brand-500/20 text-xs font-bold text-emerald-400 font-mono">
+                +{currentQ.marks} M
               </span>
             </div>
           </div>
 
           {/* Question Text */}
-          <p className="text-base sm:text-lg font-medium text-white leading-relaxed whitespace-pre-line">
-            {currentQ.questionText}
-          </p>
+          <div className="space-y-2">
+            <p className="text-base sm:text-xl font-medium text-white leading-relaxed whitespace-pre-line">
+              {currentQ.questionText}
+            </p>
+            <p className="text-[11px] text-slate-500">
+              Select one option below or press keyboard keys [A, B, C, D]
+            </p>
+          </div>
 
-          {/* Options: MCQ or True/False */}
+          {/* Options: MCQ Single Choice */}
           {currentQ.options && currentQ.options.length > 0 ? (
             <div className="space-y-3">
               {currentQ.options.map((opt, i) => {
                 const isSelected = userAnswers[currentQ.id]?.optId === opt.id;
+                const letter = String.fromCharCode(65 + i);
 
                 return (
                   <div
                     key={opt.id}
                     onClick={() => handleSelectOption(currentQ.id, opt.id, opt.text)}
-                    className={`p-4 rounded-2xl border cursor-pointer flex items-center justify-between transition-all ${
+                    className={`p-4 sm:p-5 rounded-2xl border cursor-pointer flex items-center justify-between transition-all duration-200 group ${
                       isSelected
-                        ? 'bg-brand-500/15 border-brand-500/60 text-white shadow-md shadow-brand-500/10'
-                        : 'bg-slate-950/50 border-white/[0.06] text-slate-300 hover:border-white/[0.14] hover:bg-slate-900/60'
+                        ? 'bg-brand-500/15 border-brand-500/70 text-white shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/30'
+                        : 'bg-slate-950/60 border-white/[0.06] text-slate-300 hover:border-white/[0.18] hover:bg-slate-900/70'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className={`w-7 h-7 rounded-xl text-xs font-black flex items-center justify-center shrink-0 ${
-                        isSelected ? 'bg-brand-500 text-slate-950' : 'bg-slate-900 border border-white/[0.08] text-slate-400'
+                    <div className="flex items-center gap-3.5">
+                      <span className={`w-8 h-8 rounded-xl text-xs font-black flex items-center justify-center shrink-0 transition-transform ${
+                        isSelected 
+                          ? 'bg-brand-500 text-slate-950 scale-105' 
+                          : 'bg-slate-900 border border-white/[0.08] text-slate-400 group-hover:text-white'
                       }`}>
-                        {String.fromCharCode(65 + i)}
+                        {letter}
                       </span>
-                      <span className="text-sm leading-snug">{opt.text}</span>
+                      <span className="text-sm sm:text-base font-normal leading-snug">{opt.text}</span>
                     </div>
 
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      isSelected ? 'bg-brand-500 border-brand-500' : 'border-slate-700'
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                      isSelected ? 'bg-brand-500 border-brand-500 scale-110' : 'border-slate-700'
                     }`}>
-                      {isSelected && <div className="w-2 h-2 rounded-full bg-slate-950" />}
+                      {isSelected && <Check style={{ width: '12px', height: '12px', color: '#020617', strokeWidth: 3 }} />}
                     </div>
                   </div>
                 );
               })}
+
+              {/* Clear Response Button */}
+              {userAnswers[currentQ.id]?.optId && (
+                <div className="flex justify-end pt-1">
+                  <button
+                    onClick={() => handleClearOption(currentQ.id)}
+                    className="text-[11px] text-slate-400 hover:text-rose-400 flex items-center gap-1 font-mono transition-colors"
+                  >
+                    <RotateCcw style={{ width: '11px', height: '11px' }} />
+                    <span>Clear response (avoid penalty)</span>
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             /* Subjective Text Area */
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex justify-between text-xs text-slate-400">
-                <span>Write your explanation or step-by-step solution:</span>
+                <span>Write your structured explanation, theorem steps or derivation:</span>
                 <span className="font-mono">{(userAnswers[currentQ.id]?.text || '').split(/\s+/).filter(Boolean).length} words</span>
               </div>
               <textarea
-                rows={5}
+                rows={6}
                 value={userAnswers[currentQ.id]?.text || ''}
                 onChange={e => handleTextChange(currentQ.id, e.target.value)}
-                placeholder="Write clear formulas, statements, and justification..."
-                className="input-field text-sm resize-none"
+                placeholder="Write your answer clearly according to CBSE/State Board rubric criteria..."
+                className="input-field text-sm leading-relaxed resize-none p-4"
               />
             </div>
           )}
 
           {/* Bottom Bar: Prev / Skip / Next */}
-          <div className="flex items-center justify-between pt-4 border-t border-white/[0.05]">
+          <div className="flex items-center justify-between pt-5 border-t border-white/[0.06]">
             <button
               disabled={currentIndex === 0}
               onClick={() => setCurrentIndex(p => Math.max(0, p - 1))}
-              className="btn-secondary py-2 px-4 rounded-xl disabled:opacity-30"
+              className="btn-secondary py-2 px-4 rounded-xl disabled:opacity-30 gap-1.5 text-xs"
             >
               <ChevronLeft style={{ width: '14px', height: '14px' }} />
               <span>Previous</span>
@@ -379,15 +461,15 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
 
             <button
               onClick={handleSkipQuestion}
-              className="btn-secondary py-2 px-3 rounded-xl text-slate-400 hover:text-white"
+              className="btn-secondary py-2 px-4 rounded-xl text-slate-400 hover:text-white text-xs"
             >
-              <span>Skip</span>
+              <span>Skip Question</span>
             </button>
 
             {currentIndex < totalQuestions - 1 ? (
               <button
                 onClick={() => setCurrentIndex(p => Math.min(totalQuestions - 1, p + 1))}
-                className="btn-secondary py-2 px-4 rounded-xl"
+                className="btn-secondary py-2 px-5 rounded-xl gap-1.5 text-xs font-bold"
               >
                 <span>Next</span>
                 <ChevronRight style={{ width: '14px', height: '14px' }} />
@@ -395,22 +477,22 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
             ) : (
               <button
                 onClick={() => setShowSubmitModal(true)}
-                className="btn-primary py-2 px-5 rounded-xl shadow-lg"
+                className="btn-primary py-2 px-6 rounded-xl shadow-lg shadow-brand-500/25 text-xs font-bold gap-1.5"
               >
                 <Send style={{ width: '13px', height: '13px' }} />
-                <span>Submit Set</span>
+                <span>Review &amp; Submit</span>
               </button>
             )}
           </div>
         </div>
       )}
 
-      {/* ── Submit Confirmation Modal ── */}
+      {/* ── Submit Confirmation Modal with Marks Warning ── */}
       {showSubmitModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 animate-fade-in-up">
           <div className="glass rounded-3xl p-6 sm:p-8 max-w-md w-full border border-white/[0.1] shadow-2xl space-y-5 animate-scale-in">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+              <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-brand-500/15 flex items-center justify-center text-brand-400">
                   <CheckCircle2 style={{ width: '20px', height: '20px' }} />
                 </div>
@@ -424,28 +506,48 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
               </button>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-white/[0.06] text-xs text-slate-300 space-y-2 leading-relaxed">
-              <p>Your results will be computed immediately and your score record will be automatically saved to your <strong className="text-white">Marks Dashboard</strong>.</p>
-              {markedCount > 0 && (
-                <p className="text-amber-400 flex items-center gap-1 font-semibold">
-                  <AlertTriangle style={{ width: '12px', height: '12px' }} />
-                  You still have {markedCount} question{markedCount > 1 ? 's' : ''} flagged for review.
-                </p>
-              )}
+            {/* Assessment Status Grid */}
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                <div className="text-lg font-bold text-emerald-400 font-mono">{answeredCount}</div>
+                <div className="text-[10px] text-slate-400">Answered</div>
+              </div>
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                <div className="text-lg font-bold text-amber-400 font-mono">{markedCount}</div>
+                <div className="text-[10px] text-slate-400">Marked</div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-900 border border-white/[0.06]">
+                <div className="text-lg font-bold text-slate-400 font-mono">{totalQuestions - answeredCount}</div>
+                <div className="text-[10px] text-slate-400">Skipped</div>
+              </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            {/* Negative Marking Alert */}
+            {negativePenalty > 0 && (
+              <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-start gap-2">
+                <ShieldAlert style={{ width: '16px', height: '16px', color: '#f43f5e', flexShrink: 0, marginTop: '1px' }} />
+                <span>
+                  <strong>Negative Marking Active:</strong> Incorrect answers incur a penalty of <strong className="text-white">-{negativePenalty} Marks</strong> each. Unanswered questions have no penalty.
+                </span>
+              </div>
+            )}
+
+            <div className="text-xs text-slate-400">
+              Upon submission, your exact score, negative deductions, and grade will be permanently logged to your <strong className="text-white">Marks Dashboard</strong>.
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-white/[0.06]">
               <button
                 onClick={() => setShowSubmitModal(false)}
-                className="btn-secondary text-xs py-2 px-4"
+                className="btn-secondary text-xs py-2 px-4 rounded-xl"
               >
-                Continue Practice
+                Continue Test
               </button>
               <button
                 onClick={handleSubmitAssessment}
-                className="btn-primary text-xs py-2 px-5"
+                className="btn-primary text-xs py-2.5 px-5 rounded-xl shadow-lg shadow-brand-500/25 font-bold"
               >
-                Confirm &amp; See Results
+                Submit &amp; View Scorecard
               </button>
             </div>
           </div>
@@ -455,3 +557,5 @@ export const QuestionPracticeRoom: React.FC<QuestionPracticeRoomProps> = ({
     </div>
   );
 };
+
+export default QuestionPracticeRoom;

@@ -3,7 +3,7 @@ import {
   ArrowLeft, ChevronLeft, ChevronRight, Bookmark, Highlighter, 
   StickyNote, Sparkles, Search, Sun, Moon, ZoomIn, ZoomOut, 
   Type, CheckCircle2, BookOpen, Layers, X, HelpCircle, Copy, 
-  MessageSquare, Lightbulb, Compass, Share2
+  MessageSquare, Lightbulb, Compass, Share2, Volume2, VolumeX
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Book, BookChapter, BookHighlight, BookNote } from '../../types';
@@ -34,6 +34,8 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
   const [isAiAssistantOpen, setIsAiAssistantOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [audioSpeed, setAudioSpeed] = useState<1 | 1.25 | 1.5>(1);
 
   // Highlighting & Notes state
   const [selectedText, setSelectedText] = useState<string>('');
@@ -317,6 +319,20 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
             }`}
           >
             <Bookmark style={{ width: '15px', height: '15px', fill: isBookmarked ? '#fbbf24' : 'none' }} />
+          </button>
+
+          {/* Audio TTS Narration toggle */}
+          <button
+            onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+            title={isPlayingAudio ? 'Pause Audio Reading' : 'Listen with AI Voice (TTS)'}
+            className={`p-2 rounded-xl transition-all flex items-center gap-1.5 text-xs font-semibold ${
+              isPlayingAudio 
+                ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-md shadow-amber-500/10' 
+                : 'hover:bg-white/[0.08] text-slate-300'
+            }`}
+          >
+            <Volume2 style={{ width: '15px', height: '15px', color: isPlayingAudio ? '#fbbf24' : '#94a3b8' }} />
+            <span className="hidden md:inline">{isPlayingAudio ? 'Pause Audio' : 'Audio Listen'}</span>
           </button>
 
           {/* AI Assistant Button */}
@@ -826,6 +842,47 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ── Floating TTS Audio Narration Bar ── */}
+      {isPlayingAudio && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 glass rounded-3xl p-3 px-6 border border-amber-500/40 shadow-2xl flex items-center gap-4 animate-scale-in bg-slate-950/90 backdrop-blur-2xl">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
+              <Volume2 style={{ width: '18px', height: '18px' }} />
+            </div>
+            <div className="min-w-0 max-w-[200px] sm:max-w-xs">
+              <p className="text-xs font-bold text-white leading-tight truncate">
+                Ch {currentChapter.chapterNumber}: {currentChapter.title}
+              </p>
+              <span className="text-[10px] text-amber-400 font-mono">AI Neural Voice Active</span>
+            </div>
+          </div>
+
+          {/* Soundwave Equalizer Animation */}
+          <div className="flex items-end gap-1 h-5 px-1.5 shrink-0">
+            <div className="w-1 bg-amber-400 rounded-full animate-bounce" style={{ height: '70%', animationDuration: '0.6s' }} />
+            <div className="w-1 bg-amber-400 rounded-full animate-bounce" style={{ height: '100%', animationDuration: '0.4s' }} />
+            <div className="w-1 bg-amber-400 rounded-full animate-bounce" style={{ height: '40%', animationDuration: '0.7s' }} />
+            <div className="w-1 bg-amber-400 rounded-full animate-bounce" style={{ height: '85%', animationDuration: '0.5s' }} />
+          </div>
+
+          {/* Audio Speed Selector */}
+          <button
+            onClick={() => setAudioSpeed(prev => prev === 1 ? 1.25 : prev === 1.25 ? 1.5 : 1)}
+            className="px-2.5 py-1 rounded-xl bg-slate-900 border border-white/[0.08] text-[10px] text-slate-300 font-mono font-bold hover:text-white"
+          >
+            {audioSpeed}x Speed
+          </button>
+
+          <button
+            onClick={() => setIsPlayingAudio(false)}
+            className="p-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-400 hover:text-white"
+            title="Stop Audio"
+          >
+            <X style={{ width: '15px', height: '15px' }} />
+          </button>
         </div>
       )}
 

@@ -208,6 +208,9 @@ export interface MarkRecord {
   obtainedMarks: number;
   percentage: number;
   grade: string;
+  examType?: 'Unit Test' | 'Mid-Term' | 'Pre-Board' | 'Practice Set' | 'Board Exam' | 'Offline Assessment';
+  remarks?: string;
+  negativeMarksDeducted?: number;
   timeSpentSeconds?: number;
   questionCount?: number;
   correctCount?: number;
@@ -321,6 +324,10 @@ export interface QuestionSet {
   questionCount: number;
   totalMarks: number;
   timeLimit: number; // in minutes
+  marksPerQuestion?: number;
+  negativeMarksPerWrong?: number; // 0, 0.25, 0.33, 0.5, 1
+  passingMarks?: number;
+  markingSchemeTitle?: string;
   questions: Question[];
   createdAt: string;
   presetType?: QuestionSetPreset;
@@ -337,6 +344,10 @@ export interface QuestionSetAttempt {
   chapter?: string;
   totalMarks: number;
   obtainedMarks: number;
+  grossMarks?: number;
+  negativeMarksDeducted?: number;
+  passingMarks?: number;
+  isPassed?: boolean;
   percentage: number;
   grade: string;
   correctAnswers: number;
@@ -350,6 +361,7 @@ export interface QuestionSetAttempt {
     answerText: string;
     isCorrect: boolean;
     marksAwarded: number;
+    negativeDeducted?: number;
   }[];
 }
 

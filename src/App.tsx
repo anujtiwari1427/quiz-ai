@@ -16,7 +16,7 @@ export const AppContent: React.FC = () => {
   const { currentView } = useApp();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-brand-500 selection:text-white">
+    <div className="min-h-screen bg-black text-[#f5f5f7] flex flex-col selection:bg-[#0071e3] selection:text-white font-sans">
       {/* Universal Top Navigation */}
       <Navbar />
 
