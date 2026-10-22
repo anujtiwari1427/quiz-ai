@@ -15,9 +15,12 @@ import {
   BarChart3,
   Upload,
   BookOpen,
-  Layers
+  Layers,
+  Cpu
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { LIVE_AI_SERVICE } from '../../services/liveAiService';
+import { AiSettingsModal } from '../studio/AiSettingsModal';
 
 export const Navbar: React.FC = () => {
   const { 
@@ -32,10 +35,14 @@ export const Navbar: React.FC = () => {
   } = useApp();
 
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showAiSettings, setShowAiSettings] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const unreadNotifs = notifications.filter(n => !n.read);
+
+  const aiConfig = LIVE_AI_SERVICE.getActiveConfig();
+  const isLive = LIVE_AI_SERVICE.isLiveAiAvailable();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 12);
@@ -54,10 +61,12 @@ export const Navbar: React.FC = () => {
   }, []);
 
   const navItems = [
+    { id: 'strata-studio', label: 'AI Study Studio (Edu AI)', icon: Sparkles, role: 'student' as const, isSpecial: true },
     { id: 'marketing', label: 'Overview', icon: null },
+    { id: 'books', label: 'My Library', icon: BookOpen, role: 'student' as const },
+    { id: 'create-exam', label: 'Create AI Exam', icon: Sparkles, role: 'student' as const },
     { id: 'marks', label: 'Marks', icon: BarChart3, role: 'student' as const },
     { id: 'syllabus', label: 'Syllabus', icon: Upload, role: 'student' as const },
-    { id: 'books', label: 'Read Book', icon: BookOpen, role: 'student' as const },
     { id: 'questions', label: 'Question Sets', icon: Layers, role: 'student' as const },
     { id: 'student', label: 'Test Room', icon: UserCheck, role: 'student' as const },
     { id: 'teacher', label: 'Teacher Hub', icon: GraduationCap, role: 'teacher' as const },
@@ -121,7 +130,9 @@ export const Navbar: React.FC = () => {
                   onClick={() => handleNavClick(item)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap ${
                     isActive
-                      ? 'bg-white/[0.14] text-white shadow-sm border border-white/[0.1] font-semibold'
+                      ? 'bg-gradient-to-r from-[#0071e3] to-[#2997ff] text-white shadow-md font-semibold'
+                      : item.isSpecial
+                      ? 'text-[#2997ff] bg-[#0071e3]/10 hover:bg-[#0071e3]/20 border border-[#0071e3]/30 font-semibold'
                       : 'text-[#86868b] hover:text-[#f5f5f7] hover:bg-white/[0.04]'
                   }`}
                 >
@@ -134,6 +145,19 @@ export const Navbar: React.FC = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
+            {/* Live AI Model Pill */}
+            <button
+              onClick={() => setShowAiSettings(true)}
+              title="Configure Live AI Provider (Gemini / Groq / OpenAI / Ollama)"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white transition-all duration-200 shadow-sm active:scale-95"
+            >
+              <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-[#30d158] shadow-[0_0_8px_rgba(48,209,88,0.8)] animate-pulse' : 'bg-[#ff9f0a]'}`} />
+              <Cpu className="w-3.5 h-3.5 text-[#2997ff]" />
+              <span className="hidden sm:inline text-[11px] font-semibold tracking-tight">
+                {isLive ? aiConfig.model.split(' ')[0] : 'AI Keys'}
+              </span>
+            </button>
+
             {/* Reset Demo */}
             <button
               onClick={resetAllDemoData}
@@ -237,6 +261,12 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Live AI Integration & BYOK Settings Modal */}
+      <AiSettingsModal
+        isOpen={showAiSettings}
+        onClose={() => setShowAiSettings(false)}
+      />
     </>
   );
 };

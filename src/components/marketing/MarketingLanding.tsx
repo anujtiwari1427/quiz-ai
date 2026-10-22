@@ -164,6 +164,16 @@ export const MarketingLanding: React.FC = () => {
               <span>{activeAudience === 'schools' ? 'Launch Teacher Console' : 'Open Parent Portal'}</span>
               <ArrowRight style={{width:'14px',height:'14px'}} />
             </button>
+
+            {/* Strater AI Learning Workspace Hero CTA */}
+            <button
+              onClick={() => { setUserRole('student'); setCurrentView('strata-studio'); }}
+              className="px-6 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-[#0071e3] to-[#bf5af2] hover:from-[#0077ed] hover:to-[#cb6df7] text-white flex items-center gap-2 shadow-xl shadow-[#0071e3]/30 hover:scale-105 transition-all"
+            >
+              <Sparkles style={{width:'14px',height:'14px'}} />
+              <span>Launch AI Study Studio</span>
+              <ArrowRight style={{width:'14px',height:'14px'}} />
+            </button>
           </div>
 
           {/* ── 4 Major Student Features Quick Navigation Strip (Apple Capsules) ── */}

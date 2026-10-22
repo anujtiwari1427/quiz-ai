@@ -166,6 +166,152 @@ npx vercel --prod
 
 ---
 
+## 🌟 EduPulse AI Features (v1.2 Release)
+
+### 📚 Feature 1: Upload & Read Books (RAG Vector Store)
+- **Multi-Format Ingestion**: Upload PDF, EPUB, DOCX, and TXT files up to 50 MB with strict client and server-side Zod validation.
+- **Copyright & Right-to-Use Protection**: Mandatory user certification certifying lawful educational use.
+- **Background Ingestion Pipeline**: Asynchronous background lifecycle:
+  `Uploading` (20%) → `Extracting` (50%) → `Indexing` (80%) → `Ready` (100%) or `Failed` (with automatic Tesseract OCR fallback for scanned non-selectable PDFs).
+- **Chapter Detection & Management**: Automatic regex heading detection (`Chapter \d+`, `Unit \d+`) with an interactive **Chapter Manager** to rename, add, or merge chapters.
+- **Vector Embedding & Chunking**: Splits chapters into ~500-800 token chunks with 100-token overlap and vector similarity search.
+- **In-App Reader & RAG Chat**: Chapter sidebar, page navigation, keyword search, and an interactive **"Ask this book"** RAG drawer citing exact Chapter + Page, or explicitly reporting when a concept is outside the book.
+- **Row-Level Security (RLS)**: Enforces strict user data isolation so students only access their own uploaded books.
+
+### 📝 Feature 2: AI Exam Paper Generator (By User Preference)
+- **Granular Customization**: Source book(s) and chapter selector, question types (MCQ with 4 options and plausible distractors, True/False, Fill in blanks, Short answer, Long answer, Numerical), difficulty distribution (Easy / Medium / Hard or Adaptive), Bloom's Taxonomy mix, time limit, negative marking, and weak chapter targeting.
+- **RAG Generation Constraint**: Questions are generated strictly from retrieved book chapter chunks.
+- **JSON Schema Validation**: Validated against strict Zod schemas with retry logic to ensure marks sum exactly to requested totals.
+- **Preview & Edit Screen**: Swap, regenerate, or delete individual questions prior to finalizing.
+- **PDF Paper Export**: 1-click export generating a clean examination paper and a separate confidential Teacher Answer Key with rubrics.
+- **Active Exam Runner**: Distraction-free exam room with countdown timer, question navigator palette (Answered, Marked for Review, Skipped), autosave, and question-level telemetry (time spent, times changed).
+- **Security Rule**: Correct answers are strictly hidden and never exposed to the client prior to final submission.
+
+### 📊 Feature 3: Performance Analysis & Improvement Plan
+- **Multi-Factor Difficulty Scoring Formula**:
+  $$\text{Difficulty Score} = 40 \times \left(1 - \frac{\text{marks\_awarded}}{\text{marks}}\right) + 30 \times \frac{\min\left(\frac{\text{time\_spent}}{\text{estimatedTime}}, 2\right)}{2} + 15 \times \frac{\min(\text{times\_changed}, 3)}{3} + 15 \times (\text{skipped} \,?\, 1 : 0)$$
+  *(Weights are configurable constants; verified via unit tests).*
+- **Top 5 Hardest Questions**: Deep-dive review of the most challenging questions faced, showing student answer, correct textbook answer, explanation, time spent, chapter, page reference, and class-wide % accuracy.
+- **Chapter-Wise Mastery**: Recharts interactive Bar and Radar charts categorizing chapters as **Weak** (<50%), **Average** (50-75%), or **Strong** (>75%).
+- **Targeted Improvement Plan**: Prioritized list of weak chapters detailing exact reasons ("3 of 4 wrong, avg time 2x expected"), missed sub-topics, exact pages to revisit, and a 1-click **"Practice this chapter"** exam generator.
+- **AI Study Coaching Plan**: Structured diagnostic sent to LLM returning priority chapters, topics to revise, daily time cadence, and 3 tailored coaching tips distinguishing careless slips vs concept gaps vs time pressure.
+- **Progress Over Time**: Historical score trend line chart tracking attempt-over-attempt progress.
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root directory (API keys remain server-side only in Vercel Serverless Functions):
+
+```bash
+# AI Providers (Server-Side Only)
+OPENAI_API_KEY=sk-proj-your-openai-api-key-here
+ANTHROPIC_API_KEY=sk-ant-your-claude-api-key-here
+
+# Supabase & PostgreSQL with pgvector (Optional for Cloud Persistence)
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOi...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
+
+# Cloud Storage
+STORAGE_PUBLIC_URL=https://storage.edupulse.internal
+```
+
+---
+
+## 🗄️ Database Migrations (PostgreSQL + pgvector)
+
+Run the SQL migration script located at [`supabase/migrations/20261005_edupulse_features.sql`](./supabase/migrations/20261005_edupulse_features.sql) on your Supabase or PostgreSQL instance:
+
+```bash
+# Using Supabase CLI
+supabase db push
+
+# Or execute directly via psql:
+psql -h <host> -U <user> -d <database> -f supabase/migrations/20261005_edupulse_features.sql
+```
+
+The migration defines:
+- `public.books`: Book metadata, cloud storage URLs, total pages, and status (`uploading`, `extracting`, `indexing`, `ready`, `failed`).
+- `public.chapters`: Chapter structure, order index, page ranges.
+- `public.chunks`: Text chunks with 1536-dimensional vector embeddings and ivfflat cosine distance indexing.
+- `public.exams`: Exam definitions, chapter selections, and configuration JSON.
+- `public.exam_questions`: Question stems, Bloom's level, marks, options, server-side correct answers, explanations, and page references.
+- `public.attempts`: Exam attempt logs, total scores, time spent, and submission timestamps.
+- `public.attempt_answers`: Per-question answer telemetry, correctness, marks awarded, time spent, times changed, review flags, and calculated difficulty scores.
+- **Row Level Security (RLS)**: Strictly restricts all read/write operations to authenticated users (`auth.uid() = user_id`).
+
+---
+
+---
+
+## ⚡ Strata AI Learning Platform (Strater-Inspired AI Workspace)
+
+EduPulse now integrates **Strata AI Study OS**, an all-in-one AI study workspace transforming raw media and documents into high-yield active recall systems:
+
+### 📥 1. Omnichannel Ingestion Pipeline
+- **YouTube Ingestion**: Extract video metadata, simulate/fetch synchronized timestamped transcripts, and jump directly to key video moments via synchronized chapter anchors.
+- **PDF & Academic Papers**: Token calculation, page-by-page chunking, and reading time estimation.
+- **Word Documents (DOCX)**: Structured section extraction.
+- **PowerPoint Decks (PPTX)**: Slide-by-slide titles and speaker notes decomposition.
+- **Web Articles & Research URLs**: Reader-mode clean text extraction.
+- **Progressive Background Processing**: Real states (`validating` 15% → `extracting` 40% → `chunking` 70% → `synthesizing` 95% → `ready` 100%).
+
+### 🧠 2. AI Study Synthesizer Studio
+- **Executive Summaries**: TL;DR callout, 5 high-yield takeaways, concept cards with real-world analogies, domain glossary, and simulated 3-minute audio briefing.
+- **Smart Cornell Notes**: Two-column layout with left recall cues, rich Markdown notes column with diagrams/callouts, and bottom summary area with action items.
+- **Interactive Flashcards & 3D Player**: Card flip animation, hint reveals, audio pronunciation, and keyboard navigation (`Space` to flip, `1-4` to rate).
+- **SuperMemo SM-2 Spaced Repetition**: Canonical SM-2 algorithm calculating Ease Factors ($EF$), repetitions ($n$), and review intervals ($I$), with a dedicated "Due Today" review queue.
+- **Interactive Visual Mind Map**: SVG concept graph with cubic Bezier curves, zoom/pan controls, and click-to-open concept deep-dive drawers.
+- **Contextual AI Tutor**: Multi-turn chat strictly grounded in the ingested source with clickable timestamp and page citations, prompt chips ("Explain simply", "Give an analogy"), and model selection.
+- **Practice Assessment Quizzes**: MCQs, True/False, and Fill-in-the-blanks with Bloom's Taxonomy ratings, instant grading, and thorough explanations.
+
+### 📚 3. Courses, Analytics & Exports
+- **Course Pathways**: Organize sources into syllabus modules with checklist completion tracking.
+- **Retention Analytics**: Ebbinghaus forgetting curve mathematical visualization, 7-day study heatmap, and streak tracking.
+- **Multi-Format Exports**: 1-click downloads to universal Markdown (`.md`), Anki flashcard decks (`.txt`), high-contrast printable study sheets, and JSON data archives.
+- **Bring Your Own Key (BYOK)**: Client-side encrypted API key storage for OpenAI, Anthropic Claude, Google Gemini, and Groq with live ping tests and high-fidelity offline fallback.
+- **Multi-Persona Testing**: 1-click test personas for Software Engineering, Medicine (USMLE), Law (Bar Exam), and High School Scholars with isolated data stores.
+
+---
+
+## 🧪 Testing
+
+Run empirical unit tests for both the assessment scoring and the Strater SM-2 spaced repetition engine:
+
+```bash
+npm test
+```
+
+Expected output:
+```text
+🧪 Running EduPulse Assessment & Difficulty Scoring Tests...
+  ✓ Test 1: Swift perfect answer score = 7.5 (Time factor only)
+  ✓ Test 2: Maximum difficulty struggle = 100 (Full penalty capped)
+  ✓ Test 3: Custom configurable weights respected (50 marks weight)
+  ✓ Test 4: Objective grading for MCQ, True/False, and Numerical tolerance passed
+
+🎉 ALL 4 DIFFICULTY SCORING AND GRADING TESTS PASSED EMPIRICALLY!
+
+🧪 Starting Strata AI Learning Platform Algorithmic Verification Suite...
+▶ TEST 1: SuperMemo SM-2 Spaced Repetition Algorithm Validation
+  ✓ 1.1 Fresh card rated "good": interval = 1d, repetition = 1
+  ✓ 1.2 Second review rated "good": interval = 6d, repetition = 2 (reviewing state)
+  ✓ 1.3 Third review rated "easy": interval = 16d, EF boosted to 2.6
+  ✓ 1.4 Failure rated "again": repetition resets to 0, interval = 1d
+  ✓ 1.5 Minimum ease factor floor is strictly enforced at 1.3
+▶ TEST 2: YouTube Video ID & Multi-Format Ingestion Parsing
+  ✓ 2.1 Standard watch, youtu.be shortlinks, and embed URLs extracted correctly
+▶ TEST 3: Anki Tab-Separated Exporter Compliance
+  ✓ 3.1 Anki tab-delimited format with HTML breaks and tags validated
+▶ TEST 4: Ebbinghaus Forgetting Curve Mathematical Projection
+  ✓ 4.1 Memory decay verified: Unassisted Day 10 (8%) vs SM-2 Spaced Day 30 (94%)
+
+🎉 ALL 4 EMPIRICAL VERIFICATION TESTS PASSED SUCCESSFULLY! 🚀
+```
+
+---
+
 ## 🔒 Security & Compliance
 
 - **DPDP Act Aligned**: Adheres to the principles of India's Digital Personal Data Protection Act, including parental consent verification and student data minimization.
@@ -177,3 +323,4 @@ npx vercel --prod
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+

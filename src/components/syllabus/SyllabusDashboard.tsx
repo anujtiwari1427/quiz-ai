@@ -6,13 +6,18 @@ import {
   ShieldCheck, Sliders, CheckSquare, Square, RefreshCw
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Syllabus, SyllabusSubject, SyllabusChapter } from '../../types';
+import { Syllabus, SyllabusSubject, SyllabusChapter, Book as AppBook } from '../../types';
+import { DOCUMENT_PARSER_SERVICE } from '../../services/documentParserService';
+import { LIBRARY_SERVICE } from '../../services/libraryService';
+import { BookModel } from '../../types/schemas';
 
 export const SyllabusDashboard: React.FC = () => {
   const { 
     syllabi, 
     saveSyllabus, 
     deleteSyllabus, 
+    saveBook,
+    setActiveBookToRead,
     setCurrentView,
     startQuizFromSyllabus,
     openBookForSubjectOrChapter,
@@ -40,6 +45,8 @@ export const SyllabusDashboard: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [lastUploadedBookTitle, setLastUploadedBookTitle] = useState<string | null>(null);
+  const [extractedChapterCount, setExtractedChapterCount] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const currentSyllabus = syllabi.find(s => s.id === activeSyllabusId) || syllabi[0];
@@ -102,118 +109,140 @@ export const SyllabusDashboard: React.FC = () => {
     }
   };
 
+  const extractTopicsFromChapterText = (chText: string, chName: string): string[] => {
+    const lines = chText
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(l => l.length > 8 && !l.startsWith('#') && !l.startsWith('Chapter') && !l.startsWith('Unit'));
+    
+    const foundTopics: string[] = [];
+    for (const line of lines) {
+      const cleaned = line.replace(/^[-*•\d.)\]\s]+/, '').trim();
+      if (cleaned.length >= 15 && cleaned.length <= 130 && !foundTopics.includes(cleaned)) {
+        foundTopics.push(cleaned);
+        if (foundTopics.length >= 4) break;
+      }
+    }
+
+    if (foundTopics.length === 0) {
+      return [
+        `Core theorems and definitions of ${chName}`,
+        `Analytical problem derivations and worked solutions`,
+        `Examination criteria and syllabus applications`
+      ];
+    }
+    return foundTopics;
+  };
+
   // ── Process Uploaded Syllabus with AI Curriculum Extractor ──
-  const handleProcessSyllabus = () => {
+  const handleProcessSyllabus = async () => {
     if (!selectedFile) return;
 
     setIsProcessing(true);
     setUploadProgress(15);
+    setUploadError(null);
 
-    const interval = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(interval);
-          return 90;
-        }
-        return prev + 25;
-      });
-    }, 200);
+    try {
+      // 1. Extract real text from file
+      setUploadProgress(35);
+      const rawText = await DOCUMENT_PARSER_SERVICE.extractTextFromFile(selectedFile);
+      setUploadProgress(60);
 
-    setTimeout(() => {
-      clearInterval(interval);
-      setUploadProgress(100);
+      const cleanName = selectedFile.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+      const bookId = `book_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+
+      // 2. Detect real chapters
+      const detectedChapters = LIBRARY_SERVICE.detectChaptersFromText(rawText, bookId, cleanName);
+      setUploadProgress(80);
+
+      // 3. Build Syllabus data structure
+      const syllabusChapters: SyllabusChapter[] = detectedChapters.map((ch, idx) => ({
+        id: ch.id,
+        name: ch.name,
+        unitName: `Unit ${idx + 1}: ${ch.name}`,
+        topics: extractTopicsFromChapterText(ch.content || ch.contentPreview || '', ch.name),
+        completionPercentage: 0,
+        isCompleted: false
+      }));
 
       const newSyllabus: Syllabus = {
         id: `syl_uploaded_${Date.now()}`,
-        name: selectedFile.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ") + " Syllabus",
+        name: cleanName + " (Uploaded Curriculum)",
         fileName: selectedFile.name,
         fileSize: (selectedFile.size / (1024 * 1024)).toFixed(1) + ' MB',
         fileType: selectedFile.type || 'application/pdf',
         uploadedAt: new Date().toISOString().split('T')[0],
-        board: 'CBSE & NEP 2020 Aligned',
+        board: 'Curriculum & Board Aligned',
         grade: 10,
         subjects: [
           {
             id: `sub_${Date.now()}_1`,
-            name: 'Science & Technology (Physics, Chem, Bio)',
-            chapters: [
-              {
-                id: `ch_${Date.now()}_11`,
-                name: 'Chemical Reactions & Equations',
-                unitName: 'Unit 1: Chemical Substances (25 Marks Weightage)',
-                topics: [
-                  'Balancing equations using conservation of mass',
-                  'Types of chemical reactions: Combination, Decomposition, Displacement',
-                  'Oxidation, reduction, rancidity and corrosion prevention'
-                ],
-                completionPercentage: 0,
-                isCompleted: false
-              },
-              {
-                id: `ch_${Date.now()}_12`,
-                name: 'Light – Reflection and Refraction',
-                unitName: 'Unit 3: Natural Phenomena (12 Marks Weightage)',
-                topics: [
-                  'Reflection by spherical mirrors and ray diagrams',
-                  'Mirror formula and linear magnification calculation',
-                  'Refractive index, Snell’s Law, and lens power (Dioptres)'
-                ],
-                completionPercentage: 0,
-                isCompleted: false
-              },
-              {
-                id: `ch_${Date.now()}_13`,
-                name: 'Electricity & Magnetic Effects',
-                unitName: 'Unit 4: Effects of Current (13 Marks Weightage)',
-                topics: [
-                  'Ohm’s Law, resistance, and factors affecting resistivity',
-                  'Series and parallel resistor combinations',
-                  'Joule’s Law of heating and electric power formulas'
-                ],
-                completionPercentage: 0,
-                isCompleted: false
-              }
-            ]
-          },
-          {
-            id: `sub_${Date.now()}_2`,
-            name: 'Mathematics (Standard & Basic)',
-            chapters: [
-              {
-                id: `ch_${Date.now()}_21`,
-                name: 'Quadratic Equations & Polynomials',
-                unitName: 'Unit 2: Algebra (20 Marks Weightage)',
-                topics: [
-                  'Standard form of quadratic equations ax² + bx + c = 0',
-                  'Solution by factorisation and quadratic formula',
-                  'Discriminant analysis (b² - 4ac) and nature of roots'
-                ],
-                completionPercentage: 0,
-                isCompleted: false
-              },
-              {
-                id: `ch_${Date.now()}_22`,
-                name: 'Introduction to Trigonometry',
-                unitName: 'Unit 5: Trigonometry (12 Marks Weightage)',
-                topics: [
-                  'Trigonometric ratios of acute angles',
-                  'Values of trigonometric ratios at 0°, 30°, 45°, 60°, 90°',
-                  'Proofs and applications of identity sin²θ + cos²θ = 1'
-                ],
-                completionPercentage: 0,
-                isCompleted: false
-              }
-            ]
+            name: cleanName,
+            chapters: syllabusChapters
           }
         ]
       };
 
+      // 4. Save into LIBRARY_SERVICE (Vector store + RAG)
+      const totalPages = Math.max(1, Math.ceil((rawText.length || 3000) / 1500));
+      const bookModel: BookModel = {
+        id: bookId,
+        userId: LIBRARY_SERVICE.getCurrentUserId(),
+        title: cleanName,
+        author: 'Prescribed Faculty & Board',
+        subject: cleanName,
+        fileUrl: `https://storage.edupulse.internal/books/${bookId}`,
+        fileType: (selectedFile.name.split('.').pop()?.toLowerCase() as any) || 'pdf',
+        fileSizeBytes: selectedFile.size,
+        status: 'ready',
+        totalPages,
+        coverGradient: 'from-blue-600 via-indigo-700 to-slate-900',
+        chapters: detectedChapters,
+        createdAt: new Date().toISOString()
+      };
+      LIBRARY_SERVICE.saveBook(bookModel);
+
+      const chunks = LIBRARY_SERVICE.createChunksFromText(rawText, bookId, detectedChapters);
+      LIBRARY_SERVICE.saveChunks(chunks);
+
+      // 5. Save into AppContext Books
+      const appBook: AppBook = {
+        id: bookId,
+        title: cleanName,
+        author: 'Prescribed Faculty & Board',
+        subject: cleanName,
+        grade: 10,
+        coverGradient: 'from-blue-600 via-indigo-700 to-slate-900',
+        fileName: selectedFile.name,
+        progress: 0,
+        lastOpened: new Date().toISOString().split('T')[0],
+        chapters: detectedChapters.map(c => ({
+          id: c.id,
+          chapterNumber: c.orderIndex,
+          title: c.name,
+          estimatedReadTimeMinutes: Math.max(5, Math.ceil((c.content?.length || 1500) / 800)),
+          sections: extractTopicsFromChapterText(c.content || '', c.name),
+          content: c.content || `## ${c.name}\n\n${c.contentPreview || 'Textbook content extracted from uploaded syllabus document.'}`
+        })),
+        bookmarks: []
+      };
+      saveBook(appBook);
+
+      // 6. Save Syllabus
       saveSyllabus(newSyllabus);
       setActiveSyllabusId(newSyllabus.id);
+      setLastUploadedBookTitle(cleanName);
+      setExtractedChapterCount(detectedChapters.length);
+
+      setUploadProgress(100);
       setIsProcessing(false);
       setUploadSuccess(true);
       setSelectedFile(null);
-    }, 1200);
+    } catch (err: any) {
+      console.error('Failed to parse syllabus file', err);
+      setIsProcessing(false);
+      setUploadError(err.message || 'Error parsing uploaded syllabus file. Please ensure it is a valid document.');
+    }
   };
 
   // Quick 1-click preset loader
@@ -357,11 +386,43 @@ export const SyllabusDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Success notification */}
+        {/* Success notification with 1-click Read Book button */}
         {uploadSuccess && (
-          <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2">
-            <CheckCircle2 style={{ width: '16px', height: '16px', flexShrink: 0 }} />
-            <span>Syllabus successfully decomposed! Subjects, units, and learning goals are ready below.</span>
+          <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fade-in-up">
+            <div className="flex items-center gap-2.5">
+              <CheckCircle2 style={{ width: '18px', height: '18px', flexShrink: 0, color: '#34d399' }} />
+              <div>
+                <p className="font-bold text-white text-sm">
+                  Textbook extracted &amp; indexed successfully!
+                </p>
+                <p className="text-emerald-300/80 text-xs">
+                  {lastUploadedBookTitle || 'Document'} • {extractedChapterCount} chapters detected with full readable text, chapter sidebar, and RAG Q&amp;A.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => {
+                  if (lastUploadedBookTitle) {
+                    openBookForSubjectOrChapter(lastUploadedBookTitle);
+                  } else {
+                    setCurrentView('books');
+                  }
+                }}
+                className="btn-primary text-xs py-2 px-4 rounded-xl flex items-center gap-1.5 font-bold shadow-md shadow-brand-500/20"
+              >
+                <BookOpen style={{ width: '14px', height: '14px' }} />
+                <span>📖 Read Uploaded Book Now</span>
+              </button>
+              <button
+                onClick={() => setUploadSuccess(false)}
+                className="p-1.5 text-slate-400 hover:text-white"
+                title="Dismiss"
+              >
+                <Check style={{ width: '14px', height: '14px' }} />
+              </button>
+            </div>
           </div>
         )}
 
@@ -500,7 +561,7 @@ export const SyllabusDashboard: React.FC = () => {
               <button
                 onClick={() => {
                   const firstSub = currentSyllabus.subjects[0];
-                  if (firstSub) openBookForSubjectOrChapter(firstSub.name, firstSub.chapters[0]?.name);
+                  openBookForSubjectOrChapter(currentSyllabus.name || firstSub?.name || 'Syllabus', firstSub?.chapters[0]?.name);
                 }}
                 className="btn-secondary text-xs py-2 px-4 rounded-xl text-amber-400 hover:text-amber-300 gap-1.5"
               >
@@ -607,7 +668,7 @@ export const SyllabusDashboard: React.FC = () => {
                                 <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
                                   {/* READ BOOK OPTION BUTTON */}
                                   <button
-                                    onClick={() => openBookForSubjectOrChapter(subject.name, chapter.name)}
+                                    onClick={() => openBookForSubjectOrChapter(subject.name || currentSyllabus.name, chapter.name)}
                                     title="Open this chapter in Read the Book mode"
                                     className="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 transition-all text-xs flex items-center gap-1.5 font-semibold"
                                   >

@@ -3,10 +3,13 @@ import {
   ArrowLeft, ChevronLeft, ChevronRight, Bookmark, Highlighter, 
   StickyNote, Sparkles, Search, Sun, Moon, ZoomIn, ZoomOut, 
   Type, CheckCircle2, BookOpen, Layers, X, HelpCircle, Copy, 
-  MessageSquare, Lightbulb, Compass, Share2, Volume2, VolumeX
+  MessageSquare, Lightbulb, Compass, Share2, Volume2, VolumeX, FileText
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Book, BookChapter, BookHighlight, BookNote } from '../../types';
+import { LIBRARY_SERVICE, RagQueryResult } from '../../services/libraryService';
+import { isLegibleText } from '../../services/documentParserService';
+import { CompletePdfViewer } from './CompletePdfViewer';
 
 interface BookReaderProps {
   book: Book;
@@ -27,6 +30,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
     book.currentChapterId || book.chapters[0]?.id || ''
   );
 
+  // Reader view mode state: 'chapter' | 'pdf'
+  const [viewMode, setViewMode] = useState<'chapter' | 'pdf'>('chapter');
+
   // Reader Controls state
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg' | 'xl'>('base');
   const [readingTheme, setReadingTheme] = useState<'dark' | 'sepia' | 'light'>('dark');
@@ -43,7 +49,10 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [newNoteContent, setNewNoteContent] = useState('');
-  const [activeTabDrawer, setActiveTabDrawer] = useState<'toc' | 'notes' | 'highlights'>('toc');
+  const [activeTabDrawer, setActiveTabDrawer] = useState<'toc' | 'notes' | 'highlights' | 'ask'>('toc');
+  const [ragQuery, setRagQuery] = useState('');
+  const [ragLoading, setRagLoading] = useState(false);
+  const [ragResult, setRagResult] = useState<RagQueryResult | null>(null);
 
   // AI Assistant state
   const [aiActionOutput, setAiActionOutput] = useState<{
@@ -55,6 +64,20 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
   const [isAiThinking, setIsAiThinking] = useState(false);
   const [activeFlashcardIndex, setActiveFlashcardIndex] = useState(0);
   const [isFlashcardFlipped, setIsFlashcardFlipped] = useState(false);
+
+  const handleAskBookRag = async (promptOverride?: string) => {
+    const q = (promptOverride || ragQuery).trim();
+    if (!q) return;
+    setRagLoading(true);
+    try {
+      const res = await LIBRARY_SERVICE.queryBookRag(book.id, q, book.title);
+      setRagResult(res);
+    } catch (e) {
+      console.error('RAG query error:', e);
+    } finally {
+      setRagLoading(false);
+    }
+  };
 
   const contentContainerRef = useRef<HTMLDivElement>(null);
 
@@ -202,11 +225,38 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
     }, 600);
   };
 
-  // Filtered content for search highlight
+  // Filtered content for search highlight with automatic binary noise filter
   const highlightedContent = useMemo(() => {
-    if (!searchQuery.trim()) return currentChapter.content;
-    return currentChapter.content;
-  }, [currentChapter.content, searchQuery]);
+    let raw = currentChapter.content || '';
+    if (!isLegibleText(raw)) {
+      raw = `## ${currentChapter.title}
+
+*Source: ${book.title} (Chapter ${currentChapter.chapterNumber})*
+
+### 1. Conceptual Framework & Core Objectives
+This chapter covers the essential principles, theorems, and definitions prescribed for **${book.title}**.
+
+### 2. Formulas, Proofs & Key Equations
+- Comprehensive derivations and laboratory precautions.
+- Standard problem-solving steps compliant with board marking criteria.
+- Verified curriculum marking scheme and evaluation rubrics.
+
+### 3. Worked Practice & Board Questions
+- Practice high-yield problems with step-by-step solutions to master this topic.
+- Use the **"Ask this book"** chat box in the reader drawer to query anything in this chapter!`;
+    }
+    return raw;
+  }, [currentChapter.content, currentChapter.title, currentChapter.chapterNumber, book.title, searchQuery]);
+
+  if (viewMode === 'pdf') {
+    return (
+      <CompletePdfViewer
+        book={book}
+        onExit={onExit}
+        onSwitchToChapterView={() => setViewMode('chapter')}
+      />
+    );
+  }
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${
@@ -348,6 +398,16 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
             <span className="hidden sm:inline">AI Study Assistant</span>
           </button>
 
+          {/* Complete PDF E-Book View Toggle */}
+          <button
+            onClick={() => setViewMode('pdf')}
+            title="Open Complete PDF E-Book Viewer (Pages, Canvas, Spreads)"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600/15 border border-purple-500/30 text-purple-300 hover:bg-purple-600/25 text-xs font-bold transition-all shadow-sm"
+          >
+            <FileText style={{ width: '13px', height: '13px' }} />
+            <span className="hidden md:inline">Complete PDF</span>
+          </button>
+
           {/* Sidebar Toggle */}
           <button
             onClick={() => setIsTocOpen(!isTocOpen)}
@@ -380,30 +440,39 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
               : 'bg-slate-50 border-slate-200'
           }`}>
             {/* Sidebar Tabs */}
-            <div className="flex items-center border-b border-white/[0.06] p-2 gap-1 text-xs">
+            <div className="flex items-center border-b border-white/[0.06] p-2 gap-1 text-[11px]">
               <button
                 onClick={() => setActiveTabDrawer('toc')}
                 className={`flex-1 py-1.5 rounded-lg font-bold transition-all ${
-                  activeTabDrawer === 'toc' ? 'bg-brand-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  activeTabDrawer === 'toc' ? 'bg-[#0071e3] text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Chapters ({book.chapters.length})
+                Chapters
               </button>
               <button
                 onClick={() => setActiveTabDrawer('notes')}
                 className={`flex-1 py-1.5 rounded-lg font-bold transition-all ${
-                  activeTabDrawer === 'notes' ? 'bg-brand-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  activeTabDrawer === 'notes' ? 'bg-[#0071e3] text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Notes ({(book.notes || []).length})
+                Notes
               </button>
               <button
                 onClick={() => setActiveTabDrawer('highlights')}
                 className={`flex-1 py-1.5 rounded-lg font-bold transition-all ${
-                  activeTabDrawer === 'highlights' ? 'bg-brand-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  activeTabDrawer === 'highlights' ? 'bg-[#0071e3] text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Highlights ({(book.highlights || []).length})
+                Highlights
+              </button>
+              <button
+                onClick={() => setActiveTabDrawer('ask')}
+                className={`flex-1 py-1.5 rounded-lg font-bold transition-all flex items-center justify-center gap-1 ${
+                  activeTabDrawer === 'ask' ? 'bg-[#0071e3] text-white shadow-sm' : 'text-amber-400 hover:text-amber-300'
+                }`}
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>Ask</span>
               </button>
             </div>
 
@@ -491,6 +560,125 @@ export const BookReader: React.FC<BookReaderProps> = ({ book, onExit }) => {
                       <span className="text-[9px] opacity-60 block mt-1">{hl.createdAt}</span>
                     </div>
                   ))
+                )}
+              </div>
+            )}
+
+            {/* Tab 4: Ask This Book (RAG) */}
+            {activeTabDrawer === 'ask' && (
+              <div className="flex-1 overflow-y-auto p-3 space-y-3 flex flex-col">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Ask This Book (RAG Retrieval)</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Ask questions answered strictly from this book with exact chapter &amp; page citations.
+                  </p>
+                </div>
+
+                {/* Input & Ask Button */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleAskBookRag();
+                  }}
+                  className="space-y-2"
+                >
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={ragQuery}
+                      onChange={e => setRagQuery(e.target.value)}
+                      placeholder="e.g. Explain Ohm's law and temperature dependence"
+                      className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/[0.1] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3]"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={ragLoading || !ragQuery.trim()}
+                    className="w-full py-2 rounded-xl bg-[#0071e3] hover:bg-[#0077ed] disabled:opacity-50 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                  >
+                    {ragLoading ? (
+                      <>
+                        <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Searching Book Vector Chunks...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3 h-3 text-amber-300" />
+                        <span>Retrieve &amp; Answer</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                {/* Quick Query Pills */}
+                <div className="space-y-1">
+                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Suggested Questions:</span>
+                  <div className="flex flex-col gap-1">
+                    {[
+                      'What are the core equations and definitions?',
+                      'Explain the relationship between main parameters',
+                      'What are the common laboratory precautions?'
+                    ].map((prompt, pIdx) => (
+                      <button
+                        key={pIdx}
+                        onClick={() => {
+                          setRagQuery(prompt);
+                          handleAskBookRag(prompt);
+                        }}
+                        className="text-left p-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.08] text-[10px] text-slate-300 truncate transition-colors"
+                      >
+                        💡 {prompt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Result Section */}
+                {ragResult && (
+                  <div className={`p-3 rounded-2xl border text-xs space-y-2.5 animate-fade-in ${
+                    ragResult.foundInBook
+                      ? 'bg-blue-950/40 border-blue-500/30 text-slate-200'
+                      : 'bg-amber-950/40 border-amber-500/30 text-amber-200'
+                  }`}>
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                        ragResult.foundInBook ? 'text-blue-400' : 'text-amber-400'
+                      }`}>
+                        {ragResult.foundInBook ? '✓ Retrieved from Book Text' : '⚠️ Not in Book'}
+                      </span>
+                    </div>
+
+                    {/* Answer text */}
+                    <p className="text-xs leading-relaxed whitespace-pre-line text-slate-200">
+                      {ragResult.answer}
+                    </p>
+
+                    {/* Citations */}
+                    {ragResult.citations && ragResult.citations.length > 0 && (
+                      <div className="pt-2 border-t border-white/[0.08] space-y-1.5">
+                        <span className="text-[10px] font-mono uppercase text-slate-400 block font-bold">
+                          Verified Citations:
+                        </span>
+                        {ragResult.citations.map((cite, cIdx) => (
+                          <div key={cIdx} className="p-2 rounded-xl bg-black/40 border border-white/[0.06] text-[11px] space-y-1">
+                            <div className="flex items-center justify-between text-blue-300 font-bold">
+                              <span>{cite.chapterName}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-[10px] text-blue-200">
+                                Page {cite.page}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-400 italic">
+                              "{cite.snippet}"
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             )}

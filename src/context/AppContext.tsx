@@ -20,7 +20,9 @@ import {
   QuestionSet,
   QuestionSetAttempt
 } from '../types';
+import { ExamModel, AttemptModel } from '../types/schemas';
 import { STORAGE_SERVICE } from '../services/storageService';
+import { LIBRARY_SERVICE } from '../services/libraryService';
 import { SUBSCRIPTION_PLANS } from '../mock/initialData';
 import { calculateGrade } from '../utils/gradeUtils';
 
@@ -116,6 +118,15 @@ interface AppContextType {
   markNotificationRead: (id: string) => void;
   addNotification: (title: string, message: string, type: NotificationItem['type']) => void;
   resetAllDemoData: () => void;
+
+  // AI Exam Generator & Performance Analysis
+  activeExamToRun: ExamModel | null;
+  setActiveExamToRun: (exam: ExamModel | null) => void;
+  activeExamAnalysis: { exam: ExamModel; attempt: AttemptModel } | null;
+  setActiveExamAnalysis: (data: { exam: ExamModel; attempt: AttemptModel } | null) => void;
+  launchExamCreator: (sourceBookId?: string) => void;
+  startExamRunner: (exam: ExamModel) => void;
+  showExamAnalysis: (exam: ExamModel, attempt: AttemptModel) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -152,6 +163,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Cross-feature active selections
   const [activeBookToRead, setActiveBookToRead] = useState<Book | null>(null);
   const [activeQuestionSetToPractice, setActiveQuestionSetToPractice] = useState<QuestionSet | null>(null);
+
+  // AI Exam & Performance Analysis states
+  const [activeExamToRun, setActiveExamToRun] = useState<ExamModel | null>(null);
+  const [activeExamAnalysis, setActiveExamAnalysis] = useState<{ exam: ExamModel; attempt: AttemptModel } | null>(null);
+
+  const launchExamCreator = (sourceBookId?: string) => {
+    if (sourceBookId) {
+      localStorage.setItem('edupulse_preselect_book', sourceBookId);
+    }
+    setCurrentView('create-exam');
+  };
+
+  const startExamRunner = (exam: ExamModel) => {
+    setActiveExamToRun(exam);
+    setCurrentView('take-exam');
+  };
+
+  const showExamAnalysis = (exam: ExamModel, attempt: AttemptModel) => {
+    setActiveExamAnalysis({ exam, attempt });
+    setCurrentView('exam-analysis');
+  };
 
   // Student test runner state
   const [activeTestToken, setActiveTestToken] = useState<string | null>(null);
@@ -307,12 +339,72 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCurrentView('questions');
   };
 
-  // Cross-feature: Open matching book from Syllabus
-  const openBookForSubjectOrChapter = (subject: string, chapter?: string) => {
-    const matchedBook = books.find(b => b.subject.toLowerCase() === subject.toLowerCase()) || books[0];
+  // Cross-feature: Open matching book from Syllabus or Library
+  const openBookForSubjectOrChapter = (subjectOrTitle: string, chapter?: string) => {
+    const q = (subjectOrTitle || '').toLowerCase().trim();
+    
+    // 1. Check in LIBRARY_SERVICE (where user uploaded books are stored)
+    const libBooks = LIBRARY_SERVICE.getBooks();
+    const matchedLib = libBooks.find(b => 
+      b.title.toLowerCase().includes(q) ||
+      q.includes(b.title.toLowerCase()) ||
+      b.subject.toLowerCase() === q ||
+      q.includes(b.subject.toLowerCase())
+    );
+
+    if (matchedLib) {
+      const appBook: Book = {
+        id: matchedLib.id,
+        title: matchedLib.title,
+        author: matchedLib.author,
+        subject: matchedLib.subject,
+        grade: 10,
+        coverGradient: matchedLib.coverGradient || 'from-indigo-600 via-purple-700 to-slate-900',
+        fileName: `${matchedLib.title.replace(/\s+/g, '_')}.${matchedLib.fileType}`,
+        progress: 0,
+        lastOpened: new Date().toISOString().split('T')[0],
+        chapters: matchedLib.chapters.map(c => ({
+          id: c.id,
+          chapterNumber: c.orderIndex,
+          title: c.name,
+          estimatedReadTimeMinutes: Math.max(5, Math.ceil((c.content?.length || 1500) / 800)),
+          sections: ['Core Concepts', 'Formulas & Definitions', 'Worked Problems'],
+          content: c.content || `## ${c.name}\n\n*Source: ${matchedLib.title}*\n\n### Overview\n${c.contentPreview || 'Chapter content extracted from textbook.'}`
+        })),
+        bookmarks: []
+      };
+
+      if (chapter) {
+        const cLower = chapter.toLowerCase();
+        const matchedCh = appBook.chapters.find(ch => 
+          ch.title.toLowerCase().includes(cLower) || 
+          cLower.includes(ch.title.toLowerCase())
+        );
+        if (matchedCh) {
+          appBook.currentChapterId = matchedCh.id;
+        }
+      }
+
+      setActiveBookToRead(appBook);
+      setUserRole('student');
+      setCurrentView('books');
+      return;
+    }
+
+    // 2. Check legacy AppContext books
+    const matchedBook = books.find(b => 
+      b.title.toLowerCase().includes(q) || 
+      b.subject.toLowerCase() === q ||
+      q.includes(b.subject.toLowerCase())
+    ) || books[0];
+
     if (matchedBook) {
       if (chapter) {
-        const matchedCh = matchedBook.chapters.find(ch => ch.title.toLowerCase().includes(chapter.toLowerCase()));
+        const cLower = chapter.toLowerCase();
+        const matchedCh = matchedBook.chapters.find(ch => 
+          ch.title.toLowerCase().includes(cLower) || 
+          cLower.includes(ch.title.toLowerCase())
+        );
         if (matchedCh) {
           matchedBook.currentChapterId = matchedCh.id;
         }
@@ -620,7 +712,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         logAuditEvent,
         markNotificationRead,
         addNotification,
-        resetAllDemoData
+        resetAllDemoData,
+        activeExamToRun,
+        setActiveExamToRun,
+        activeExamAnalysis,
+        setActiveExamAnalysis,
+        launchExamCreator,
+        startExamRunner,
+        showExamAnalysis
       }}
     >
       {children}

@@ -1,4 +1,5 @@
 import { Question, QuestionType, RubricCriterion, StudentAnswer } from '../types';
+import { LIVE_AI_SERVICE } from './liveAiService';
 
 export interface GenerateTestParams {
   board: string;
@@ -14,14 +15,71 @@ export interface GenerateTestParams {
 
 export const AI_SERVICE = {
   /**
-   * Simulates Claude 3.5 Sonnet streaming generation with board-specific precision.
+   * Generates curriculum-aligned questions using live neural models (Gemini / Groq / OpenAI / Ollama)
+   * with seamless fallback to built-in curriculum heuristics.
    */
   async generateQuestions(params: GenerateTestParams): Promise<Question[]> {
     const { board, classGrade, subject, chapters, totalMarks, difficultyMix, questionTypes } = params;
 
-    // Simulate streaming step progress
+    const liveConfig = LIVE_AI_SERVICE.getActiveConfig();
+
+    if (LIVE_AI_SERVICE.isLiveAiAvailable()) {
+      if (params.onStreamChunk) {
+        params.onStreamChunk(`Connecting to ${liveConfig.model} (${liveConfig.provider.toUpperCase()})...`);
+        await new Promise(r => setTimeout(r, 200));
+        params.onStreamChunk(`Synthesizing ${board} Class ${classGrade} ${subject} examination matrix for [${chapters.join(', ')}]...`);
+      }
+
+      const prompt = `You are an expert examination committee author for ${board} Board, Class ${classGrade}, Subject: ${subject}.
+Chapters to cover: ${chapters.join(', ')}.
+Total Marks target: ${totalMarks}.
+Difficulty ratio: ${difficultyMix.easy}% Easy, ${difficultyMix.medium}% Medium, ${difficultyMix.hard}% Hard.
+Required Question Types: ${questionTypes.join(', ')}.
+
+Generate a rigorous, complete set of questions. Return a JSON array matching this exact schema:
+[
+  {
+    "id": "gen_1",
+    "type": "mcq" | "short_answer" | "numerical" | "assertion_reason" | "case_study",
+    "chapter": "Chapter name",
+    "marks": 1,
+    "difficulty": "easy" | "medium" | "hard",
+    "bloomsLevel": "Remember" | "Understand" | "Apply" | "Analyze",
+    "questionText": "Question statement",
+    "options": [
+      { "id": "opt_1", "text": "Option A", "isCorrect": false },
+      { "id": "opt_2", "text": "Option B", "isCorrect": true }
+    ],
+    "correctAnswer": "Exact text of correct answer",
+    "explanation": "Clear pedagogical explanation with formula steps if applicable",
+    "rubric": [
+      { "id": "r_1", "criterion": "Step 1 description", "maxMarks": 1 }
+    ],
+    "numericalAnswer": 10,
+    "tolerance": 0.1
+  }
+]
+Output ONLY raw JSON. Do not include markdown preamble.`;
+
+      try {
+        const rawJson = await LIVE_AI_SERVICE.callLlm(prompt, { jsonMode: true, maxTokens: 4000 });
+        const parsed = LIVE_AI_SERVICE.extractJson<Question[]>(rawJson);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          params.onStreamChunk?.(`✓ Generated ${parsed.length} authentic questions via ${liveConfig.model}`);
+          return parsed.map((q, idx) => ({
+            ...q,
+            id: q.id || `live_q_${Date.now()}_${idx + 1}`
+          }));
+        }
+      } catch (err: any) {
+        console.warn('Live AI generation encountered error, reverting to built-in syllabus generator:', err);
+        params.onStreamChunk?.(`Reverting to built-in curriculum heuristics (${err.message})...`);
+      }
+    }
+
+    // Heuristic / Simulated fallback progress
     if (params.onStreamChunk) {
-      params.onStreamChunk(`Connecting to Claude 3.5 Sonnet (Mumbai Edge)...`);
+      params.onStreamChunk(`Connecting to Neural Synthesizer (Built-in Syllabus Engine)...`);
       await new Promise(r => setTimeout(r, 400));
       params.onStreamChunk(`Analyzing ${board} Class ${classGrade} ${subject} syllabus for ${chapters.join(', ')}...`);
       await new Promise(r => setTimeout(r, 500));
@@ -152,6 +210,53 @@ export const AI_SERVICE = {
     feedback: string;
     rubricEvaluation: { criterionId: string; marksAwarded: number; feedback: string }[];
   }> {
+    if (LIVE_AI_SERVICE.isLiveAiAvailable()) {
+      const prompt = `You are a certified senior Board examiner evaluating a student's answer.
+Question: "${question.questionText}"
+Maximum Marks: ${question.marks}
+Sample Ideal Answer / Marking Scheme: "${question.sampleAnswer || question.correctAnswer || 'Standard curriculum model answer.'}"
+Rubric Criteria: ${JSON.stringify(question.rubric || [])}
+
+Student's Submitted Answer:
+"${studentAnswerText}"
+
+Evaluate accurately according to official grading standards. Award marks proportionately based on key concept terminology, conceptual accuracy, and steps shown.
+Return JSON with this exact schema:
+{
+  "awardedMarks": number,
+  "confidence": "High" | "Medium" | "Low",
+  "feedback": "Concise, constructive pedagogical feedback explaining what was correct and what was missing",
+  "rubricEvaluation": [
+    {
+      "criterionId": "string",
+      "marksAwarded": number,
+      "feedback": "string"
+    }
+  ]
+}
+Output ONLY raw JSON.`;
+
+      try {
+        const rawJson = await LIVE_AI_SERVICE.callLlm(prompt, { jsonMode: true, temperature: 0.2 });
+        const res = LIVE_AI_SERVICE.extractJson<{
+          awardedMarks: number;
+          confidence: 'High' | 'Medium' | 'Low';
+          feedback: string;
+          rubricEvaluation: { criterionId: string; marksAwarded: number; feedback: string }[];
+        }>(rawJson);
+
+        return {
+          awardedMarks: Math.min(question.marks, Math.max(0, Number(res.awardedMarks) || 0)),
+          maxMarks: question.marks,
+          confidence: res.confidence || 'High',
+          feedback: res.feedback || 'Evaluated via live AI grading model.',
+          rubricEvaluation: res.rubricEvaluation || []
+        };
+      } catch (err) {
+        console.warn('Live AI grading error, using curriculum rubric matcher:', err);
+      }
+    }
+
     await new Promise(r => setTimeout(r, 600));
 
     const answerLength = studentAnswerText.trim().length;
@@ -219,10 +324,46 @@ export const AI_SERVICE = {
       language?: string;
     }
   ): Promise<{ responseText: string; suggestedFollowUps: string[] }> {
-    await new Promise(r => setTimeout(r, 700));
-
     const lang = studentContext.language || 'English';
     const q = studentContext.wrongQuestion;
+
+    if (LIVE_AI_SERVICE.isLiveAiAvailable()) {
+      const systemPrompt = `You are an empathetic, world-class K-12 AI Tutor helping a Class ${studentContext.classGrade} student named ${studentContext.studentName}.
+Language mode: ${lang} (if Hindi or Hinglish, speak fluently in natural conversational Hindi/Hinglish using Devanagari or Latin script as appropriate).
+Use Socratic questioning, clear step-by-step mathematical reasoning, and highlight the exact mistake without being harsh. Format equations using Markdown or LaTeX ($...$).`;
+
+      let userPrompt = `Student Question / Query: "${query}"\n`;
+      if (q) {
+        userPrompt += `Context from recently attempted question:
+Question: "${q.questionText}"
+Correct Answer: "${q.correctAnswer || q.sampleAnswer || ''}"
+Student's Submitted Answer: "${studentContext.studentAnswerText || 'Incorrect'}"
+Explanation: "${q.explanation || ''}"
+`;
+      }
+      userPrompt += `
+Return valid JSON:
+{
+  "responseText": "Your complete helpful pedagogical response with markdown formatting",
+  "suggestedFollowUps": ["Follow-up prompt 1", "Follow-up prompt 2", "Follow-up prompt 3"]
+}
+Output ONLY raw JSON.`;
+
+      try {
+        const rawJson = await LIVE_AI_SERVICE.callLlm(userPrompt, { systemPrompt, jsonMode: true });
+        const res = LIVE_AI_SERVICE.extractJson<{ responseText: string; suggestedFollowUps: string[] }>(rawJson);
+        if (res && res.responseText) {
+          return {
+            responseText: res.responseText,
+            suggestedFollowUps: res.suggestedFollowUps || []
+          };
+        }
+      } catch (err) {
+        console.warn('Live AI tutor error, falling back to local tutor rules:', err);
+      }
+    }
+
+    await new Promise(r => setTimeout(r, 700));
 
     if (lang === 'Hindi' || lang === 'Hinglish') {
       if (q && q.chapter.includes('Electricity')) {

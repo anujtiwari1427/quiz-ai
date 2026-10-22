@@ -2,7 +2,7 @@ export type BoardType = 'CBSE' | 'ICSE' | 'State Board (Maharashtra)' | 'State B
 
 export type UserRole = 'teacher' | 'admin' | 'parent' | 'student';
 
-export type ActiveAppView = 'marketing' | 'teacher' | 'student' | 'parent' | 'admin' | 'marks' | 'syllabus' | 'books' | 'questions';
+export type ActiveAppView = 'marketing' | 'teacher' | 'student' | 'parent' | 'admin' | 'marks' | 'syllabus' | 'books' | 'questions' | 'create-exam' | 'take-exam' | 'exam-analysis' | 'strata-studio' | 'strata-courses' | 'strata-repetition' | 'strata-analytics' | 'strata-billing';
 
 export type QuestionType = 'mcq' | 'short_answer' | 'long_answer' | 'case_study' | 'assertion_reason';
 
@@ -295,6 +295,7 @@ export interface Book {
   title: string;
   author?: string;
   subject: string;
+  board?: string;
   grade?: number;
   coverGradient?: string;
   coverIcon?: string;
