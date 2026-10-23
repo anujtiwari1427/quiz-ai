@@ -270,7 +270,7 @@ export const BookLibrary: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in-up">
       
       {/* ── Top Hero Banner ── */}
-      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 border border-white/[0.08] bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 border border-white/[0.1] bg-[#161618]/90 backdrop-blur-2xl shadow-2xl">
         <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -283,10 +283,10 @@ export const BookLibrary: React.FC = () => {
               </span>
               <button
                 onClick={() => { setSelectedBoard(selectedBoard === 'maharashtra' ? 'all' : 'maharashtra'); }}
-                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1 transition-all ${
+                className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
                   selectedBoard === 'maharashtra'
                     ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30'
-                    : 'bg-orange-500/20 text-orange-400 border border-orange-500/30 hover:bg-orange-500/30'
+                    : 'bg-orange-500/15 text-orange-300 border border-orange-500/30 hover:bg-orange-500/25'
                 }`}
               >
                 <span>🏛️ Free Maharashtra Board (Balbharati) Textbooks</span>
@@ -298,24 +298,24 @@ export const BookLibrary: React.FC = () => {
               </span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight">
-              📚 My Library &amp; Book Reader
+              📚 My Library &amp; Curriculum Reader
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Read free Maharashtra State Board (Balbharati) and NCERT textbooks or upload custom curriculum notes with interactive in-app reading, text-to-speech audio, and "Ask this book" AI RAG Q&amp;A.
+            <p className="text-xs sm:text-sm text-[#cbd5e1] leading-relaxed">
+              Read verified Maharashtra State Board (Balbharati) and NCERT textbooks, or upload custom study material with interactive page reading, text-to-speech audio, and "Ask this book" AI RAG Q&amp;A.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <button
               onClick={() => setCurrentView('create-exam')}
-              className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-xs font-bold text-white flex items-center gap-2 transition-all shadow-sm"
+              className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-bold text-white flex items-center gap-2 transition-all shadow-sm"
             >
               <Sparkles className="w-4 h-4 text-amber-400" />
               <span>Create AI Exam</span>
             </button>
             <button
               onClick={() => setIsAddBookModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-[#0071e3] hover:bg-[#0077ed] text-xs font-bold text-white shadow-lg shadow-blue-500/25 flex items-center gap-2 transition-all"
+              className="btn-primary text-xs font-bold px-5 py-2.5 rounded-xl"
             >
               <Plus className="w-4 h-4" />
               <span>Upload Book</span>
@@ -324,27 +324,27 @@ export const BookLibrary: React.FC = () => {
         </div>
 
         {/* Legal notice banner */}
-        <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center gap-2 text-xs text-slate-400">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="mt-6 pt-4 border-t border-white/[0.08] flex items-center gap-2 text-xs text-[#9da3ae]">
+          <ShieldCheck className="w-4 h-4 text-[#30d158] shrink-0" />
           <span>
-            <strong>Free Access Notice:</strong> Maharashtra State Board (Balbharati) &amp; NCERT textbooks are open-access public educational materials provided free of cost for student self-study.
+            <strong className="text-white">Free Access Notice:</strong> Maharashtra State Board (Balbharati) &amp; NCERT textbooks are open-access public educational materials provided free of cost for student self-study.
           </span>
         </div>
       </div>
 
       {/* ── Search and Filter Controls ── */}
-      <div className="p-4 rounded-2xl bg-[#1c1c1e] border border-white/[0.08] space-y-3">
+      <div className="p-4 rounded-2xl bg-[#161618]/90 backdrop-blur-2xl border border-white/[0.1] space-y-3 shadow-lg">
         
         {/* Row 1: Search & Subject Filters */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#9da3ae] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search books by title, author, board, or subject..."
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-black/60 border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3]"
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-black/60 border border-white/[0.1] text-xs text-white placeholder-[#9da3ae] focus:outline-none focus:border-[#0071e3]"
             />
           </div>
 
@@ -355,8 +355,8 @@ export const BookLibrary: React.FC = () => {
                 onClick={() => setSelectedSubject(sub)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
                   selectedSubject === sub
-                    ? 'bg-white text-black font-bold'
-                    : 'bg-white/[0.04] text-slate-400 hover:text-white'
+                    ? 'bg-white text-black font-bold shadow-md'
+                    : 'bg-white/[0.04] text-[#9da3ae] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 {sub === 'all' ? 'All Subjects' : sub}
@@ -367,7 +367,7 @@ export const BookLibrary: React.FC = () => {
 
         {/* Row 2: Curriculum / Board Filter Pills */}
         <div className="pt-2 border-t border-white/[0.06] flex items-center gap-2 overflow-x-auto pb-1">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
+          <span className="text-[11px] font-semibold text-[#9da3ae] uppercase tracking-wider shrink-0 flex items-center gap-1">
             <Filter className="w-3 h-3 text-[#2997ff]" /> Board:
           </span>
           {[
@@ -379,10 +379,10 @@ export const BookLibrary: React.FC = () => {
             <button
               key={b.id}
               onClick={() => setSelectedBoard(b.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedBoard === b.id
-                  ? 'bg-[#0071e3] text-white font-bold shadow-md shadow-blue-500/20'
-                  : 'bg-white/[0.04] text-slate-400 hover:text-white border border-white/[0.05]'
+                  ? 'bg-[#0071e3] text-white font-bold shadow-md shadow-blue-500/25'
+                  : 'bg-white/[0.04] text-[#9da3ae] hover:text-white border border-white/[0.08] hover:bg-white/[0.08]'
               }`}
             >
               {b.label}
@@ -413,32 +413,32 @@ export const BookLibrary: React.FC = () => {
           {filteredBooks.map(book => (
             <div
               key={book.id}
-              className="group rounded-3xl bg-[#1c1c1e] border border-white/[0.08] hover:border-white/[0.18] transition-all duration-300 overflow-hidden flex flex-col shadow-lg hover:shadow-2xl"
+              className="group rounded-3xl bg-[#161618]/90 backdrop-blur-2xl border border-white/[0.1] hover:border-white/[0.22] transition-all duration-300 overflow-hidden flex flex-col shadow-lg hover:shadow-2xl hover:-translate-y-1"
             >
               {/* Cover Gradient Banner */}
               <div className={`h-36 bg-gradient-to-br ${book.coverGradient || 'from-indigo-600 via-purple-700 to-slate-900'} p-5 flex flex-col justify-between relative`}>
                 <div className="flex items-center justify-between relative z-10">
-                  <span className="px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
+                  <span className="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/15 text-[10px] font-mono uppercase tracking-wider text-white">
                     {book.fileType.toUpperCase()} • {book.totalPages} Pages
                   </span>
                   <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                    book.status === 'ready' ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-300' :
-                    book.status === 'failed' ? 'bg-rose-500/20 border border-rose-500/40 text-rose-300' :
-                    'bg-amber-500/20 border border-amber-500/40 text-amber-300 animate-pulse'
+                    book.status === 'ready' ? 'bg-emerald-500/20 border border-emerald-500/40 text-[#30d158]' :
+                    book.status === 'failed' ? 'bg-rose-500/20 border border-rose-500/40 text-[#ff453a]' :
+                    'bg-amber-500/20 border border-amber-500/40 text-[#ff9f0a] animate-pulse'
                   }`}>
                     {book.status === 'ready' ? 'Indexed & Ready' : book.status}
                   </span>
                 </div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                    <span className="text-[10px] font-bold text-white/70 uppercase tracking-widest">{book.subject}</span>
+                    <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest">{book.subject}</span>
                     {book.board && (
-                      <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-[9px] font-bold text-orange-300 border border-orange-500/40">
+                      <span className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[9px] font-bold text-orange-300 border border-orange-500/40">
                         {book.board}
                       </span>
                     )}
                     {book.userId === 'system_curriculum' && (
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-500/30 text-emerald-200 border border-emerald-500/30">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-[#30d158]/20 text-[#30d158] border border-[#30d158]/30">
                         Free Reading
                       </span>
                     )}
@@ -450,21 +450,21 @@ export const BookLibrary: React.FC = () => {
               {/* Card Body */}
               <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                 <div className="space-y-2">
-                  <div className="text-xs text-slate-400 flex items-center justify-between">
+                  <div className="text-xs text-[#9da3ae] flex items-center justify-between font-medium">
                     <span>By {book.author}</span>
-                    <span>{book.chapters.length} Chapters</span>
+                    <span className="text-white font-semibold">{book.chapters.length} Chapters</span>
                   </div>
 
                   {/* Chapter preview list */}
                   <div className="space-y-1.5 pt-1">
-                    {book.chapters.slice(0, 3).map((ch, idx) => (
-                      <div key={ch.id} className="text-[11px] text-slate-300 flex items-center gap-1.5 truncate">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                    {book.chapters.slice(0, 3).map((ch) => (
+                      <div key={ch.id} className="text-xs text-[#cbd5e1] flex items-center gap-2 truncate">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2997ff] shrink-0" />
                         <span className="truncate">{ch.name}</span>
                       </div>
                     ))}
                     {book.chapters.length > 3 && (
-                      <span className="text-[10px] text-slate-500 font-mono block pl-3">
+                      <span className="text-[11px] text-[#9da3ae] font-mono block pl-3.5">
                         + {book.chapters.length - 3} more chapters
                       </span>
                     )}
@@ -472,7 +472,7 @@ export const BookLibrary: React.FC = () => {
                 </div>
 
                 {/* Card Actions */}
-                <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between gap-2">
+                <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between gap-2">
                   <button
                     onClick={() => setActiveReadingBook(book)}
                     className="flex-1 py-2 px-3 rounded-xl bg-[#0071e3] hover:bg-[#0077ed] text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-500/20 active:scale-95"

@@ -32,19 +32,18 @@ export const Footer: React.FC = () => {
                 <span className="font-display font-bold text-[17px] tracking-tight text-[#f5f5f7]">
                   Edu<span className="gradient-text-blue">Pulse</span>
                 </span>
-                <p className="text-[10px] text-[#86868b] font-normal">K-12 Assessment Intelligence</p>
+                <p className="text-[10px] text-[#9da3ae] font-medium">K-12 Assessment Intelligence</p>
               </div>
             </div>
 
-            <p className="text-xs text-[#86868b] leading-relaxed max-w-[240px]">
-              India's most advanced AI-powered assessment platform. Board-accurate, DPDP-compliant, and built for 
-              Bharat's 260M K-12 learners.
+            <p className="text-xs text-[#cbd5e1] leading-relaxed max-w-[260px]">
+              India's premier AI-powered assessment platform. Blueprint-accurate, DPDP-compliant, and engineered for Bharat's 260M K-12 learners.
             </p>
 
             {/* Compliance badges */}
             <div className="flex items-center gap-1.5 flex-wrap">
-              {['CBSE', 'ICSE', 'NEP 2020', 'DPDP'].map((b) => (
-                <span key={b} className="px-2.5 py-0.5 rounded-full text-[9px] font-medium bg-white/[0.06] border border-white/[0.08] text-[#86868b]">
+              {['CBSE', 'ICSE', 'NEP 2020', 'DPDP Act', 'ISO 27001'].map((b) => (
+                <span key={b} className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/[0.08] border border-white/[0.12] text-[#f5f5f7]">
                   {b}
                 </span>
               ))}
@@ -61,7 +60,7 @@ export const Footer: React.FC = () => {
                 <button
                   key={label}
                   title={label}
-                  className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-[#86868b] hover:text-white hover:bg-white/[0.12] transition-all duration-200 hover:scale-105"
+                  className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-[#9da3ae] hover:text-white hover:bg-white/[0.12] transition-all duration-200 hover:scale-105"
                 >
                   <Icon style={{width:'13px',height:'13px'}} />
                 </button>
@@ -72,12 +71,12 @@ export const Footer: React.FC = () => {
           {/* Link columns */}
           {Object.entries(LINKS).map(([section, links]) => (
             <div key={section} className="space-y-4">
-              <h4 className="text-[11px] font-semibold text-[#f5f5f7] tracking-wider uppercase">{section}</h4>
+              <h4 className="text-[11px] font-bold text-[#f5f5f7] tracking-wider uppercase">{section}</h4>
               <ul className="space-y-2.5">
                 {links.map((link) => (
                   <li key={link}>
-                    <button className="group flex items-center gap-1 text-xs text-[#86868b] hover:text-[#2997ff] transition-colors duration-150">
-                      <ChevronRight style={{width:'10px',height:'10px',opacity:0,transition:'all 0.15s'}} className="group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" />
+                    <button className="group flex items-center gap-1 text-xs text-[#9da3ae] hover:text-[#2997ff] transition-colors duration-150">
+                      <ChevronRight style={{width:'10px',height:'10px',opacity:0,transition:'all 0.15s'}} className="group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 text-[#2997ff]" />
                       {link}
                     </button>
                   </li>

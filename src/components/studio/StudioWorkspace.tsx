@@ -212,7 +212,7 @@ export const StudioWorkspace: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 activeSubView === 'source_workspace'
                   ? 'bg-white/15 text-white font-semibold shadow-sm'
-                  : 'text-[#86868b] hover:text-white'
+                  : 'text-[#9da3ae] hover:text-white'
               }`}
             >
               Workspace
@@ -222,7 +222,7 @@ export const StudioWorkspace: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 activeSubView === 'courses'
                   ? 'bg-white/15 text-white font-semibold shadow-sm'
-                  : 'text-[#86868b] hover:text-white'
+                  : 'text-[#9da3ae] hover:text-white'
               }`}
             >
               Courses ({allCourses.length})
@@ -232,7 +232,7 @@ export const StudioWorkspace: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1 ${
                 activeSubView === 'spaced_repetition'
                   ? 'bg-white/15 text-white font-semibold shadow-sm'
-                  : 'text-[#86868b] hover:text-white'
+                  : 'text-[#9da3ae] hover:text-white'
               }`}
             >
               <Zap className="w-3 h-3 text-[#ff9f0a]" />
@@ -243,7 +243,7 @@ export const StudioWorkspace: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 activeSubView === 'analytics'
                   ? 'bg-white/15 text-white font-semibold shadow-sm'
-                  : 'text-[#86868b] hover:text-white'
+                  : 'text-[#9da3ae] hover:text-white'
               }`}
             >
               Analytics
@@ -253,10 +253,10 @@ export const StudioWorkspace: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 activeSubView === 'billing'
                   ? 'bg-white/15 text-white font-semibold shadow-sm'
-                  : 'text-[#86868b] hover:text-white'
+                  : 'text-[#9da3ae] hover:text-white'
               }`}
             >
-              Pricing & Plans
+              Pricing &amp; Plans
             </button>
           </div>
 

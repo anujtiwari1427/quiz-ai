@@ -16,7 +16,8 @@ import {
   Upload,
   BookOpen,
   Layers,
-  Cpu
+  Cpu,
+  ChevronDown
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { LIVE_AI_SERVICE } from '../../services/liveAiService';
@@ -36,9 +37,11 @@ export const Navbar: React.FC = () => {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAiSettings, setShowAiSettings] = useState(false);
+  const [showPortalsMenu, setShowPortalsMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+  const portalsRef = useRef<HTMLDivElement>(null);
   const unreadNotifs = notifications.filter(n => !n.read);
 
   const aiConfig = LIVE_AI_SERVICE.getActiveConfig();
@@ -55,34 +58,46 @@ export const Navbar: React.FC = () => {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setShowNotifications(false);
       }
+      if (portalsRef.current && !portalsRef.current.contains(e.target as Node)) {
+        setShowPortalsMenu(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const navItems = [
-    { id: 'strata-studio', label: 'AI Study Studio (Edu AI)', icon: Sparkles, role: 'student' as const, isSpecial: true },
+  // Primary learner & core navigation
+  const primaryNavItems = [
+    { id: 'strata-studio', label: 'AI Study Studio', icon: Sparkles, role: 'student' as const, isSpecial: true },
     { id: 'marketing', label: 'Overview', icon: null },
-    { id: 'books', label: 'My Library', icon: BookOpen, role: 'student' as const },
+    { id: 'books', label: 'Library', icon: BookOpen, role: 'student' as const },
     { id: 'create-exam', label: 'Create AI Exam', icon: Sparkles, role: 'student' as const },
+    { id: 'questions', label: 'Question Bank', icon: Layers, role: 'student' as const },
     { id: 'marks', label: 'Marks', icon: BarChart3, role: 'student' as const },
     { id: 'syllabus', label: 'Syllabus', icon: Upload, role: 'student' as const },
-    { id: 'questions', label: 'Question Sets', icon: Layers, role: 'student' as const },
-    { id: 'student', label: 'Test Room', icon: UserCheck, role: 'student' as const },
-    { id: 'teacher', label: 'Teacher Hub', icon: GraduationCap, role: 'teacher' as const },
-    { id: 'parent', label: 'Parent & Tutor', icon: Users, role: 'parent' as const },
-    { id: 'admin', label: 'Admin', icon: Building2, role: 'admin' as const },
   ];
 
-  const handleNavClick = (item: typeof navItems[0]) => {
-    if (item.id === 'student') {
+  // Role-based portals
+  const portalItems = [
+    { id: 'teacher', label: 'Teacher Hub', icon: GraduationCap, role: 'teacher' as const, desc: 'CBSE/ICSE Blueprints & Proctoring' },
+    { id: 'student', label: 'Student Test Room', icon: UserCheck, role: 'student' as const, desc: 'Interactive timed exam experience' },
+    { id: 'parent', label: 'Parent & Tutor', icon: Users, role: 'parent' as const, desc: 'WhatsApp login & 12-lang mistake tutor' },
+    { id: 'admin', label: 'School Admin', icon: Building2, role: 'admin' as const, desc: 'DPDP compliance & audit trail' },
+  ];
+
+  const isPortalActive = portalItems.some(p => p.id === currentView);
+  const activePortal = portalItems.find(p => p.id === currentView);
+
+  const handleNavClick = (id: string, role?: 'student' | 'teacher' | 'parent' | 'admin') => {
+    if (id === 'student') {
       if (tests.length > 0) launchStudentTestRoom(tests[0].id);
       else { setUserRole('student'); setCurrentView('student'); }
     } else {
-      if (item.role) setUserRole(item.role);
-      setCurrentView(item.id as any);
+      if (role) setUserRole(role);
+      setCurrentView(id as any);
     }
     setMobileOpen(false);
+    setShowPortalsMenu(false);
   };
 
   return (
@@ -90,11 +105,11 @@ export const Navbar: React.FC = () => {
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-black/80 backdrop-blur-2xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.8)]'
-            : 'bg-black/40 backdrop-blur-xl border-b border-white/[0.04]'
+            ? 'bg-black/85 backdrop-blur-2xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.85)]'
+            : 'bg-black/50 backdrop-blur-xl border-b border-white/[0.04]'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-[58px] flex items-center justify-between gap-3">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-[60px] flex items-center justify-between gap-3">
           
           {/* Apple Style Brand */}
           <button
@@ -116,31 +131,87 @@ export const Navbar: React.FC = () => {
                   Pro AI
                 </span>
               </div>
-              <p className="text-[10px] text-[#86868b] font-normal tracking-wide mt-0.5">CBSE • ICSE • State</p>
+              <p className="text-[10px] text-[#9da3ae] font-normal tracking-wide mt-0.5">CBSE • ICSE • State</p>
             </div>
           </button>
 
-          {/* Desktop Apple Segmented Nav Control */}
-          <nav className="hidden lg:flex items-center gap-1 px-1.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] backdrop-blur-xl max-w-[740px] overflow-x-auto shadow-inner">
-            {navItems.map((item) => {
+          {/* Desktop Streamlined Navigation Bar */}
+          <nav className="hidden lg:flex items-center gap-1 px-2 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] backdrop-blur-xl shadow-inner">
+            {primaryNavItems.map((item) => {
               const isActive = currentView === item.id;
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleNavClick(item)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap ${
+                  onClick={() => handleNavClick(item.id, item.role)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs transition-all duration-200 whitespace-nowrap ${
                     isActive
                       ? 'bg-gradient-to-r from-[#0071e3] to-[#2997ff] text-white shadow-md font-semibold'
                       : item.isSpecial
-                      ? 'text-[#2997ff] bg-[#0071e3]/10 hover:bg-[#0071e3]/20 border border-[#0071e3]/30 font-semibold'
-                      : 'text-[#86868b] hover:text-[#f5f5f7] hover:bg-white/[0.04]'
+                      ? 'text-[#2997ff] bg-[#0071e3]/15 hover:bg-[#0071e3]/25 border border-[#0071e3]/35 font-semibold'
+                      : 'text-[#9da3ae] hover:text-[#f5f5f7] hover:bg-white/[0.06] font-medium'
                   }`}
                 >
-                  {item.icon && <item.icon style={{width:'12px',height:'12px'}} />}
+                  {item.icon && <item.icon style={{width:'13px',height:'13px'}} />}
                   <span>{item.label}</span>
                 </button>
               );
             })}
+
+            {/* Portals Dropdown Trigger */}
+            <div className="relative" ref={portalsRef}>
+              <button
+                onClick={() => setShowPortalsMenu(!showPortalsMenu)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                  isPortalActive
+                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md font-semibold'
+                    : 'text-[#9da3ae] hover:text-[#f5f5f7] hover:bg-white/[0.06]'
+                }`}
+              >
+                {isPortalActive && activePortal?.icon ? (
+                  <activePortal.icon style={{width:'13px',height:'13px'}} />
+                ) : (
+                  <GraduationCap style={{width:'13px',height:'13px'}} />
+                )}
+                <span>{isPortalActive ? activePortal?.label : 'Portals'}</span>
+                <ChevronDown style={{width:'12px',height:'12px'}} className={`transition-transform duration-200 ${showPortalsMenu ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Portals Menu Dropdown */}
+              {showPortalsMenu && (
+                <div className="absolute left-0 mt-2.5 w-64 rounded-2xl bg-[#1c1c1e]/95 backdrop-blur-2xl border border-white/[0.12] shadow-2xl p-1.5 z-50 animate-fade-in-down">
+                  <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-[#9da3ae] border-b border-white/[0.06] mb-1">
+                    Role Portals &amp; Consoles
+                  </div>
+                  {portalItems.map((p) => {
+                    const isSelected = currentView === p.id;
+                    const Icon = p.icon;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => handleNavClick(p.id, p.role)}
+                        className={`w-full flex items-start gap-2.5 px-3 py-2 rounded-xl text-left transition-all ${
+                          isSelected
+                            ? 'bg-[#0071e3]/20 text-white border border-[#0071e3]/40'
+                            : 'hover:bg-white/[0.06] text-[#9da3ae] hover:text-[#f5f5f7]'
+                        }`}
+                      >
+                        <div className={`p-1.5 rounded-lg mt-0.5 ${isSelected ? 'bg-[#0071e3] text-white' : 'bg-white/[0.06] text-[#2997ff]'}`}>
+                          <Icon style={{width:'14px',height:'14px'}} />
+                        </div>
+                        <div>
+                          <div className={`text-xs font-semibold ${isSelected ? 'text-white' : 'text-[#f5f5f7]'}`}>
+                            {p.label}
+                          </div>
+                          <div className="text-[10px] text-[#9da3ae] leading-tight mt-0.5">
+                            {p.desc}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Right Actions */}
@@ -162,7 +233,7 @@ export const Navbar: React.FC = () => {
             <button
               onClick={resetAllDemoData}
               title="Reset Demo Data"
-              className="hidden sm:flex items-center gap-1 text-[11px] font-medium text-[#86868b] hover:text-[#f5f5f7] px-2.5 py-1.5 rounded-full hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] transition-all duration-200"
+              className="hidden sm:flex items-center gap-1 text-[11px] font-medium text-[#9da3ae] hover:text-[#f5f5f7] px-2.5 py-1.5 rounded-full hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] transition-all duration-200"
             >
               <RotateCcw style={{width:'11px',height:'11px'}} />
               Reset
@@ -172,7 +243,7 @@ export const Navbar: React.FC = () => {
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-2 rounded-full bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.16] text-[#86868b] hover:text-white transition-all duration-200 hover:bg-white/[0.1]"
+                className="relative p-2 rounded-full bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.16] text-[#9da3ae] hover:text-white transition-all duration-200 hover:bg-white/[0.1]"
               >
                 <Bell style={{width:'14px',height:'14px'}} />
                 {unreadNotifs.length > 0 && (
@@ -210,9 +281,9 @@ export const Navbar: React.FC = () => {
                           {notif.type === 'result_ready' && <CheckCircle2 style={{width:'12px',height:'12px',color:'#30d158',flexShrink:0,marginTop:'1px'}} />}
                           {notif.type === 'at_risk_alert' && <AlertTriangle style={{width:'12px',height:'12px',color:'#ff453a',flexShrink:0,marginTop:'1px'}} />}
                           <span className="font-medium text-white leading-tight text-xs">{notif.title}</span>
-                          <span className="ml-auto text-[10px] text-[#86868b] shrink-0">{notif.timestamp}</span>
+                          <span className="ml-auto text-[10px] text-[#9da3ae] shrink-0">{notif.timestamp}</span>
                         </div>
-                        <p className="text-[#86868b] leading-snug pl-4 text-[11px]">{notif.message}</p>
+                        <p className="text-[#9da3ae] leading-snug pl-4 text-[11px]">{notif.message}</p>
                       </div>
                     ))}
                   </div>
@@ -220,7 +291,7 @@ export const Navbar: React.FC = () => {
               )}
             </div>
 
-            {/* Quick Practice CTA - Apple Pill */}
+            {/* Quick Practice CTA */}
             <button
               onClick={() => { setUserRole('student'); setCurrentView('questions'); }}
               className="btn-primary hidden sm:flex text-xs py-1.5 px-3.5"
@@ -232,7 +303,7 @@ export const Navbar: React.FC = () => {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#86868b] hover:text-white transition-colors"
+              className="lg:hidden p-2 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#9da3ae] hover:text-white transition-colors"
             >
               {mobileOpen ? <X style={{width:'16px',height:'16px'}} /> : <Menu style={{width:'16px',height:'16px'}} />}
             </button>
@@ -243,21 +314,53 @@ export const Navbar: React.FC = () => {
       {/* Mobile Menu Drawer */}
       {mobileOpen && (
         <div className="fixed inset-x-0 top-[60px] z-40 lg:hidden animate-fade-in-down">
-          <div className="bg-[#1c1c1e]/95 backdrop-blur-2xl border border-white/[0.1] p-3 space-y-1 mx-3 rounded-2xl mt-1 shadow-2xl">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item)}
-                className={`w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                  currentView === item.id
-                    ? 'bg-[#0071e3] text-white font-semibold shadow-sm'
-                    : 'text-[#86868b] hover:bg-white/[0.06] hover:text-white'
-                }`}
-              >
-                {item.icon && <item.icon style={{width:'14px',height:'14px'}} />}
-                <span>{item.label}</span>
-              </button>
-            ))}
+          <div className="bg-[#1c1c1e]/98 backdrop-blur-2xl border border-white/[0.12] p-4 space-y-3 mx-3 rounded-2xl mt-1 shadow-2xl max-h-[80vh] overflow-y-auto">
+            <div>
+              <div className="text-[10px] font-semibold text-[#9da3ae] uppercase tracking-wider mb-2 px-2">
+                Study &amp; Learning Tools
+              </div>
+              <div className="space-y-1">
+                {primaryNavItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id, item.role)}
+                    className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                      currentView === item.id
+                        ? 'bg-[#0071e3] text-white font-semibold shadow-sm'
+                        : 'text-[#9da3ae] hover:bg-white/[0.06] hover:text-white'
+                    }`}
+                  >
+                    {item.icon && <item.icon style={{width:'14px',height:'14px'}} />}
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/[0.08]">
+              <div className="text-[10px] font-semibold text-[#9da3ae] uppercase tracking-wider mb-2 px-2">
+                Portals &amp; Roles
+              </div>
+              <div className="space-y-1">
+                {portalItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id, item.role)}
+                    className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                      currentView === item.id
+                        ? 'bg-[#5e5ce6] text-white font-semibold shadow-sm'
+                        : 'text-[#9da3ae] hover:bg-white/[0.06] hover:text-white'
+                    }`}
+                  >
+                    {item.icon && <item.icon style={{width:'14px',height:'14px'}} />}
+                    <div className="text-left">
+                      <div>{item.label}</div>
+                      <div className="text-[10px] text-[#9da3ae] font-normal">{item.desc}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -270,3 +373,4 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
+

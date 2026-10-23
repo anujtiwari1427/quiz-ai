@@ -77,9 +77,9 @@ export default {
         },
       },
       fontFamily: {
-        sans:    ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', '"SF Pro"', 'Inter', 'system-ui', 'sans-serif'],
-        display: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Outfit', 'Inter', 'sans-serif'],
-        mono:    ['"SF Mono"', 'JetBrains Mono', 'Fira Code', 'Menlo', 'monospace'],
+        sans:    ['"Plus Jakarta Sans"', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'system-ui', 'sans-serif'],
+        display: ['Outfit', '"Plus Jakarta Sans"', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'sans-serif'],
+        mono:    ['"JetBrains Mono"', '"SF Mono"', 'Fira Code', 'Menlo', 'monospace'],
       },
       borderRadius: {
         '4xl': '2rem',

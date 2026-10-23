@@ -97,15 +97,15 @@ export const StudyToolsSection: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="section-label glass-sm border border-emerald-500/20 text-emerald-300 mb-4 inline-flex items-center gap-2">
-            <Sparkles style={{ width: '13px', height: '13px', color: '#10b981' }} />
-            <span>Student Study Platform</span>
+          <div className="section-label glass-sm border border-emerald-500/25 text-[#30d158] mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold">
+            <Sparkles style={{ width: '13px', height: '13px', color: '#30d158' }} />
+            <span>Interactive Student Learning Suite</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-display font-black text-white tracking-tight">
-            Comprehensive <span className="gradient-text-emerald">Study Tools</span>
+            Integrated <span className="gradient-text-apple">Study Tools</span>
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base mt-2 leading-relaxed">
-            Four powerful, interconnected tools built to elevate every student from daily revision to board exam perfection.
+          <p className="text-[#c9ccd3] text-sm sm:text-base mt-2 leading-relaxed">
+            Four interconnected study tools built to elevate students from daily chapter revision to board exam mastery.
           </p>
         </div>
 
@@ -120,42 +120,42 @@ export const StudyToolsSection: React.FC = () => {
               transition={{ duration: 0.4, delay: idx * 0.1 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               onClick={tool.onClick}
-              className="bg-[#1c1c1e]/75 backdrop-blur-2xl rounded-3xl p-6 border border-white/[0.08] hover:border-white/[0.18] cursor-pointer flex flex-col justify-between relative shadow-xl group transition-all duration-300"
+              className="bg-[#161618]/90 backdrop-blur-2xl rounded-3xl p-6 border border-white/[0.1] hover:border-white/[0.22] cursor-pointer flex flex-col justify-between relative shadow-xl hover:shadow-2xl group transition-all duration-300"
             >
               <div className="space-y-4">
                 {/* Header with Icon and Badge */}
                 <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-white/[0.06] border border-white/[0.08] shadow-inner text-[#f5f5f7]">
+                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border shadow-inner ${tool.iconBg} ${tool.borderColor}`}>
                     <tool.icon style={{ width: '20px', height: '20px' }} />
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[9px] font-medium bg-white/[0.08] border border-white/[0.1] text-[#f5f5f7]">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/[0.08] border border-white/[0.12] text-[#f5f5f7]">
                     {tool.badge}
                   </span>
                 </div>
 
                 {/* Titles */}
                 <div>
-                  <h3 className="text-base font-display font-semibold text-[#f5f5f7] group-hover:text-[#2997ff] transition-colors">
+                  <h3 className="text-base font-display font-bold text-white group-hover:text-[#2997ff] transition-colors">
                     {tool.title}
                   </h3>
-                  <p className="text-[11px] font-normal text-[#86868b] tracking-wide mt-0.5">
+                  <p className="text-xs font-medium text-[#9da3ae] tracking-wide mt-0.5">
                     {tool.subtitle}
                   </p>
                 </div>
 
                 {/* Description */}
-                <p className="text-xs text-[#86868b] leading-relaxed">
+                <p className="text-xs text-[#cbd5e1] leading-relaxed">
                   {tool.description}
                 </p>
               </div>
 
               {/* Footer Stat & CTA */}
-              <div className="pt-4 mt-5 border-t border-white/[0.06] flex items-center justify-between">
-                <span className="text-[11px] font-mono text-[#86868b]">
+              <div className="pt-4 mt-5 border-t border-white/[0.08] flex items-center justify-between">
+                <span className="text-xs font-mono text-[#9da3ae]">
                   {tool.statLabel}
                 </span>
 
-                <span className="text-xs font-medium text-[#2997ff] group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                <span className="text-xs font-semibold text-[#2997ff] group-hover:translate-x-1 transition-transform flex items-center gap-1">
                   <span>{tool.cta}</span>
                   <ArrowRight style={{ width: '13px', height: '13px' }} />
                 </span>
