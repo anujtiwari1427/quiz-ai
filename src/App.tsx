@@ -15,6 +15,7 @@ import { ExamCreator } from './components/exams/ExamCreator';
 import { ExamRunner } from './components/exams/ExamRunner';
 import { ExamAnalysisView } from './components/exams/ExamAnalysisView';
 import { StudioWorkspace } from './components/studio/StudioWorkspace';
+import { DEFAULT_PW_EXAM } from './mock/pwTestData';
 
 export const AppContent: React.FC = () => {
   const { 
@@ -70,11 +71,11 @@ export const AppContent: React.FC = () => {
           />
         )}
 
-        {currentView === 'exam-analysis' && activeExamAnalysis && (
+        {currentView === 'exam-analysis' && (
           <ExamAnalysisView
-            exam={activeExamAnalysis.exam}
-            attempt={activeExamAnalysis.attempt}
-            onRetakeExam={() => startExamRunner(activeExamAnalysis.exam)}
+            exam={activeExamAnalysis?.exam}
+            attempt={activeExamAnalysis?.attempt}
+            onRetakeExam={() => startExamRunner(activeExamAnalysis?.exam || DEFAULT_PW_EXAM)}
             onPracticeChapter={(chapterName) => {
               launchExamCreator();
             }}

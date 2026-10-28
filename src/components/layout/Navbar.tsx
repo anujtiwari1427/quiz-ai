@@ -17,7 +17,8 @@ import {
   BookOpen,
   Layers,
   Cpu,
-  ChevronDown
+  ChevronDown,
+  Trophy
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { LIVE_AI_SERVICE } from '../../services/liveAiService';
@@ -70,6 +71,7 @@ export const Navbar: React.FC = () => {
   const primaryNavItems = [
     { id: 'strata-studio', label: 'AI Study Studio', icon: Sparkles, role: 'student' as const, isSpecial: true },
     { id: 'marketing', label: 'Overview', icon: null },
+    { id: 'exam-analysis', label: 'EduPlus Test Result', icon: Trophy, role: 'student' as const },
     { id: 'books', label: 'Library', icon: BookOpen, role: 'student' as const },
     { id: 'create-exam', label: 'Create AI Exam', icon: Sparkles, role: 'student' as const },
     { id: 'questions', label: 'Question Bank', icon: Layers, role: 'student' as const },

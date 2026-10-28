@@ -1007,3 +1007,24 @@ body::before {
   animation: float var(--duration, 6s) ease-in-out infinite;
   animation-delay: var(--delay, 0s);
 }
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Print Styles for EduPlus PDF Report */
+@media print {
+  nav, header, footer, .no-print {
+    display: none !important;
+  }
+  body, main {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
