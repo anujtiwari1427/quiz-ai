@@ -198,13 +198,21 @@ export const MarksDashboard: React.FC = () => {
             <span>Official Report Card</span>
           </button>
 
+          <button
+            onClick={() => setCurrentView('score-upload')}
+            className="btn-secondary text-xs py-2 px-3.5 rounded-xl flex items-center gap-1.5 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+          >
+            <BarChart3 style={{ width: '13px', height: '13px' }} />
+            <span>Class Score Upload &amp; Dashboard</span>
+          </button>
+
           {/* ADD MARKS OPTION BUTTON */}
           <button
             onClick={() => setIsAddMarksModalOpen(true)}
             className="btn-primary text-xs py-2 px-4 rounded-xl shadow-lg shadow-brand-500/25 flex items-center gap-1.5 font-bold"
           >
             <Plus style={{ width: '14px', height: '14px' }} />
-            <span>Add Marks Record</span>
+            <span>Add Single Record</span>
           </button>
         </div>
       </div>

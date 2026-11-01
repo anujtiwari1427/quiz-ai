@@ -2,7 +2,47 @@ export type BoardType = 'CBSE' | 'ICSE' | 'State Board (Maharashtra)' | 'State B
 
 export type UserRole = 'teacher' | 'admin' | 'parent' | 'student';
 
-export type ActiveAppView = 'marketing' | 'teacher' | 'student' | 'parent' | 'admin' | 'marks' | 'syllabus' | 'books' | 'questions' | 'create-exam' | 'take-exam' | 'exam-analysis' | 'strata-studio' | 'strata-courses' | 'strata-repetition' | 'strata-analytics' | 'strata-billing';
+export type ActiveAppView = 
+  | 'marketing' 
+  | 'teacher' 
+  | 'student' 
+  | 'parent' 
+  | 'admin' 
+  | 'admin-login' 
+  | 'parent-login' 
+  | 'marks' 
+  | 'syllabus' 
+  | 'books' 
+  | 'questions' 
+  | 'create-exam' 
+  | 'take-exam' 
+  | 'exam-analysis' 
+  | 'ai-paper-gen'
+  | 'smart-attendance'
+  | 'score-upload'
+  | 'strata-studio' 
+  | 'strata-courses' 
+  | 'strata-repetition' 
+  | 'strata-analytics' 
+  | 'strata-billing';
+
+export type TextSizeTheme = 'normal' | 'large' | 'extra-large';
+
+export interface AdminUser {
+  name: string;
+  email: string;
+  role: string;
+  branch: string;
+  schoolCode: string;
+  avatar?: string;
+}
+
+export interface ParentUser {
+  name: string;
+  phone: string;
+  activeChildGsid: string;
+  childName: string;
+}
 
 export type QuestionType = 'mcq' | 'short_answer' | 'long_answer' | 'case_study' | 'assertion_reason';
 
@@ -364,5 +404,113 @@ export interface QuestionSetAttempt {
     marksAwarded: number;
     negativeDeducted?: number;
   }[];
+}
+
+// ──────────────────────────────────────────────
+// SMART ATTENDANCE TYPES
+// ──────────────────────────────────────────────
+export type AttendanceStatus = 'present' | 'absent' | 'late' | 'excused';
+export type AttendanceMethod = 'manual' | 'qr_code' | 'facial_id' | 'rfid' | 'kiosk';
+
+export interface AttendanceRecord {
+  id: string;
+  studentGsid: string;
+  studentName: string;
+  rollNumber: string;
+  classGrade: number;
+  section: string;
+  date: string; // YYYY-MM-DD
+  status: AttendanceStatus;
+  checkInTime?: string; // HH:MM:SS
+  method: AttendanceMethod;
+  remarks?: string;
+  parentNotified?: boolean;
+}
+
+export interface StudentAttendanceSummary {
+  studentGsid: string;
+  studentName: string;
+  rollNumber: string;
+  classGrade: number;
+  section: string;
+  parentPhone: string;
+  totalDays: number;
+  presentDays: number;
+  absentDays: number;
+  lateDays: number;
+  excusedDays: number;
+  attendancePercentage: number;
+  isAtRisk: boolean; // < 75%
+  consecutiveAbsences: number;
+}
+
+// ──────────────────────────────────────────────
+// AI QUESTION PAPER GENERATION TYPES
+// ──────────────────────────────────────────────
+export interface PaperQuestionItem {
+  id: string;
+  questionNumber: number;
+  section: 'A' | 'B' | 'C' | 'D';
+  type: 'mcq' | 'assertion_reason' | 'short_answer_2m' | 'short_answer_3m' | 'long_answer_5m' | 'case_study';
+  marks: number;
+  questionText: string;
+  options?: { id: string; text: string }[];
+  correctAnswer: string;
+  solutionExplanation: string;
+  markingRubric: { step: string; marks: number }[];
+  bloomsLevel: BloomsLevel;
+  difficulty: DifficultyLevel;
+  topic: string;
+}
+
+export interface PaperSectionMeta {
+  sectionId: 'A' | 'B' | 'C' | 'D';
+  title: string;
+  description: string;
+  questionCount: number;
+  marksPerQuestion: number;
+  totalMarks: number;
+}
+
+export interface AiGeneratedPaper {
+  id: string;
+  title: string;
+  board: BoardType;
+  classGrade: number;
+  subject: string;
+  topics: string[];
+  totalMarks: number;
+  durationMinutes: number;
+  createdAt: string;
+  academicYear: string;
+  generalInstructions: string[];
+  sections: PaperSectionMeta[];
+  questions: PaperQuestionItem[];
+  modelUsed: string;
+  isAiGenerated: boolean;
+}
+
+// ──────────────────────────────────────────────
+// STUDENT SCORE UPLOAD & BATCH DASHBOARD TYPES
+// ──────────────────────────────────────────────
+export interface StudentScoreBatchItem {
+  id: string;
+  studentGsid: string;
+  studentName: string;
+  rollNumber: string;
+  classGrade: number;
+  section: string;
+  subject: string;
+  examName: string;
+  examType: 'Unit Test' | 'Mid-Term' | 'Pre-Board' | 'Practice Set' | 'Board Exam' | 'Offline Assessment';
+  date: string;
+  maxMarks: number;
+  marksObtained: number;
+  percentage: number;
+  grade: string;
+  status: 'Pass' | 'Fail' | 'Needs Improvement';
+  rank?: number;
+  remarks?: string;
+  uploadedAt: string;
 }
 

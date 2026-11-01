@@ -12,6 +12,9 @@ import {
   SubscriptionPlan,
   Question,
   ActiveAppView,
+  TextSizeTheme,
+  AdminUser,
+  ParentUser,
   MarkRecord,
   Syllabus,
   Book,
@@ -33,21 +36,35 @@ interface AppContextType {
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;
 
+  // Text Size Theme
+  textSizeTheme: TextSizeTheme;
+  setTextSizeTheme: (size: TextSizeTheme) => void;
+
   // Teacher Subview
   teacherTab: 'tests' | 'builder' | 'proctor' | 'grading' | 'mastery';
   setTeacherTab: (tab: 'tests' | 'builder' | 'proctor' | 'grading' | 'mastery') => void;
 
-  // Parent Subview
+  // Parent Subview & Auth
   parentTab: 'overview' | 'tutor' | 'billing';
   setParentTab: (tab: 'overview' | 'tutor' | 'billing') => void;
   activeChildGsid: string;
   setActiveChildGsid: (gsid: string) => void;
   isParentLoggedIn: boolean;
   setIsParentLoggedIn: (loggedIn: boolean) => void;
+  parentUser: ParentUser | null;
+  setParentUser: (user: ParentUser | null) => void;
+  parentLogin: (phone: string, childGsid?: string, parentName?: string) => void;
+  parentLogout: () => void;
 
-  // Admin Subview
+  // Admin Subview & Auth
   adminTab: 'branches' | 'roster' | 'dpdp';
   setAdminTab: (tab: 'branches' | 'roster' | 'dpdp') => void;
+  isAdminLoggedIn: boolean;
+  setIsAdminLoggedIn: (loggedIn: boolean) => void;
+  adminUser: AdminUser | null;
+  setAdminUser: (user: AdminUser | null) => void;
+  adminLogin: (user: AdminUser) => void;
+  adminLogout: () => void;
 
   // Data Collections
   tests: Test[];
@@ -132,17 +149,148 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentView, setCurrentView] = useState<ActiveAppView>('marketing');
+  // Text Size Theme (Default to 'large' to maintain large text size theme)
+  const [textSizeTheme, setTextSizeThemeState] = useState<TextSizeTheme>(() => {
+    const saved = localStorage.getItem('edupulse_text_size_theme') as TextSizeTheme;
+    return saved === 'normal' || saved === 'large' || saved === 'extra-large' ? saved : 'large';
+  });
+
+  const setTextSizeTheme = (size: TextSizeTheme) => {
+    setTextSizeThemeState(size);
+    localStorage.setItem('edupulse_text_size_theme', size);
+  };
+
+  useEffect(() => {
+    document.documentElement.classList.remove('theme-text-normal', 'theme-text-large', 'theme-text-extra-large');
+    document.documentElement.classList.add(`theme-text-${textSizeTheme}`);
+  }, [textSizeTheme]);
+
+  // Initial view from URL hash or query if present
+  const getInitialView = (): ActiveAppView => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace(/^#\/?/, '').trim();
+      if (
+        hash === 'ai-paper-gen' || 
+        hash === 'teacher' || 
+        hash === 'smart-attendance' || 
+        hash === 'score-upload' || 
+        hash === 'create-exam' ||
+        hash === 'marketing' ||
+        hash === 'take-exam' ||
+        hash === 'exam-analysis'
+      ) {
+        return hash as ActiveAppView;
+      }
+      const params = new URLSearchParams(window.location.search);
+      const v = params.get('view');
+      if (v === 'ai-paper-gen' || v === 'teacher' || v === 'marketing') {
+        return v as ActiveAppView;
+      }
+    }
+    return 'marketing';
+  };
+
+  const [currentView, setCurrentViewState] = useState<ActiveAppView>(getInitialView);
   const [userRole, setUserRole] = useState<UserRole>('teacher');
+
+  const setCurrentView = (view: ActiveAppView) => {
+    setCurrentViewState(view);
+    if (typeof window !== 'undefined') {
+      window.location.hash = `#/${view}`;
+    }
+  };
+
+  // Listen to hash changes for direct deep linking
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.replace(/^#\/?/, '').trim() as ActiveAppView;
+      const validViews: ActiveAppView[] = [
+        'marketing', 'teacher', 'ai-paper-gen', 'smart-attendance', 'score-upload',
+        'create-exam', 'take-exam', 'exam-analysis'
+      ];
+      if (validViews.includes(hash)) {
+        setCurrentViewState(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
   
   // Navigation tabs
   const [teacherTab, setTeacherTab] = useState<'tests' | 'builder' | 'proctor' | 'grading' | 'mastery'>('tests');
   const [parentTab, setParentTab] = useState<'overview' | 'tutor' | 'billing'>('overview');
   const [adminTab, setAdminTab] = useState<'branches' | 'roster' | 'dpdp'>('branches');
 
-  // Parent State
-  const [isParentLoggedIn, setIsParentLoggedIn] = useState<boolean>(true);
+  // Admin Auth State
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem('edupulse_admin_logged_in') === 'true';
+  });
+  const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
+    try {
+      const raw = localStorage.getItem('edupulse_admin_user');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const adminLogin = (user: AdminUser) => {
+    setIsAdminLoggedIn(true);
+    setAdminUser(user);
+    localStorage.setItem('edupulse_admin_logged_in', 'true');
+    localStorage.setItem('edupulse_admin_user', JSON.stringify(user));
+    setUserRole('admin');
+    setCurrentView('admin');
+  };
+
+  const adminLogout = () => {
+    setIsAdminLoggedIn(false);
+    setAdminUser(null);
+    localStorage.removeItem('edupulse_admin_logged_in');
+    localStorage.removeItem('edupulse_admin_user');
+    setCurrentView('admin-login');
+  };
+
+  // Parent Auth State
+  const [isParentLoggedIn, setIsParentLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem('edupulse_parent_logged_in') === 'true';
+  });
+  const [parentUser, setParentUser] = useState<ParentUser | null>(() => {
+    try {
+      const raw = localStorage.getItem('edupulse_parent_user');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
   const [activeChildGsid, setActiveChildGsid] = useState<string>('GSID-IND-2026-8819');
+
+  const parentLogin = (phone: string, childGsid?: string, parentName?: string) => {
+    const matchedChild = students.find(s => s.gsid === childGsid) || students[0];
+    const user: ParentUser = {
+      name: parentName || 'Verified Guardian',
+      phone: phone.startsWith('+91') ? phone : `+91 ${phone}`,
+      activeChildGsid: matchedChild?.gsid || 'GSID-IND-2026-8819',
+      childName: matchedChild?.name || 'Aarav Sharma'
+    };
+    setIsParentLoggedIn(true);
+    setParentUser(user);
+    if (matchedChild) {
+      setActiveChildGsid(matchedChild.gsid);
+    }
+    localStorage.setItem('edupulse_parent_logged_in', 'true');
+    localStorage.setItem('edupulse_parent_user', JSON.stringify(user));
+    setUserRole('parent');
+    setCurrentView('parent');
+  };
+
+  const parentLogout = () => {
+    setIsParentLoggedIn(false);
+    setParentUser(null);
+    localStorage.removeItem('edupulse_parent_logged_in');
+    localStorage.removeItem('edupulse_parent_user');
+    setCurrentView('parent-login');
+  };
 
   // Core Data
   const [tests, setTests] = useState<Test[]>(() => STORAGE_SERVICE.getTests());
@@ -659,6 +807,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setCurrentView,
         userRole,
         setUserRole,
+        textSizeTheme,
+        setTextSizeTheme,
         teacherTab,
         setTeacherTab,
         parentTab,
@@ -667,8 +817,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveChildGsid,
         isParentLoggedIn,
         setIsParentLoggedIn,
+        parentUser,
+        setParentUser,
+        parentLogin,
+        parentLogout,
         adminTab,
         setAdminTab,
+        isAdminLoggedIn,
+        setIsAdminLoggedIn,
+        adminUser,
+        setAdminUser,
+        adminLogin,
+        adminLogout,
         tests,
         students,
         attempts,

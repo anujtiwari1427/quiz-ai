@@ -361,20 +361,31 @@ export const ExamCreator: React.FC<ExamCreatorProps> = ({ onStartExam, onBack })
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
       
       {/* Header Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-black border border-white/[0.08] shadow-2xl space-y-3">
-        <div className="flex items-center gap-2">
-          <span className="badge badge-indigo flex items-center gap-1 text-[10px]">
-            <Sparkles className="w-3 h-3 text-amber-400" />
-            <span>AI Exam Paper Generator</span>
-          </span>
-          <span className="text-xs text-slate-400 font-mono">• Strictly RAG-Retrieved from Books</span>
+      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-black border border-white/[0.08] shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="badge badge-indigo flex items-center gap-1 text-[10px]">
+              <Sparkles className="w-3 h-3 text-amber-400" />
+              <span>AI Exam Paper Generator</span>
+            </span>
+            <span className="text-xs text-slate-400 font-mono">• Strictly RAG-Retrieved from Books</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-display font-black text-white">
+            Create AI Exam Paper
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+            Customize questions generated strictly from your uploaded textbooks with Bloom's Taxonomy, balanced difficulty distributions, and verified citations.
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-display font-black text-white">
-          Create AI Exam Paper
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-          Customize questions generated strictly from your uploaded textbooks. Questions adhere to Bloom's Taxonomy, balanced difficulty distributions, verified page citations, and exact total marks.
-        </p>
+
+        <button
+          type="button"
+          onClick={() => setCurrentView('ai-paper-gen')}
+          className="btn-primary text-xs py-2.5 px-4 rounded-xl flex items-center gap-2 whitespace-nowrap shadow-lg shadow-emerald-500/20"
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Full Board Paper Studio</span>
+        </button>
       </div>
 
       {formError && (

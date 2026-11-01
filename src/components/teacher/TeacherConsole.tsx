@@ -21,7 +21,8 @@ export const TeacherConsole: React.FC = () => {
     students, 
     launchStudentTestRoom,
     addQuestionsToExistingTest,
-    createAndPublishTest
+    createAndPublishTest,
+    setCurrentView
   } = useApp();
   const [selectedTestForShare, setSelectedTestForShare] = useState<Test | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -127,6 +128,57 @@ export const TeacherConsole: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* ── Direct Feature Launchers for Teacher ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <button
+          onClick={() => setCurrentView('ai-paper-gen')}
+          className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/40 to-slate-900 border border-emerald-500/20 hover:border-emerald-500/50 flex items-center justify-between text-left transition-all group shadow-md"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-colors">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">AI Paper Generator</div>
+              <div className="text-[10px] text-slate-400">Board blueprint &amp; rubrics via Gemini</div>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+        </button>
+
+        <button
+          onClick={() => setCurrentView('smart-attendance')}
+          className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-950/40 to-slate-900 border border-blue-500/20 hover:border-blue-500/50 flex items-center justify-between text-left transition-all group shadow-md"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-black transition-colors">
+              <Users className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Smart Attendance</div>
+              <div className="text-[10px] text-slate-400">QR, biometric &amp; parent WhatsApp</div>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+        </button>
+
+        <button
+          onClick={() => setCurrentView('score-upload')}
+          className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-950/40 to-slate-900 border border-purple-500/20 hover:border-purple-500/50 flex items-center justify-between text-left transition-all group shadow-md"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 group-hover:bg-purple-500 group-hover:text-black transition-colors">
+              <BarChart3 className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">Scores &amp; Class Dashboard</div>
+              <div className="text-[10px] text-slate-400">Batch upload &amp; rank cards</div>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all" />
+        </button>
       </div>
 
       {/* ── Sub-Tab Bar ── */}

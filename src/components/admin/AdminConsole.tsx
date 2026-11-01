@@ -2,14 +2,15 @@ import React from 'react';
 import {
   Building2, Users, ShieldCheck, UploadCloud,
   BarChart3, TrendingUp, AlertTriangle, CheckCircle2,
-  Globe, Zap, Award
+  Globe, Zap, Award, LogOut, KeyRound
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { BulkRosterImport } from './BulkRosterImport';
 import { DPDPAuditLogs } from './DPDPAuditLogs';
+import { TextSizeControl } from '../auth/TextSizeControl';
 
 export const AdminConsole: React.FC = () => {
-  const { adminTab, setAdminTab, organizations, students, tests } = useApp();
+  const { adminTab, setAdminTab, organizations, students, tests, adminUser, adminLogout } = useApp();
 
   const adminTabs = [
     { id: 'branches', label: 'Branch Overview', icon: Building2 },
@@ -27,6 +28,28 @@ export const AdminConsole: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
+      {/* ── Top Accessibility & Session Bar ── */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-2xl bg-[#1c1c1e]/80 border border-white/[0.08]">
+        <div className="flex items-center gap-2">
+          <KeyRound className="w-4 h-4 text-amber-400" />
+          <span className="text-xs text-slate-300 font-semibold">
+            Logged in as <span className="text-white font-bold">{adminUser?.name || 'Principal Archana Iyer'}</span> ({adminUser?.role || 'Institution Head'})
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 justify-end">
+          <TextSizeControl variant="compact" />
+          <button
+            onClick={adminLogout}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 transition-all"
+            title="Log out and return to Admin Login page"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+
       {/* ── Header ── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
@@ -36,7 +59,7 @@ export const AdminConsole: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="badge badge-amber">Multi-School Institution HQ</span>
-              <span className="text-xs text-slate-500">• Principal Archana Iyer</span>
+              <span className="text-xs text-slate-400">• {adminUser?.branch || 'Delhi Public School, R.K. Puram'}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-display font-black text-white tracking-tight">
               Institutional Admin &amp; Governance Console

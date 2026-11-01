@@ -3,7 +3,7 @@ import {
   CheckCircle2, XCircle, Clock, Bookmark, Sparkles, 
   Play, RotateCcw, HelpCircle, ChevronRight, ChevronLeft,
   MessageSquare, Send, Check, AlertTriangle, ShieldCheck,
-  Video, Eye, EyeOff, BookOpen, Star
+  Video, Eye, EyeOff, BookOpen, Star, Zap
 } from 'lucide-react';
 import { PwThemeConfig } from './pwTheme';
 import { ExamModel, AttemptModel, ExamQuestionModel } from '../../../types/schemas';

@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import {
   Users, Sparkles, TrendingUp, AlertTriangle, CheckCircle2,
   Download, MessageSquareQuote, CreditCard, Award, ChevronRight,
-  BookOpen, BarChart3, Target, Zap
+  BookOpen, BarChart3, Target, Zap, LogOut, MessageSquare
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { WhatsAppAuthModal } from './WhatsAppAuthModal';
 import { AITutorDrawer } from './AITutorDrawer';
 import { PricingSection } from '../marketing/PricingSection';
+import { TextSizeControl } from '../auth/TextSizeControl';
 
 /* ── Score ring SVG ── */
 const ScoreRing: React.FC<{ pct: number; size?: number }> = ({ pct, size = 72 }) => {
@@ -36,7 +37,7 @@ const ScoreRing: React.FC<{ pct: number; size?: number }> = ({ pct, size = 72 })
 export const ParentPortal: React.FC = () => {
   const {
     parentTab, setParentTab, students, activeChildGsid, setActiveChildGsid,
-    isParentLoggedIn, setIsParentLoggedIn, attempts, tests, activePlan
+    isParentLoggedIn, setIsParentLoggedIn, parentUser, parentLogout, attempts, tests, activePlan
   } = useApp();
 
   const [showAuthModal, setShowAuthModal] = useState(!isParentLoggedIn);
@@ -45,7 +46,7 @@ export const ParentPortal: React.FC = () => {
   const childAttempts = attempts.filter(a => a.studentGsid === activeChild?.gsid);
 
   const handleDownloadReport = (testTitle: string) => {
-    alert(`Generating DPDP-compliant report card for ${activeChild.name} (${testTitle}). PDF sent to WhatsApp +91 98765 43210.`);
+    alert(`Generating DPDP-compliant report card for ${activeChild.name} (${testTitle}). PDF sent to WhatsApp ${parentUser?.phone || '+91 98765 43210'}.`);
   };
 
   const parentTabs = [
@@ -57,6 +58,28 @@ export const ParentPortal: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
+      {/* ── Top Accessibility & Session Bar ── */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-2xl bg-[#1c1c1e]/80 border border-white/[0.08]">
+        <div className="flex items-center gap-2">
+          <MessageSquare className="w-4 h-4 text-emerald-400" />
+          <span className="text-xs text-slate-300 font-semibold">
+            Guardian: <span className="text-white font-bold">{parentUser?.name || 'Verified Guardian'}</span> ({parentUser?.phone || '+91 98765 43210'})
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 justify-end">
+          <TextSizeControl variant="compact" />
+          <button
+            onClick={parentLogout}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 transition-all"
+            title="Log out and return to Parent Login page"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+
       {/* ── Header ── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
@@ -66,7 +89,7 @@ export const ParentPortal: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="badge badge-emerald">Parent Portal</span>
-              <span className="text-xs text-slate-500">• Verified WhatsApp +91 98765 43210</span>
+              <span className="text-xs text-slate-400">• Verified WhatsApp {parentUser?.phone || '+91 98765 43210'}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-display font-black text-white tracking-tight">
               Academic Dashboard &amp; AI Tutor

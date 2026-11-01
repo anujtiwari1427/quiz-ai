@@ -252,7 +252,7 @@ export const LIVE_AI_SERVICE = {
       }
       parts.push({ text: prompt });
 
-      const res = await fetch(url, {
+      let res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -266,8 +266,27 @@ export const LIVE_AI_SERVICE = {
       });
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error?.message || `Gemini API error (HTTP ${res.status})`);
+        // Fallback to gemini-1.5-flash if 2.0-flash is unavailable
+        const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${config.keyOrUrl.trim()}`;
+        const fallbackRes = await fetch(fallbackUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts }],
+            generationConfig: {
+              temperature,
+              maxOutputTokens: maxTokens,
+              ...(jsonMode ? { responseMimeType: 'application/json' } : {})
+            }
+          })
+        }).catch(() => null);
+
+        if (fallbackRes && fallbackRes.ok) {
+          res = fallbackRes;
+        } else {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error?.message || `Gemini API error (HTTP ${res.status})`);
+        }
       }
 
       const data = await res.json();
