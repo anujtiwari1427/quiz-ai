@@ -21,6 +21,13 @@ export interface GeneratePaperInput {
   durationMinutes: number;
   difficulty: 'balanced' | 'easy' | 'hard' | 'olympiad';
   includeCaseStudy: boolean;
+  // School / teacher metadata
+  schoolName?: string;
+  teacherName?: string;
+  invigilatorName?: string;
+  academicSession?: string;
+  // Multi-set generation
+  setCount?: 1 | 2 | 3;
 }
 
 export const AI_PAPER_SERVICE = {
@@ -180,11 +187,52 @@ Respond with ONLY valid JSON without markdown quotes:
       modelUsed = 'EduPulse Pedagogical Blueprint Engine';
     }
 
+    // Attach school metadata
+    if (input.schoolName) (generatedPaper as any).schoolName = input.schoolName;
+    if (input.teacherName) (generatedPaper as any).teacherName = input.teacherName;
+    if (input.invigilatorName) (generatedPaper as any).invigilatorName = input.invigilatorName;
+    if (input.academicSession) (generatedPaper as any).academicSession = input.academicSession;
+
     onProgress?.(100, 'Question paper and marking scheme generated successfully!');
     await new Promise(r => setTimeout(r, 300));
 
     this.savePaper(generatedPaper);
     return generatedPaper;
+  },
+
+  /**
+   * Generates multiple shuffled paper sets (Set-1, Set-2, Set-3) from a base paper.
+   * Only objective/MCQ questions in Section A are shuffled between sets.
+   */
+  generatePaperSets(basePaper: AiGeneratedPaper, setCount: 2 | 3 = 2): AiGeneratedPaper[] {
+    const sets: AiGeneratedPaper[] = [{ ...basePaper, title: `${basePaper.title} — SET 1` }];
+
+    for (let s = 2; s <= setCount; s++) {
+      // Shuffle Section A questions; keep B/C/D in place
+      const secAQs = basePaper.questions.filter(q => q.section === 'A');
+      const rest = basePaper.questions.filter(q => q.section !== 'A');
+
+      const shuffledA = [...secAQs].sort(() => Math.random() - 0.5).map((q, idx) => ({
+        ...q,
+        id: `${q.id}_set${s}`,
+        questionNumber: idx + 1
+      }));
+
+      const renumberedRest = rest.map((q, idx) => ({
+        ...q,
+        id: `${q.id}_set${s}`,
+        questionNumber: shuffledA.length + idx + 1
+      }));
+
+      sets.push({
+        ...basePaper,
+        id: `${basePaper.id}_set${s}`,
+        title: `${basePaper.title.replace(/ — SET \d$/, '')} — SET ${s}`,
+        questions: [...shuffledA, ...renumberedRest]
+      });
+    }
+
+    return sets;
   },
 
   /**

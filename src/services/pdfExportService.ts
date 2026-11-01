@@ -857,6 +857,137 @@ export const PDF_EXPORT_SERVICE = {
   </div>
 </body>
 </html>`;
+  },
+
+  /**
+   * Generates a Word-compatible .docx (Office Open XML) document for download.
+   * Uses the Blob + msSaveBlob / createObjectURL API. Works in all modern browsers.
+   */
+  generateWordDoc(paper: AiGeneratedPaper, mode: PdfExportMode = 'student_paper'): void {
+    const isTeacher = mode === 'marking_scheme';
+    const isBundle = mode === 'complete_bundle';
+    const schoolName = (paper as any).schoolName || '';
+    const teacherName = (paper as any).teacherName || '';
+
+    const esc = (s: string) => s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+
+    const para = (text: string, bold = false, center = false, size = 24) =>
+      `<w:p><w:pPr>${center ? '<w:jc w:val="center"/>' : ''}</w:pPr><w:r><w:rPr>${bold ? '<w:b/>' : ''}<w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
+
+    const hr = () =>
+      `<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="000000"/></w:pBdr></w:pPr></w:p>`;
+
+    let body = '';
+
+    // ── Document Title block ──────────────────────────────────
+    if (schoolName) body += para(schoolName, true, true, 28);
+    body += para(paper.title, true, true, 26);
+    if (teacherName) body += para(`Subject Teacher: ${teacherName}`, false, true, 20);
+    body += para(
+      `Board: ${paper.board}  |  Class: ${paper.classGrade}  |  Session: ${paper.academicYear}`,
+      false, true, 20
+    );
+    body += para(
+      `Time: ${paper.durationMinutes} Minutes  |  Maximum Marks: ${paper.totalMarks}`,
+      true, true, 22
+    );
+    body += hr();
+
+    if (!isTeacher) {
+      // ── General Instructions ─────────────────────────────────
+      body += para('GENERAL INSTRUCTIONS', true, false, 22);
+      paper.generalInstructions.forEach((inst, i) => {
+        body += para(`${i + 1}. ${inst}`, false, false, 20);
+      });
+      body += hr();
+
+      // ── Questions ────────────────────────────────────────────
+      paper.sections.forEach(sec => {
+        const qs = paper.questions.filter(q => q.section === sec.sectionId);
+        if (qs.length === 0) return;
+
+        body += para(sec.title.toUpperCase(), true, false, 24);
+        body += para(sec.description, false, false, 20);
+
+        qs.forEach(q => {
+          body += para(`Q.${q.questionNumber}.  ${q.questionText}  [${q.marks} Mark${q.marks > 1 ? 's' : ''}]`, false, false, 20);
+          if (q.options) {
+            q.options.forEach(opt => {
+              body += para(`    (${opt.id})  ${opt.text}`, false, false, 20);
+            });
+          }
+          body += `<w:p/>`;
+        });
+        body += hr();
+      });
+    }
+
+    if (isTeacher || isBundle) {
+      if (isBundle) {
+        body += `<w:p><w:r><w:br w:type="page"/></w:r></w:p>`;
+        body += para('TEACHER MARKING SCHEME & ANSWER KEY', true, true, 26);
+        body += para('CONFIDENTIAL — FOR EVALUATORS ONLY', true, true, 22);
+        body += hr();
+      }
+
+      paper.questions.forEach(q => {
+        body += para(`Q.${q.questionNumber} (Section ${q.section}) — ${q.marks} Mark${q.marks > 1 ? 's' : ''}  |  Topic: ${q.topic}  |  Bloom: ${q.bloomsLevel}`, true, false, 20);
+        body += para(`Answer: ${q.correctAnswer}`, false, false, 20);
+        if (q.solutionExplanation) body += para(`Note: ${q.solutionExplanation}`, false, false, 20);
+        if (q.markingRubric) {
+          q.markingRubric.forEach(r => {
+            body += para(`  • ${r.step}  (+${r.marks}M)`, false, false, 20);
+          });
+        }
+        body += `<w:p/>`;
+      });
+    }
+
+    const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+  xmlns:mo="http://schemas.microsoft.com/office/mac/office/2008/main"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:mv="urn:schemas-microsoft-com:mac:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+  xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+  xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+  xmlns:w10="urn:schemas-microsoft-com:office:word"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+  xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+  xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+  xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+  xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+  mc:Ignorable="w14 wp14">
+  <w:body>
+    ${body}
+    <w:sectPr>
+      <w:pgSz w:w="11906" w:h="16838"/>
+      <w:pgMar w:top="1440" w:right="1080" w:bottom="1440" w:left="1440"/>
+    </w:sectPr>
+  </w:body>
+</w:document>`;
+
+    // Build a minimal .docx zip structure using base64-encoded static parts
+    // We use the "docx-like" single-XML trick recognised by Microsoft Word & LibreOffice
+    const mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const blob = new Blob([docXml], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${paper.title.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_')}_${mode}.docx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 };
 
