@@ -267,10 +267,14 @@ Respond with ONLY valid JSON without markdown quotes:
 
     return {
       id: `exam_from_paper_${paper.id}`,
+      userId: 'teacher_current',
       title: paper.title,
+      totalMarks: paper.totalMarks,
+      timeLimitMinutes: paper.durationMinutes,
       config: {
+        title: paper.title,
         sourceBookIds: ['book_ai_gen'],
-        sourceChapterIds: paper.topics,
+        sourceChapterIds: paper.topics.length > 0 ? paper.topics : ['topic_all'],
         totalQuestions: questions.length,
         totalMarks: paper.totalMarks,
         timeLimitMinutes: paper.durationMinutes,
@@ -278,7 +282,9 @@ Respond with ONLY valid JSON without markdown quotes:
         difficultyMode: 'custom',
         difficultyMix: { easy: 30, medium: 50, hard: 20 },
         negativeMarking: false,
-        language: 'English'
+        negativeMarkingValue: 0,
+        language: 'English',
+        focusOnWeakChapters: false
       },
       createdAt: paper.createdAt,
       questions

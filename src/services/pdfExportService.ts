@@ -3,6 +3,10 @@ import { AiGeneratedPaper, PaperQuestionItem } from '../types';
 export type PdfExportMode = 'student_paper' | 'marking_scheme' | 'complete_bundle';
 
 export const PDF_EXPORT_SERVICE = {
+  exportPaper(paper: AiGeneratedPaper, mode: PdfExportMode = 'student_paper'): void {
+    this.generateAndPrintPaperPdf(paper, mode);
+  },
+
   /**
    * Generates a publication-grade, official Board-standard Examination PDF document.
    * Formatted strictly according to CBSE/ICSE standard examination layout specifications.

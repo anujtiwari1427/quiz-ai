@@ -204,7 +204,7 @@ export const SMART_ATTENDANCE_SERVICE = {
       students.forEach((student, idx) => {
         let status: AttendanceStatus = 'present';
         let method: AttendanceMethod = (idx % 2 === 0) ? 'qr_code' : 'facial_id';
-        let checkInTime = `07:${45 + (idx * 3) % 15}:${String((idx * 7) % 60).padStart(2, '0')}`;
+        let checkInTime: string | undefined = `07:${45 + (idx * 3) % 15}:${String((idx * 7) % 60).padStart(2, '0')}`;
 
         // Add realistic absences for demo
         if (student.rollNumber === '07B-12' && (dayOffset === 1 || dayOffset === 2 || dayOffset === 6)) {

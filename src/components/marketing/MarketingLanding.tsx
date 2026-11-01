@@ -941,7 +941,7 @@ export const MarketingLanding: React.FC = () => {
                   <button
                     onClick={() => {
                       const paper = AI_PAPER_SERVICE.getDefaultSeedPapers()[0];
-                      PDF_EXPORT_SERVICE.exportPaper(paper, 'exam_paper');
+                      PDF_EXPORT_SERVICE.generateAndPrintPaperPdf(paper, 'student_paper');
                     }}
                     className="btn-qg-secondary px-3.5 py-1.5 text-xs font-bold"
                   >
