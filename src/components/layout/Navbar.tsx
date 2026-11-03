@@ -56,7 +56,7 @@ export const Navbar: React.FC = () => {
               onClick={() => setCurrentView('marketing')}
               className="flex items-center gap-2.5 focus:outline-none text-left group"
             >
-              <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-[#00b87c] to-[#047857] p-2 flex items-center justify-center shadow-lg shadow-emerald-500/20 border border-white/20 group-hover:scale-105 transition-transform">
+              <div className="relative w-9 h-9 rounded-xl bg-emerald-700 p-2 flex items-center justify-center shadow-sm border border-emerald-800 transition-transform">
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -186,7 +186,7 @@ export const Navbar: React.FC = () => {
             {currentView === 'marketing' ? (
               <button
                 onClick={() => setCurrentView('paper-builder')}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all active:scale-95"
+                className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
               >
                 <span>Launch Studio</span>
                 <ArrowRight className="w-3.5 h-3.5" />

@@ -589,7 +589,7 @@ Respond with ONLY valid JSON array with this structure:
           
           {/* Brand & Title */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#00b87c] to-[#047857] p-2 flex items-center justify-center shadow-lg shadow-emerald-500/20 border border-white/20">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-700 p-2 flex items-center justify-center shadow-sm border border-emerald-800">
               <FileText className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -738,7 +738,7 @@ Respond with ONLY valid JSON array with this structure:
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowAiModal(true)}
-                  className="px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
+                  className="px-2.5 py-1 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
                   title="Generate new questions using AI"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
@@ -1488,7 +1488,7 @@ Respond with ONLY valid JSON array with this structure:
               </button>
               <button
                 onClick={handleExecuteAutoGenerate}
-                className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg"
+                className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition-all"
               >
                 Assemble Balanced Paper
               </button>
@@ -1823,18 +1823,18 @@ Respond with ONLY valid JSON array with this structure:
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={handlePrint}
-                  className="p-4 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white text-center font-bold space-y-1 shadow-lg transition-all"
+                  className="p-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-center font-bold space-y-1 shadow-sm transition-all"
                 >
-                  <Printer className="w-5 h-5 mx-auto text-emerald-200" />
+                  <Printer className="w-5 h-5 mx-auto text-emerald-100" />
                   <div>Print / A4 PDF</div>
                   <div className="text-[10px] text-emerald-200 font-normal">Native clean layout</div>
                 </button>
 
                 <button
                   onClick={handleExportWord}
-                  className="p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white text-center font-bold space-y-1 shadow-lg transition-all"
+                  className="p-4 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white text-center font-bold space-y-1 shadow-sm transition-all"
                 >
-                  <FileText className="w-5 h-5 mx-auto text-blue-200" />
+                  <FileText className="w-5 h-5 mx-auto text-blue-100" />
                   <div>Word (.doc)</div>
                   <div className="text-[10px] text-blue-200 font-normal">Editable Microsoft Word</div>
                 </button>
@@ -2027,7 +2027,7 @@ Respond with ONLY valid JSON array with this structure:
                 type="button"
                 onClick={handleGenerateAiQuestions}
                 disabled={isAiGenerating}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg flex items-center gap-2 disabled:opacity-50"
+                className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm flex items-center gap-2 disabled:opacity-50 transition-all"
               >
                 {isAiGenerating ? (
                   <>

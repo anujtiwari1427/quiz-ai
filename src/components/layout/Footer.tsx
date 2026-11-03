@@ -30,7 +30,7 @@ export const Footer: React.FC = () => {
           {/* Brand Info */}
           <div className="col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e293b] p-1.5 shadow-md flex items-center justify-center border border-white/20">
+              <div className="w-8 h-8 rounded-xl bg-slate-800 p-1.5 shadow-md flex items-center justify-center border border-white/20">
                 <Sparkles className="w-4 h-4 text-[#00b87c]" />
               </div>
               <span className="font-display font-extrabold text-xl text-white">

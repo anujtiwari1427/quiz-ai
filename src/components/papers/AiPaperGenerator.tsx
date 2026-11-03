@@ -159,11 +159,9 @@ export const AiPaperGenerator: React.FC = () => {
       {/* ── Header Banner ─────────────────────────────────────────── */}
       <div className={`relative overflow-hidden rounded-3xl border p-6 sm:p-8 transition-all ${
         isLight
-          ? 'bg-gradient-to-br from-white via-slate-50 to-emerald-50/30 border-slate-200 shadow-xl shadow-slate-200/50'
-          : 'bg-gradient-to-br from-[#101820] via-[#0d1117] to-black border-white/[0.1] shadow-2xl'
+          ? 'bg-white border-slate-200 shadow-sm'
+          : 'bg-[#0f172a] border-slate-800 shadow-md'
       }`}>
-        <div className="absolute -top-20 -right-20 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-teal-500/8 rounded-full blur-3xl pointer-events-none" />
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
@@ -205,8 +203,8 @@ export const AiPaperGenerator: React.FC = () => {
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0 md:self-start">
-            <button onClick={() => setCurrentView("paper-builder")} className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-xs font-bold text-white shadow-lg shadow-teal-500/25 transition-all flex items-center gap-2">
-              <Layers className="w-4 h-4 text-emerald-200" /> Open Split Canvas Studio (QP-M)
+            <button onClick={() => setCurrentView("paper-builder")} className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-xs font-bold text-white shadow-sm transition-all flex items-center gap-2">
+              <Layers className="w-4 h-4 text-emerald-100" /> Open Split Canvas Studio (QP-M)
             </button>
           </div>
         </div>
@@ -388,7 +386,7 @@ export const AiPaperGenerator: React.FC = () => {
 
               {/* Generate button */}
               <button type="submit" disabled={isGenerating}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
+                className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
                 {isGenerating?(<><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /><span>Generating{setCount>1?` ${setCount} Sets`:""}...</span></>):(<><Sparkles className="w-4 h-4" /><span>Generate{setCount>1?` ${setCount} Paper Sets`:""}</span></>)}
               </button>
 
@@ -396,7 +394,7 @@ export const AiPaperGenerator: React.FC = () => {
                 <div className="space-y-2 animate-fade-in">
                   <div className="flex justify-between text-[11px]"><span className={`truncate pr-2 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>{progressMsg}</span><span className="font-mono text-emerald-600 font-bold">{progressPct}%</span></div>
                   <div className={`w-full rounded-full h-1.5 overflow-hidden border ${isLight ? 'bg-slate-200 border-slate-300' : 'bg-black/40 border-white/5'}`}>
-                    <div className="bg-gradient-to-r from-emerald-500 to-teal-400 h-1.5 rounded-full transition-all duration-500" style={{width:`${progressPct}%`}} />
+                    <div className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500" style={{width:`${progressPct}%`}} />
                   </div>
                 </div>
               )}
@@ -464,7 +462,7 @@ export const AiPaperGenerator: React.FC = () => {
               }`}>
                 {copied?<Check className="w-3.5 h-3.5 text-emerald-500" />:<Copy className={`w-3.5 h-3.5 ${isLight ? 'text-slate-500' : 'text-slate-400'}`} />}<span>{copied?"Copied!":"Copy"}</span>
               </button>
-              <button onClick={()=>setShowPdfModal(true)} className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all flex items-center gap-1.5 active:scale-95">
+              <button onClick={()=>setShowPdfModal(true)} className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
                 <Download className="w-3.5 h-3.5 stroke-[2.5]" /><span>Export / Print Paper</span>
               </button>
             </div>
@@ -699,7 +697,7 @@ export const AiPaperGenerator: React.FC = () => {
               ? 'bg-white border-slate-200 text-slate-900 shadow-2xl'
               : 'bg-[#111622] border-white/20 text-white'
           }`}>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 rounded-t-3xl" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-700 rounded-t-3xl" />
             <div className="flex items-start justify-between">
               <div>
                 <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mb-2 border ${

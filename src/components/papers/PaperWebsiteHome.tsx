@@ -72,29 +72,18 @@ export const PaperWebsiteHome: React.FC = () => {
     }`}>
 
       {/* ──────────────────────────────────────────────────────────
-          1. HERO SECTION (Theme Aware with Crisp Emerald Accents)
+          1. HERO SECTION (Clean, Solid, Professional Styling)
           ────────────────────────────────────────────────────────── */}
       <section className={`relative pt-12 pb-20 sm:pt-20 sm:pb-28 overflow-hidden border-b transition-colors duration-300 ${
         isDark
-          ? 'bg-gradient-to-b from-[#07090e] via-[#0b0f19] to-[#07090e] border-white/[0.08]'
-          : 'bg-gradient-to-b from-slate-50/80 via-white to-slate-50/50 border-slate-200/80'
+          ? 'bg-[#090d16] border-slate-800'
+          : 'bg-white border-slate-200'
       }`}>
-        {/* Subtle Ambient Radial Lighting */}
-        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-gradient-to-b from-emerald-500/[0.12] via-teal-500/[0.06] to-transparent blur-3xl pointer-events-none rounded-full ${
-          isDark ? 'opacity-70' : 'opacity-100'
-        }`} />
-        <div className={`absolute top-24 left-12 w-64 h-64 bg-emerald-400/[0.08] blur-2xl pointer-events-none rounded-full ${
-          isDark ? 'opacity-80' : 'opacity-60'
-        }`} />
-        <div className={`absolute bottom-10 right-10 w-80 h-80 bg-teal-400/[0.08] blur-3xl pointer-events-none rounded-full ${
-          isDark ? 'opacity-80' : 'opacity-60'
-        }`} />
-
-        {/* Delicate Micro-Grid Pattern */}
+        {/* Clean, Subtle Micro-Grid Pattern */}
         <div className={`absolute inset-0 pointer-events-none [background-size:24px_24px] ${
           isDark
-            ? 'bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-40'
-            : 'bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] opacity-60'
+            ? 'bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-30'
+            : 'bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] opacity-40'
         }`} />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-7">
@@ -104,26 +93,26 @@ export const PaperWebsiteHome: React.FC = () => {
             onClick={() => setCurrentView('paper-builder')}
             className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border shadow-sm transition-all cursor-pointer group ${
               isDark
-                ? 'bg-white/[0.04] border-white/10 hover:border-emerald-500/50 hover:bg-white/[0.07] text-slate-300'
-                : 'bg-white border-slate-200/90 hover:border-emerald-500/50 hover:shadow-md text-slate-700'
+                ? 'bg-slate-900 border-slate-700 hover:border-emerald-500 text-slate-300'
+                : 'bg-slate-50 border-slate-200 hover:border-emerald-600 text-slate-700'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
             <span className={`text-xs font-semibold transition-colors ${
-              isDark ? 'group-hover:text-emerald-300' : 'group-hover:text-emerald-700'
+              isDark ? 'group-hover:text-emerald-400' : 'group-hover:text-emerald-800'
             }`}>
               QP-M 2.0 • The Professional Question Paper Maker for Schools
             </span>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
           </div>
 
-          {/* Main Headline */}
+          {/* Main Headline with Solid, Authoritative Typography */}
           <div className="space-y-4 max-w-4xl mx-auto">
             <h1 className={`text-4xl sm:text-6xl lg:text-7xl font-display font-black tracking-tight leading-[1.1] ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
               Craft Board-Standard <br />
-              <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className={isDark ? "text-emerald-400" : "text-emerald-700"}>
                 Question Papers
               </span> in Minutes.
             </h1>
@@ -138,7 +127,7 @@ export const PaperWebsiteHome: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3">
             <button
               onClick={() => setCurrentView('paper-builder')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/35 transition-all flex items-center justify-center gap-2.5 active:scale-95 group"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2.5 active:scale-95 group"
             >
               <Layers className="w-4 h-4 text-white" />
               <span>Launch QP-M Studio</span>
@@ -147,35 +136,35 @@ export const PaperWebsiteHome: React.FC = () => {
 
             <button
               onClick={() => setCurrentView('ai-paper-gen')}
-              className={`w-full sm:w-auto px-7 py-4 rounded-2xl border font-bold text-sm shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 active:scale-95 ${
+              className={`w-full sm:w-auto px-7 py-3.5 rounded-xl border font-bold text-sm shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 active:scale-95 ${
                 isDark
-                  ? 'bg-white/[0.05] hover:bg-white/[0.1] border-white/10 text-white'
+                  ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-100'
                   : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-800'
               }`}
             >
-              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Generate with AI Blueprint</span>
             </button>
           </div>
 
           {/* Trust strip */}
           <div className={`pt-8 border-t flex flex-wrap items-center justify-center gap-6 text-xs font-medium ${
-            isDark ? 'border-white/10 text-slate-400' : 'border-slate-200/80 text-slate-600'
+            isDark ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-600'
           }`}>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>CBSE &amp; ICSE Format Compliant</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-teal-500" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Real-Time Marks Balancing</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-cyan-500" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Word (.doc) &amp; Vector A4 Print</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>100% Private &amp; Offline Ready</span>
             </div>
           </div>
@@ -653,20 +642,20 @@ export const PaperWebsiteHome: React.FC = () => {
       </section>
 
       {/* ──────────────────────────────────────────────────────────
-          5. BOARD STANDARDS COMPLIANCE CARD
+          5. BOARD STANDARDS COMPLIANCE CARD (Solid Professional Theme)
           ────────────────────────────────────────────────────────── */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`rounded-3xl p-8 sm:p-12 border relative overflow-hidden transition-all duration-300 ${
           isDark
-            ? 'bg-gradient-to-br from-[#0c1f28] via-[#0c1626] to-[#070e1a] border-emerald-500/30 shadow-2xl shadow-emerald-950/30'
-            : 'bg-gradient-to-br from-emerald-50 via-teal-50/60 to-cyan-50/40 border-emerald-200 shadow-lg'
+            ? 'bg-[#0e1626] border-slate-800 shadow-xl'
+            : 'bg-slate-50 border-slate-200 shadow-sm'
         }`}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             
             <div className="space-y-4">
               <span className={`px-3 py-1 rounded-full text-[11px] font-mono font-bold border ${
                 isDark
-                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
                   : 'bg-emerald-100 text-emerald-800 border-emerald-200'
               }`}>
                 OFFICIAL FORMATS
@@ -684,7 +673,7 @@ export const PaperWebsiteHome: React.FC = () => {
               <div className="pt-2">
                 <button
                   onClick={() => setCurrentView('paper-builder')}
-                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-md shadow-emerald-600/20"
+                  className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-sm"
                 >
                   <span>Build Paper Now</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -694,27 +683,27 @@ export const PaperWebsiteHome: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-3 text-xs font-mono">
               <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-white/[0.04] border-white/10' : 'bg-white border-emerald-100'
+                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-emerald-400 font-bold">CBSE Class 10 &amp; 12</span>
+                <span className="text-emerald-500 dark:text-emerald-400 font-bold">CBSE Class 10 &amp; 12</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>80 Marks • 3 Hours • 39 Questions Standard Pattern</p>
               </div>
               <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-white/[0.04] border-white/10' : 'bg-white border-teal-100'
+                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-teal-400 font-bold">ICSE / ISC Board</span>
+                <span className="text-teal-600 dark:text-teal-400 font-bold">ICSE / ISC Board</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Compulsory Section I &amp; Section II Internal Choices</p>
               </div>
               <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-white/[0.04] border-white/10' : 'bg-white border-cyan-100'
+                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-cyan-400 font-bold">State Board Formats</span>
+                <span className="text-cyan-600 dark:text-cyan-400 font-bold">State Board Formats</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Maharashtra, Karnataka &amp; Tamil Nadu Blueprint Rules</p>
               </div>
               <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-white/[0.04] border-white/10' : 'bg-white border-indigo-100'
+                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-indigo-400 font-bold">Foundation &amp; Olympiad</span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-bold">Foundation &amp; Olympiad</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>JEE/NEET diagnostic weighting &amp; negative marking keys</p>
               </div>
             </div>
@@ -795,20 +784,20 @@ export const PaperWebsiteHome: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
               onClick={() => setCurrentView('paper-builder')}
-              className="px-8 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/35 transition-all flex items-center gap-2"
+              className="px-8 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2"
             >
               <Layers className="w-4 h-4" />
               <span>Open QP-M Studio</span>
             </button>
             <button
               onClick={() => setCurrentView('ai-paper-gen')}
-              className={`px-7 py-3.5 rounded-2xl border font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+              className={`px-7 py-3.5 rounded-xl border font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
                 isDark
-                  ? 'bg-white/[0.06] hover:bg-white/[0.12] border-white/10 text-white'
+                  ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-100'
                   : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-800'
               }`}
             >
-              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>AI Blueprint Generator</span>
             </button>
           </div>
