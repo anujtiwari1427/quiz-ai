@@ -54,7 +54,7 @@ export const AdminConsole: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
           <div className="relative w-11 h-11 rounded-2xl bg-white p-1 shadow-lg flex items-center justify-center border border-white/20 shrink-0 mt-0.5">
-            <img src="/logo.png" alt="EduPulse AI Logo" className="w-9 h-9 object-contain" />
+            <img src="/logo.png" alt="PaperPulse AI Logo" className="w-9 h-9 object-contain" />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">

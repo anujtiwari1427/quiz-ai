@@ -319,7 +319,7 @@ export const EXAM_GENERATOR_SERVICE = {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>${exam.title} - EduPulse AI Examination Paper</title>
+        <title>${exam.title} - PaperPulse AI Examination Paper</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 32px; color: #0f172a; line-height: 1.5; }
           .header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 24px; }
@@ -339,7 +339,7 @@ export const EXAM_GENERATOR_SERVICE = {
 
         <!-- SECTION 1: QUESTION PAPER -->
         <div class="header">
-          <h1 style="margin: 0 0 6px 0; font-size: 22px;">EDUPULSE AI ASSESSMENT</h1>
+          <h1 style="margin: 0 0 6px 0; font-size: 22px;">PAPERPULSE AI ASSESSMENT</h1>
           <h2 style="margin: 0 0 10px 0; font-size: 18px; color: #334155;">${exam.title}</h2>
           <div style="display: flex; justify-content: space-around; font-size: 13px; font-weight: 600; color: #475569;">
             <span>Total Questions: ${exam.questions.length}</span>

@@ -90,7 +90,7 @@ export const SecurityTrust: React.FC = () => {
             <span className="gradient-text-indigo">Uncompromising Privacy</span>
           </h2>
           <p className="text-base text-slate-400 leading-relaxed">
-            Student privacy and institutional security are baked into every layer of EduPulse AI architecture — not bolted on as an afterthought.
+            Student privacy and institutional security are baked into every layer of Paper Pulse AI architecture — not bolted on as an afterthought.
           </p>
         </div>
 

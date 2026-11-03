@@ -13,6 +13,7 @@ import {
   Question,
   ActiveAppView,
   TextSizeTheme,
+  AppTheme,
   AdminUser,
   ParentUser,
   MarkRecord,
@@ -39,6 +40,11 @@ interface AppContextType {
   // Text Size Theme
   textSizeTheme: TextSizeTheme;
   setTextSizeTheme: (size: TextSizeTheme) => void;
+
+  // Color Theme (Light / Dark)
+  theme: AppTheme;
+  setTheme: (theme: AppTheme) => void;
+  toggleTheme: () => void;
 
   // Teacher Subview
   teacherTab: 'tests' | 'builder' | 'proctor' | 'grading' | 'mastery';
@@ -165,25 +171,54 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     document.documentElement.classList.add(`theme-text-${textSizeTheme}`);
   }, [textSizeTheme]);
 
-  // Initial view from URL hash or query if present
+  // Color Theme (Light / Dark) - Default to 'light' for White Theme
+  const [theme, setThemeState] = useState<AppTheme>(() => {
+    try {
+      const saved = localStorage.getItem('qpm_color_theme') as AppTheme;
+      if (saved === 'light' || saved === 'dark') return saved;
+    } catch {}
+    return 'light';
+  });
+
+  const setTheme = (t: AppTheme) => {
+    setThemeState(t);
+    try {
+      localStorage.setItem('qpm_color_theme', t);
+    } catch {}
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  }, [theme]);
+
+  // Initial view from URL hash or query if present (defaults to QP-M white theme landing page)
   const getInitialView = (): ActiveAppView => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace(/^#\/?/, '').trim();
-      if (
-        hash === 'ai-paper-gen' || 
-        hash === 'teacher' || 
-        hash === 'smart-attendance' || 
-        hash === 'score-upload' || 
-        hash === 'create-exam' ||
-        hash === 'marketing' ||
-        hash === 'take-exam' ||
-        hash === 'exam-analysis'
-      ) {
-        return hash as ActiveAppView;
+      if (hash === 'ai-paper-gen') {
+        return 'ai-paper-gen';
+      }
+      if (hash === 'paper-builder') {
+        return 'paper-builder';
+      }
+      if (hash === 'marketing' || hash === 'home') {
+        return 'marketing';
       }
       const params = new URLSearchParams(window.location.search);
       const v = params.get('view');
-      if (v === 'ai-paper-gen' || v === 'teacher' || v === 'marketing') {
+      if (v === 'ai-paper-gen' || v === 'paper-builder') {
         return v as ActiveAppView;
       }
     }
@@ -204,12 +239,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace(/^#\/?/, '').trim() as ActiveAppView;
-      const validViews: ActiveAppView[] = [
-        'marketing', 'teacher', 'ai-paper-gen', 'smart-attendance', 'score-upload',
-        'create-exam', 'take-exam', 'exam-analysis'
-      ];
-      if (validViews.includes(hash)) {
+      if (hash === 'ai-paper-gen' || hash === 'paper-builder' || hash === 'marketing') {
         setCurrentViewState(hash);
+      } else {
+        setCurrentViewState('marketing');
       }
     };
     window.addEventListener('hashchange', handleHash);
@@ -809,6 +842,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setUserRole,
         textSizeTheme,
         setTextSizeTheme,
+        theme,
+        setTheme,
+        toggleTheme,
         teacherTab,
         setTeacherTab,
         parentTab,

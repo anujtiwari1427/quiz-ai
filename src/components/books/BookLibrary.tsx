@@ -666,7 +666,7 @@ export const BookLibrary: React.FC = () => {
                       required
                     />
                     <span className="text-[11px] text-amber-200 leading-relaxed font-medium">
-                      <strong>Legal Right-to-Use Declaration:</strong> I confirm that I have the legal right or license to upload and use this book/study document in EduPulse for private educational purposes.
+                      <strong>Legal Right-to-Use Declaration:</strong> I confirm that I have the legal right or license to upload and use this book/study document in PaperPulse for private educational purposes.
                     </span>
                   </label>
                 </div>

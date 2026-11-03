@@ -101,11 +101,11 @@ export const StudentTestRoom: React.FC = () => {
           {/* Header */}
           <div className="text-center space-y-3">
             <div className="relative w-16 h-16 rounded-2xl bg-white p-1 shadow-xl mx-auto flex items-center justify-center border border-white/30 animate-soft-bounce">
-              <img src="/logo.png" alt="EduPulse AI Logo" className="w-14 h-14 object-contain" />
+              <img src="/logo.png" alt="PaperPulse AI Logo" className="w-14 h-14 object-contain" />
             </div>
             <div>
               <span className="badge badge-emerald text-[10px]">{test.board} • CLASS {test.classGrade}</span>
-              <p className="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-1">EduPulse AI Assessment Room</p>
+              <p className="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-1">PaperPulse AI Assessment Room</p>
             </div>
             <h2 className="text-2xl font-display font-black text-white leading-tight">{test.title}</h2>
             <div className="flex items-center justify-center gap-3 text-xs text-slate-400">
@@ -198,10 +198,10 @@ export const StudentTestRoom: React.FC = () => {
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex items-center gap-2 shrink-0">
               <div className="w-7 h-7 rounded-lg bg-white p-0.5 shadow-sm flex items-center justify-center">
-                <img src="/logo.png" alt="EduPulse Logo" className="w-6 h-6 object-contain" />
+                <img src="/logo.png" alt="PaperPulse Logo" className="w-6 h-6 object-contain" />
               </div>
               <span className="font-display font-black text-xs text-white hidden md:inline">
-                Edu<span className="gradient-text-emerald">Pulse</span>
+                Paper<span className="gradient-text-emerald">Pulse</span>
               </span>
             </div>
             <span className="text-slate-700">|</span>

@@ -54,10 +54,10 @@ export const ResultDiagnosticSheet: React.FC<ResultDiagnosticSheetProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-2">
             <div className="w-5 h-5 rounded-md bg-white p-0.5 flex items-center justify-center shadow-sm">
-              <img src="/logo.png" alt="EduPulse AI" className="w-4 h-4 object-contain" />
+              <img src="/logo.png" alt="PaperPulse AI" className="w-4 h-4 object-contain" />
             </div>
             <span className="text-[11px] uppercase font-bold tracking-widest text-brand-400">
-              EduPulse AI Diagnostic Report
+              PaperPulse AI Diagnostic Report
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-white mt-1">
@@ -108,7 +108,7 @@ export const ResultDiagnosticSheet: React.FC<ResultDiagnosticSheetProps> = ({
           <div>
             <h4 className="font-bold text-sm text-white">Need help understanding your wrong answers?</h4>
             <p className="text-xs text-slate-400">
-              EduPulse AI Tutor can explain the exact steps in English, Hindi, or Hinglish with worked examples.
+              PaperPulse AI Tutor can explain the exact steps in English, Hindi, or Hinglish with worked examples.
             </p>
           </div>
         </div>

@@ -290,7 +290,7 @@ export const DOCUMENT_PARSER_SERVICE = {
     return `## ${cleanTitle}
 
 *Source Document: ${file.name}*
-*Notice: This textbook/syllabus file is formatted as high-resolution imagery/scanned document without an embedded selectable font layer. EduPulse AI has generated this structured curriculum study guide aligned with the prescribed syllabus standards.*
+*Notice: This textbook/syllabus file is formatted as high-resolution imagery/scanned document without an embedded selectable font layer. PaperPulse AI has generated this structured curriculum study guide aligned with the prescribed syllabus standards.*
 
 ### Chapter 1: Foundational Principles & Core Concepts
 - Comprehensive review of core terminology, fundamental laws, and curriculum postulates for ${cleanTitle}.

@@ -18,6 +18,7 @@ export type ActiveAppView =
   | 'take-exam' 
   | 'exam-analysis' 
   | 'ai-paper-gen'
+  | 'paper-builder'
   | 'smart-attendance'
   | 'score-upload'
   | 'strata-studio' 
@@ -27,6 +28,8 @@ export type ActiveAppView =
   | 'strata-billing';
 
 export type TextSizeTheme = 'normal' | 'large' | 'extra-large';
+
+export type AppTheme = 'light' | 'dark';
 
 export interface AdminUser {
   name: string;

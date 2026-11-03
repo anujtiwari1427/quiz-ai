@@ -101,7 +101,7 @@ export const TeacherConsole: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div className="flex items-start gap-3.5">
           <div className="relative w-11 h-11 rounded-2xl bg-white p-1 shadow-lg flex items-center justify-center border border-white/20 shrink-0 mt-0.5">
-            <img src="/logo.png" alt="EduPulse AI Logo" className="w-9 h-9 object-contain" />
+            <img src="/logo.png" alt="PaperPulse AI Logo" className="w-9 h-9 object-contain" />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
@@ -131,7 +131,26 @@ export const TeacherConsole: React.FC = () => {
       </div>
 
       {/* ── Direct Feature Launchers for Teacher ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <button
+          onClick={() => setCurrentView('paper-builder')}
+          className="p-3.5 rounded-2xl bg-gradient-to-r from-teal-950/40 to-slate-900 border border-teal-500/30 hover:border-teal-500/60 flex items-center justify-between text-left transition-all group shadow-md"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400 group-hover:bg-teal-500 group-hover:text-black transition-colors">
+              <FileText className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                <span>QP Studio</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono">QP-M</span>
+              </div>
+              <div className="text-[10px] text-slate-400">Drag &amp; drop canvas + Word export</div>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-teal-400 group-hover:translate-x-0.5 transition-all" />
+        </button>
+
         <button
           onClick={() => setCurrentView('ai-paper-gen')}
           className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/40 to-slate-900 border border-emerald-500/20 hover:border-emerald-500/50 flex items-center justify-between text-left transition-all group shadow-md"

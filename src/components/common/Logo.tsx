@@ -33,7 +33,7 @@ export const Logo: React.FC<LogoProps> = ({
         <div className={`relative ${box} rounded-xl bg-white p-0.5 shadow-md flex items-center justify-center overflow-hidden border border-white/20 transition-transform duration-300 hover:scale-105`}>
           <img
             src="/logo.png"
-            alt="EduPulse AI Logo"
+            alt="PaperPulse AI Logo"
             className={`${img} object-contain`}
           />
         </div>
@@ -43,9 +43,9 @@ export const Logo: React.FC<LogoProps> = ({
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5">
             <span className={`font-display font-black tracking-tight text-white ${textClassName || 'text-[19px]'}`}>
-              Edu<span className="gradient-text-emerald">Pulse</span>
+              Paper<span className="gradient-text-emerald">Pulse</span>
             </span>
-            <span className="badge badge-emerald" style={{ fontSize: '9px', padding: '2px 6px' }}>AI K-12</span>
+            <span className="badge badge-emerald" style={{ fontSize: '9px', padding: '2px 6px' }}>AI</span>
           </div>
           {subtitle && (
             <p className="text-[10px] text-slate-400 font-medium tracking-wide">{subtitle}</p>

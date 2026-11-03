@@ -184,7 +184,7 @@ Respond with ONLY valid JSON without markdown quotes:
     if (!generatedPaper) {
       onProgress?.(85, 'Finalizing academic blueprint and question allocation...');
       generatedPaper = this.generateHeuristicPaper(input, paperTitle, promptTopics);
-      modelUsed = 'EduPulse Pedagogical Blueprint Engine';
+      modelUsed = 'PaperPulse Pedagogical Blueprint Engine';
     }
 
     // Attach school metadata
@@ -471,7 +471,7 @@ Respond with ONLY valid JSON without markdown quotes:
       generalInstructions: this.getDefaultInstructions(input.durationMinutes, input.totalMarks),
       sections,
       questions,
-      modelUsed: 'EduPulse Pedagogical Blueprint Engine',
+      modelUsed: 'PaperPulse Pedagogical Blueprint Engine',
       isAiGenerated: false
     };
   },

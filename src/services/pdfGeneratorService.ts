@@ -172,7 +172,7 @@ export class PdfGeneratorService {
     s.push('70 70 455 50 re f');
     s.push('q 1 1 1 rg');
     s.push('BT /F2 11 Tf 85 100 Td (100% FREE DIGITAL TEXTBOOK & STUDY EDITION) Tj ET');
-    s.push('BT /F1 8.5 Tf 85 85 Td (Digitized for interactive reading, audio narration, and AI tutoring on EduPulse AI) Tj ET');
+    s.push('BT /F1 8.5 Tf 85 85 Td (Digitized for interactive reading, audio narration, and AI tutoring on PaperPulse AI) Tj ET');
     s.push('Q');
 
     return s.join('\n');
@@ -353,7 +353,7 @@ export class PdfGeneratorService {
     // Footer
     s.push(`0.85 0.88 0.92 RG 0.5 w ${MARGIN_LEFT} 50 m ${MARGIN_RIGHT} 50 l S`);
     s.push('0.4 0.45 0.55 rg');
-    s.push(`BT /F1 8 Tf ${MARGIN_LEFT} 38 Td (EduPulse AI Free E-Book Reader • ${escapePdfText(book.board || 'State Board')}) Tj ET`);
+    s.push(`BT /F1 8 Tf ${MARGIN_LEFT} 38 Td (PaperPulse AI Free E-Book Reader • ${escapePdfText(book.board || 'State Board')}) Tj ET`);
     s.push(`BT /F2 8.5 Tf 505 38 Td (Page ${pageNumber}) Tj ET`);
   }
 

@@ -173,7 +173,7 @@ export const PricingSection: React.FC = () => {
                 <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm">₹</div>
                 <div>
                   <p className="text-xs font-bold text-white">Razorpay India Checkout</p>
-                  <p className="text-[10px] text-slate-400">EduPulse AI Assessments Pvt Ltd</p>
+                  <p className="text-[10px] text-slate-400">Paper Pulse AI Assessments Pvt Ltd</p>
                 </div>
               </div>
               <button onClick={() => setShowCheckoutModal(false)} className="text-slate-500 hover:text-white text-lg leading-none transition-colors">×</button>

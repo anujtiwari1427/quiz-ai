@@ -86,11 +86,11 @@ export const AITutorDrawer: React.FC = () => {
       <div className="p-4 sm:p-5 bg-slate-900/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-white p-0.5 shadow-md flex items-center justify-center shrink-0 border border-white/20">
-            <img src="/logo.png" alt="EduPulse AI Mistake Tutor" className="w-9 h-9 object-contain" />
+            <img src="/logo.png" alt="PaperPulse AI Mistake Tutor" className="w-9 h-9 object-contain" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-display font-bold text-sm text-white">EduPulse AI Mistake Tutor</h3>
+              <h3 className="font-display font-bold text-sm text-white">PaperPulse AI Mistake Tutor</h3>
               <span className="px-2 py-0.5 rounded-full bg-accent-500/10 text-accent-400 text-[10px] font-mono font-bold">
                 RAG Diagnostic Active
               </span>
@@ -167,7 +167,7 @@ export const AITutorDrawer: React.FC = () => {
         {isTyping && (
           <div className="flex items-center gap-2 text-xs text-slate-400 pl-10">
             <div className="w-2 h-2 rounded-full bg-accent-400 animate-ping" />
-            <span>EduPulse Tutor is formulating diagnostic explanation...</span>
+            <span>PaperPulse Tutor is formulating diagnostic explanation...</span>
           </div>
         )}
       </div>

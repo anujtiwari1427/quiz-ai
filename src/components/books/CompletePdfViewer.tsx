@@ -338,7 +338,7 @@ export const CompletePdfViewer: React.FC<CompletePdfViewerProps> = ({
         pageText = textContent.items.map((item: any) => item.str).join(' ');
       }
 
-      const contextualPrompt = `You are EduPulse AI, an expert STEM tutor for ${book.board || 'Maharashtra State Board'} Class 10 / K-12.
+      const contextualPrompt = `You are PaperPulse AI, an expert STEM tutor for ${book.board || 'Maharashtra State Board'} Class 10 / K-12.
 The student is currently viewing Page ${currentPage} of "${book.title}".
 
 TEXT EXTRACTED FROM CURRENT PAGE:

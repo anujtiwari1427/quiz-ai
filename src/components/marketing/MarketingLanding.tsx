@@ -1155,7 +1155,7 @@ export const MarketingLanding: React.FC = () => {
                 100% CBSE, ICSE &amp; State Board Syllabus Mapping
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed max-w-xl mb-6">
-                Unlike generic LLMs, QuizPulse synthesizes question papers strictly cross-referenced against official NCERT chapter weightages, Bloom’s cognitive taxonomy levels, and step-by-step marking rubrics.
+                Unlike generic LLMs, Paper Pulse synthesizes question papers strictly cross-referenced against official NCERT chapter weightages, Bloom’s cognitive taxonomy levels, and step-by-step marking rubrics.
               </p>
 
               {/* Visual Bloom's Taxonomy Distribution Pills */}
@@ -1378,7 +1378,7 @@ export const MarketingLanding: React.FC = () => {
             Effortless Workflow
           </span>
           <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white mt-1">
-            How QuizPulse Works in 3 Steps
+            How Paper Pulse Works in 3 Steps
           </h2>
         </div>
 
@@ -1432,7 +1432,7 @@ export const MarketingLanding: React.FC = () => {
           <div className="p-6 rounded-3xl bg-slate-900/70 border border-white/10 flex flex-col justify-between">
             <div className="text-amber-400 mb-3 text-sm">★★★★★</div>
             <p className="text-sm text-slate-300 leading-relaxed mb-6">
-              "QuizPulse cut our examination paper creation time by over 80%. The CBSE marking rubrics and step-by-step scoring schemes are more accurate than manual faculty drafts."
+              "Paper Pulse cut our examination paper creation time by over 80%. The CBSE marking rubrics and step-by-step scoring schemes are more accurate than manual faculty drafts."
             </p>
             <div className="flex items-center gap-3 pt-4 border-t border-white/10">
               <div className="w-9 h-9 rounded-full bg-emerald-500/20 text-[#34d399] flex items-center justify-center font-bold text-xs">
@@ -1632,7 +1632,7 @@ export const MarketingLanding: React.FC = () => {
         <div className="space-y-3">
           {[
             {
-              q: 'How does QuizPulse generate quizzes and flashcards from text or PDFs?',
+              q: 'How does Paper Pulse generate quizzes and flashcards from text or PDFs?',
               a: 'Our AI engine analyzes your uploaded document, extracts key concepts, definitions, and equations, and cross-references them with official educational curriculum blueprints (such as CBSE, ICSE, and state boards) to construct balanced multiple-choice, short-answer, and case-study questions with detailed solutions.'
             },
             {
@@ -1648,7 +1648,7 @@ export const MarketingLanding: React.FC = () => {
               a: 'The SM-2 algorithm calculates the optimal time interval to review each card based on your response ratings (Again, Hard, Good, Easy), ensuring long-term active recall memory consolidation before forgetfulness occurs.'
             },
             {
-              q: 'Is QuizPulse compliant with Indian DPDP Act and student privacy regulations?',
+              q: 'Is Paper Pulse compliant with Indian DPDP Act and student privacy regulations?',
               a: 'Yes. All student rosters, marks, and examination telemetries are isolated in strict compliance with the Digital Personal Data Protection (DPDP) Act 2023 with localized storage and zero model training on student private data.'
             }
           ].map((item, idx) => (

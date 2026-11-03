@@ -55,7 +55,7 @@ export const LiveProctoringHUD: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <div className="w-6 h-6 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 shadow-sm">
-              <img src="/logo.png" alt="EduPulse AI Logo" className="w-5 h-5 object-contain" />
+              <img src="/logo.png" alt="PaperPulse AI Logo" className="w-5 h-5 object-contain" />
             </div>
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
             <h2 className="text-xl font-display font-bold text-white">

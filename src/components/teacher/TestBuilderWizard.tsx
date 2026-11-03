@@ -703,7 +703,7 @@ export const TestBuilderWizard: React.FC<{ onComplete: () => void }> = ({ onComp
         <div className="space-y-6 animate-fadeIn text-center">
           <div className="p-8 sm:p-12 rounded-3xl glass-panel-glow border-brand-500/40 space-y-6">
             <div className="relative w-16 h-16 rounded-2xl bg-white p-1.5 shadow-xl flex items-center justify-center mx-auto border border-white/30">
-              <img src="/logo.png" alt="EduPulse AI Logo" className="w-13 h-13 object-contain" />
+              <img src="/logo.png" alt="PaperPulse AI Logo" className="w-13 h-13 object-contain" />
             </div>
 
             <div className="space-y-2">

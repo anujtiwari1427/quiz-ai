@@ -31,10 +31,10 @@ export const WhatsAppAuthModal: React.FC<WhatsAppAuthModalProps> = ({ onSuccess,
         <div className="flex items-center justify-between pb-3 border-b border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-white p-0.5 shadow-sm flex items-center justify-center shrink-0 border border-white/20">
-              <img src="/logo.png" alt="EduPulse AI Logo" className="w-8 h-8 object-contain" />
+              <img src="/logo.png" alt="PaperPulse AI Logo" className="w-8 h-8 object-contain" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white">EduPulse AI Parent Access</h4>
+              <h4 className="text-sm font-bold text-white">PaperPulse AI Parent Access</h4>
               <p className="text-[10px] text-slate-400">Secure WhatsApp Passwordless OTP</p>
             </div>
           </div>

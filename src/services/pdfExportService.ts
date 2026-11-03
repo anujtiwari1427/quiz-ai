@@ -845,7 +845,7 @@ export const PDF_EXPORT_SERVICE = {
       ${renderQuestionsForStudent()}
 
       <div class="end-paper-seal">
-        *** END OF QUESTION PAPER &bull; EDUPULSE ACADEMIC ASSESSMENT ENGINE ***
+        *** END OF QUESTION PAPER &bull; PAPERPULSE ACADEMIC ASSESSMENT ENGINE ***
       </div>
     ` : ''}
 

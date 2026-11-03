@@ -34,7 +34,7 @@ export const Footer: React.FC = () => {
                 <Sparkles className="w-4 h-4 text-[#00b87c]" />
               </div>
               <span className="font-display font-extrabold text-xl text-white">
-                Quiz<span className="text-[#00b87c]">Pulse</span>
+                Paper<span className="text-[#00b87c]">Pulse</span>
               </span>
             </div>
 
@@ -159,7 +159,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© 2026 QuizPulse AI. Inspired by Quizgecko. All rights reserved.</p>
+          <p>© 2026 PaperPulse AI. All rights reserved.</p>
           <div className="flex items-center gap-6 text-slate-400">
             <span className="hover:text-white cursor-pointer">Privacy Policy</span>
             <span className="hover:text-white cursor-pointer">Terms of Service</span>
