@@ -4,6 +4,7 @@ import { Navbar } from './components/layout/Navbar';
 import { PaperWebsiteHome } from './components/papers/PaperWebsiteHome';
 import { PaperBuilderStudio } from './components/papers/PaperBuilderStudio';
 import { AiPaperGenerator } from './components/papers/AiPaperGenerator';
+import { MyTextbooksView } from './components/books/MyTextbooksView';
 
 export const AppContent: React.FC = () => {
   const { currentView, textSizeTheme, theme } = useApp();
@@ -20,9 +21,10 @@ export const AppContent: React.FC = () => {
       {/* Main Content Area */}
       <main className="flex-1 min-w-0 flex flex-col">
         {currentView === 'marketing' && <PaperWebsiteHome />}
+        {currentView === 'books' && <MyTextbooksView />}
         {currentView === 'paper-builder' && <PaperBuilderStudio />}
         {currentView === 'ai-paper-gen' && <AiPaperGenerator />}
-        {currentView !== 'marketing' && currentView !== 'paper-builder' && currentView !== 'ai-paper-gen' && (
+        {currentView !== 'marketing' && currentView !== 'books' && currentView !== 'paper-builder' && currentView !== 'ai-paper-gen' && (
           <PaperWebsiteHome />
         )}
       </main>

@@ -7,9 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "node scripts/test-scoring.mjs && node scripts/test-strater-platform.mjs",
+    "test": "node scripts/test-scoring.mjs && node scripts/test-strater-platform.mjs && node scripts/test-textbook-pipeline.mjs",
     "test:scoring": "node scripts/test-scoring.mjs",
-    "test:strater": "node scripts/test-strater-platform.mjs"
+    "test:strater": "node scripts/test-strater-platform.mjs",
+    "test:textbook": "node scripts/test-textbook-pipeline.mjs"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",

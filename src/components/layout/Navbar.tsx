@@ -12,7 +12,8 @@ import {
   ArrowRight,
   Home,
   Sun,
-  Moon
+  Moon,
+  BookOpen
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { LIVE_AI_SERVICE } from '../../services/liveAiService';
@@ -97,6 +98,20 @@ export const Navbar: React.FC = () => {
             >
               <Home className="w-3.5 h-3.5" />
               <span>Overview</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentView('books')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                currentView === 'books'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : isLight
+                    ? 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                    : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>My Textbooks</span>
             </button>
 
             <button
@@ -260,6 +275,24 @@ export const Navbar: React.FC = () => {
               <span className="flex items-center gap-2">
                 <Home className="w-4 h-4" />
                 <span>Overview (Home)</span>
+              </span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </button>
+
+            <button
+              onClick={() => {
+                setCurrentView('books');
+                setMobileMenuOpen(false);
+              }}
+              className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold ${
+                currentView === 'books' 
+                  ? 'bg-emerald-50 text-emerald-700' 
+                  : isLight ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-300 hover:bg-white/5'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                <span>My Textbooks</span>
               </span>
               <ChevronRight className="w-4 h-4 text-slate-400" />
             </button>

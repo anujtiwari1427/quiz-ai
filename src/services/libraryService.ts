@@ -4,12 +4,14 @@ import {
   ChunkModel, 
   PipelineStatus,
   BookUploadSchema,
+  DetectedExercise,
   ALLOWED_FILE_EXTENSIONS,
   MAX_FILE_SIZE_BYTES
 } from '../types/schemas';
 import { DOCUMENT_PARSER_SERVICE, isLegibleText } from './documentParserService';
 import { MAHARASHTRA_BOARD_TEXTBOOKS } from './maharashtraBoardBooks';
 import { PDF_STORAGE_SERVICE } from './pdfStorageService';
+import { TEXTBOOK_EXTRACTION_SERVICE } from './textbookExtractionService';
 
 const BOOKS_STORAGE_KEY = 'edupulse_library_books';
 const CHUNKS_STORAGE_KEY = 'edupulse_library_chunks';
@@ -80,6 +82,57 @@ export const LIBRARY_SERVICE = {
     }
   },
 
+  renameBook(bookId: string, newTitle: string): BookModel | null {
+    try {
+      const all = this.getAllStoredBooks();
+      const idx = all.findIndex(b => b.id === bookId);
+      if (idx >= 0) {
+        all[idx] = {
+          ...all[idx],
+          title: newTitle.trim(),
+          updatedAt: new Date().toISOString()
+        };
+        localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(all));
+        return all[idx];
+      }
+      return null;
+    } catch (e) {
+      console.error('Failed to rename book', e);
+      return null;
+    }
+  },
+
+  getExercisesForBook(bookId: string): DetectedExercise[] {
+    const book = this.getAllStoredBooks().find(b => b.id === bookId);
+    if (!book || !book.chapters) return [];
+    const exercises: DetectedExercise[] = [];
+    book.chapters.forEach(ch => {
+      if (ch.detectedExercises && ch.detectedExercises.length > 0) {
+        exercises.push(...ch.detectedExercises);
+      }
+    });
+    return exercises;
+  },
+
+  async reprocessBook(bookId: string, onProgress?: UploadProgressCallback): Promise<BookModel> {
+    const book = this.getAllStoredBooks().find(b => b.id === bookId);
+    if (!book) throw new Error('Book not found in library');
+
+    const blob = await PDF_STORAGE_SERVICE.getPdfBlob(bookId);
+    if (!blob) {
+      throw new Error('Original file binary not found in storage. Please upload the book again.');
+    }
+
+    const file = new File([blob], book.originalFilename || `${book.title}.pdf`, { type: blob.type || 'application/pdf' });
+    return this.processBookUpload(file, {
+      title: book.title,
+      author: book.author,
+      subject: book.subject,
+      uploaderName: book.uploaderName || 'Educator',
+      hasRightsDeclaration: true
+    }, onProgress);
+  },
+
   getAllStoredBooks(): BookModel[] {
     try {
       const data = localStorage.getItem(BOOKS_STORAGE_KEY);
@@ -136,6 +189,7 @@ export const LIBRARY_SERVICE = {
       title: string;
       author?: string;
       subject?: string;
+      uploaderName?: string;
       hasRightsDeclaration: boolean;
     },
     onProgress?: UploadProgressCallback
@@ -158,83 +212,83 @@ export const LIBRARY_SERVICE = {
     }
 
     const currentUserId = this.getCurrentUserId();
-    const bookId = `book_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
 
-    // STAGE 1: Uploading
-    onProgress?.('uploading', 20, 'Securing original book file in cloud storage...');
-    await new Promise(r => setTimeout(r, 600));
-
-    // STAGE 2: Extracting text
-    onProgress?.('extracting', 50, 'Extracting text and verifying document layers...');
-    await new Promise(r => setTimeout(r, 700));
-
-    let extractedText = '';
-    try {
-      extractedText = await DOCUMENT_PARSER_SERVICE.extractTextFromFile(file);
-    } catch {
-      try {
-        extractedText = await file.text();
-      } catch {
-        extractedText = '';
+    // Run textbook extraction service (page-by-page extraction, scanned check, structure & exercise detection)
+    const extractResult = await TEXTBOOK_EXTRACTION_SERVICE.processTextbookFile(
+      file,
+      {
+        title: metadata.title,
+        author: metadata.author,
+        subject: metadata.subject,
+        uploaderName: metadata.uploaderName || 'Teacher / Educator'
+      },
+      (stage, percent, message) => {
+        const mappedStage: PipelineStatus = stage === 'structuring' ? 'indexing' : stage;
+        onProgress?.(mappedStage, percent, message);
       }
+    );
+
+    // If scanned PDF with no text layer, store failed status and throw user-facing error
+    if (extractResult.isScanned) {
+      const failedBook: BookModel = {
+        id: extractResult.bookId,
+        userId: currentUserId,
+        title: metadata.title,
+        author: metadata.author || 'Curriculum Author',
+        subject: metadata.subject || 'General',
+        uploaderName: extractResult.uploaderName,
+        originalFilename: file.name,
+        sanitizedFilename: extractResult.sanitizedFilename,
+        fileUrl: `/uploads/${extractResult.bookId}_${extractResult.sanitizedFilename}`,
+        fileType: extractResult.fileType,
+        fileSizeBytes: file.size,
+        status: 'failed',
+        totalPages: extractResult.totalPages,
+        isScanned: true,
+        errorMessage: extractResult.errorMessage,
+        chapters: [],
+        exerciseSectionsCount: 0,
+        createdAt: new Date().toISOString()
+      };
+      this.saveBook(failedBook);
+      throw new Error(extractResult.errorMessage || 'Scanned PDF not supported');
     }
 
-    // Check scanned PDF edge case or minimal extraction
-    const isScannedNoText = fileExt === 'pdf' && (!extractedText || extractedText.length < 50);
-    if (isScannedNoText) {
-      // Attempt OCR simulation fallback
-      onProgress?.('extracting', 65, 'No selectable text layer found. Running Tesseract OCR engine...');
-      await new Promise(r => setTimeout(r, 600));
-      extractedText = `[OCR PROCESSED CONTENT FOR ${metadata.title}]\n\nChapter 1: Foundations and Definitions\nFundamental principles analyzed in detail with core formulas and terminology.\n\nChapter 2: Analytical Methods & Applications\nAdvanced examination problems, worked examples, and step-by-step proofs.`;
+    // Save Chunks
+    if (extractResult.chunks.length > 0) {
+      this.saveChunks(extractResult.chunks);
     }
-
-    // STAGE 3: Indexing (Chapter detection & Chunking)
-    onProgress?.('indexing', 80, 'Detecting chapters and generating vector embeddings...');
-    await new Promise(r => setTimeout(r, 800));
-
-    // Chapter detection
-    const chapters = this.detectChaptersFromText(extractedText, bookId, metadata.title);
-
-    // Chunking (~500-800 tokens, 100 token overlap)
-    const chunks = this.createChunksFromText(extractedText, bookId, chapters);
-    this.saveChunks(chunks);
-
-    const totalPages = Math.max(1, Math.ceil((extractedText.length || 3000) / 1500));
-
-    const coverGradients = [
-      'from-indigo-600 via-purple-700 to-slate-900',
-      'from-emerald-600 via-teal-700 to-slate-900',
-      'from-blue-600 via-cyan-700 to-slate-900',
-      'from-amber-600 via-orange-700 to-slate-900'
-    ];
-    const coverGradient = coverGradients[Math.floor(Math.random() * coverGradients.length)];
 
     const newBook: BookModel = {
-      id: bookId,
+      id: extractResult.bookId,
       userId: currentUserId,
-      title: metadata.title,
-      author: metadata.author || 'Curriculum Faculty',
-      subject: metadata.subject || 'General Studies',
-      fileUrl: `https://storage.edupulse.internal/books/${bookId}.${fileExt}`,
-      fileType: fileExt as any,
+      title: extractResult.title,
+      author: extractResult.author,
+      subject: extractResult.subject,
+      uploaderName: extractResult.uploaderName,
+      originalFilename: file.name,
+      sanitizedFilename: extractResult.sanitizedFilename,
+      fileUrl: `/uploads/${extractResult.bookId}_${extractResult.sanitizedFilename}`,
+      fileType: extractResult.fileType,
       fileSizeBytes: file.size,
       status: 'ready',
-      totalPages,
-      coverGradient,
-      chapters,
+      totalPages: extractResult.totalPages,
+      isScanned: false,
+      chapters: extractResult.chapters,
+      exerciseSectionsCount: extractResult.exerciseSectionsCount,
       createdAt: new Date().toISOString()
     };
 
     this.saveBook(newBook);
-    if (fileExt === 'pdf') {
-      try {
-        await PDF_STORAGE_SERVICE.savePdfBlob(bookId, file, file.name);
-      } catch (err) {
-        console.warn('Could not store PDF in IndexedDB:', err);
-      }
-    }
-    onProgress?.('ready', 100, 'Book successfully indexed into vector library!');
 
+    // Save binary in IndexedDB
+    try {
+      await PDF_STORAGE_SERVICE.savePdfBlob(extractResult.bookId, file, file.name);
+    } catch (err) {
+      console.warn('Could not store PDF in IndexedDB:', err);
+    }
+
+    onProgress?.('ready', 100, `Textbook ready! Detected ${extractResult.chapters.length} chapters and ${extractResult.exerciseSectionsCount} exercise sections.`);
     return newBook;
   },
 

@@ -6,6 +6,16 @@ import { z } from 'zod';
 export const ALLOWED_FILE_EXTENSIONS = ['pdf', 'epub', 'docx', 'txt'] as const;
 export const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
 
+// Sanitizes filename by stripping directory traversal and non-alphanumeric chars
+export function sanitizeFilename(filename: string): string {
+  const base = filename.replace(/^.*[\\/]/, ''); // Strip path
+  const dotIndex = base.lastIndexOf('.');
+  const ext = dotIndex !== -1 ? base.substring(dotIndex) : '';
+  const name = dotIndex !== -1 ? base.substring(0, dotIndex) : base;
+  const sanitized = name.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').slice(0, 100);
+  return `${sanitized || 'document'}${ext.toLowerCase()}`;
+}
+
 export const BookUploadSchema = z.object({
   title: z.string().min(2, 'Title must be at least 2 characters').max(200, 'Title too long'),
   author: z.string().max(100, 'Author name too long').default('Curriculum Author'),
@@ -21,11 +31,22 @@ export const BookUploadSchema = z.object({
 
 export type BookUploadInput = z.infer<typeof BookUploadSchema>;
 
+// Exercise detection schema
+export const DetectedExerciseSchema = z.object({
+  id: z.string(),
+  title: z.string(), // e.g. "Exercise 1.1", "Practice Set 2.1", "Review Questions"
+  page: z.number().int().positive(),
+  type: z.enum(['exercise', 'practice_problems', 'review_questions', 'problems', 'questions']),
+  snippet: z.string().optional(),
+  estimatedQuestions: z.number().int().nonnegative().optional()
+});
+export type DetectedExercise = z.infer<typeof DetectedExerciseSchema>;
+
 // Pipeline status
 export const PipelineStatusEnum = z.enum(['uploading', 'extracting', 'indexing', 'ready', 'failed']);
 export type PipelineStatus = z.infer<typeof PipelineStatusEnum>;
 
-// Chapter schema
+// Chapter schema - optional exercise fields so existing models stay backward compatible
 export const ChapterSchema = z.object({
   id: z.string(),
   bookId: z.string(),
@@ -34,11 +55,14 @@ export const ChapterSchema = z.object({
   pageStart: z.number().int().positive(),
   pageEnd: z.number().int().positive(),
   contentPreview: z.string().optional(),
-  content: z.string().optional()
+  content: z.string().optional(),
+  hasExercises: z.boolean().optional(),
+  detectedExercises: z.array(DetectedExerciseSchema).optional(),
+  exerciseCount: z.number().optional()
 });
 export type ChapterModel = z.infer<typeof ChapterSchema>;
 
-// Book schema
+// Book schema - optional fields for backward compatibility
 export const BookModelSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -50,11 +74,17 @@ export const BookModelSchema = z.object({
   fileSizeBytes: z.number(),
   status: PipelineStatusEnum,
   totalPages: z.number().int().positive(),
+  uploaderName: z.string().optional(),
+  originalFilename: z.string().optional(),
+  sanitizedFilename: z.string().optional(),
+  isScanned: z.boolean().optional(),
+  exerciseSectionsCount: z.number().optional(),
   board: z.string().optional(),
   coverGradient: z.string().optional(),
   errorMessage: z.string().optional(),
   chapters: z.array(ChapterSchema).default([]),
-  createdAt: z.string()
+  createdAt: z.string(),
+  updatedAt: z.string().optional()
 });
 export type BookModel = z.infer<typeof BookModelSchema>;
 
@@ -64,6 +94,7 @@ export const ChunkSchema = z.object({
   bookId: z.string(),
   chapterId: z.string().optional(),
   chapterName: z.string().default('General'),
+  exerciseRef: z.string().optional(),
   text: z.string().min(1),
   page: z.number().int().positive(),
   embedding: z.array(z.number()).optional(),
@@ -101,6 +132,7 @@ export const ExamQuestionSchema = z.object({
   chapterId: z.string(),
   chapterName: z.string(),
   pageRef: z.string().default('Page 1'),
+  sourceExerciseRef: z.string().optional(),
   difficulty: DifficultyLevelEnum,
   bloomLevel: BloomLevelEnum,
   marks: z.number().positive(),
@@ -112,14 +144,20 @@ export const ExamQuestionSchema = z.object({
 });
 export type ExamQuestionModel = z.infer<typeof ExamQuestionSchema>;
 
+export const ExerciseSourceModeEnum = z.enum(['as_is', 'similar', 'mixed']);
+export type ExerciseSourceMode = z.infer<typeof ExerciseSourceModeEnum>;
+
 export const ExamConfigSchema = z.object({
   title: z.string().min(2, 'Exam title is required'),
   sourceBookIds: z.array(z.string()).min(1, 'Select at least one source book'),
   sourceChapterIds: z.array(z.string()).min(1, 'Select at least one chapter or all chapters'),
-  totalQuestions: z.number().int().min(1).max(50),
-  totalMarks: z.number().int().min(5).max(100),
+  sourceExerciseIds: z.array(z.string()).optional(),
+  exerciseMode: ExerciseSourceModeEnum.optional(),
+  totalQuestions: z.number().int().min(1).max(100),
+  totalMarks: z.number().int().min(5).max(200),
   questionTypes: z.array(QuestionTypeEnum).min(1, 'Select at least one question type'),
   typeCounts: z.record(QuestionTypeEnum, z.number().int().nonnegative()).optional(),
+  marksPerType: z.record(QuestionTypeEnum, z.number().int().positive()).optional(),
   difficultyMode: z.enum(['custom', 'adaptive']).default('custom'),
   difficultyMix: z.object({
     easy: z.number().min(0).max(100),
@@ -127,7 +165,7 @@ export const ExamConfigSchema = z.object({
     hard: z.number().min(0).max(100)
   }),
   bloomMix: z.record(z.string(), z.number()).optional(),
-  timeLimitMinutes: z.number().int().min(5).max(180).default(30),
+  timeLimitMinutes: z.number().int().min(5).max(240).default(60),
   negativeMarking: z.boolean().default(false),
   negativeMarkingValue: z.number().default(0.25),
   language: z.string().default('English'),
@@ -146,6 +184,33 @@ export const ExamModelSchema = z.object({
   createdAt: z.string()
 });
 export type ExamModel = z.infer<typeof ExamModelSchema>;
+
+// Saved test paper section breakdown
+export interface PaperSection {
+  id: string;
+  name: string; // e.g. "Section A: Multiple Choice Questions"
+  questionType: QuestionType;
+  instructions: string;
+  marksPerQuestion: number;
+  totalMarks: number;
+  questions: ExamQuestionModel[];
+}
+
+export interface SavedTestPaper {
+  id: string;
+  userId: string;
+  title: string;
+  bookId?: string;
+  bookTitle?: string;
+  subject: string;
+  durationMinutes: number;
+  totalMarks: number;
+  exerciseMode: ExerciseSourceMode;
+  sections: PaperSection[];
+  questions: ExamQuestionModel[];
+  createdAt: string;
+  updatedAt: string;
+}
 
 // ==============================================================================
 // 3. ATTEMPT & PERFORMANCE SCHEMAS
