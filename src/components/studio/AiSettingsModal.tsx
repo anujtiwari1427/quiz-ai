@@ -140,28 +140,28 @@ export const AiSettingsModal: React.FC<AiSettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in overflow-y-auto">
-      <div className="w-full max-w-2xl bg-[#1c1c1e] border border-white/10 rounded-3xl p-6 sm:p-7 space-y-6 shadow-2xl my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+      <div className="w-full max-w-2xl bg-white dark:bg-[#161226] border border-slate-200 dark:border-purple-900/50 rounded-3xl p-6 sm:p-7 space-y-6 shadow-2xl my-8 text-slate-900 dark:text-white">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0071e3] to-[#bf5af2] flex items-center justify-center text-white shadow-lg shadow-[#0071e3]/30">
+            <div className="w-9 h-9 rounded-xl bg-purple-700 flex items-center justify-center text-white shadow-sm border border-purple-800">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white tracking-tight">Live AI & Neural Model Engine</h3>
-              <p className="text-xs text-[#86868b]">Connect real neural models for live exam generation, grading, and tutoring</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Live AI & Neural Model Engine</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Connect real neural models for live exam generation, grading, and tutoring</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-[#86868b] hover:text-white p-1 rounded-lg">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Security Alert */}
-        <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-start gap-2.5 text-xs text-[#86868b]">
-          <ShieldCheck className="w-4 h-4 text-[#30d158] shrink-0 mt-0.5" />
+        <div className="p-3.5 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/50 flex items-start gap-2.5 text-xs text-purple-900 dark:text-purple-300">
+          <ShieldCheck className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
           <span>API keys are stored directly in your browser's encrypted localStorage and communicate peer-to-peer with LLM providers without proxy logging.</span>
         </div>
 
@@ -416,13 +416,13 @@ export const AiSettingsModal: React.FC<AiSettingsModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs text-[#86868b] hover:text-white"
+                className="px-4 py-2 rounded-xl text-xs text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="btn-primary text-xs py-2 px-5 font-semibold shadow-lg shadow-[#0071e3]/30"
+                className="px-5 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-sm transition-all"
               >
                 Save Settings
               </button>

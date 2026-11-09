@@ -312,6 +312,57 @@ Expected output:
 
 ---
 
+## 🎨 Professional Orange · White · Purple Design System
+
+The application features a modern, solid design system:
+- **Default Theme**: Crisp White (`#ffffff`) background with slate typography for optimal reading clarity.
+- **Brand Colors**:
+  - **Royal Purple** (`#7c3aed` / `#6d28d9`): Navigation badges, structural accents, and secondary actions.
+  - **Vibrant Orange** (`#ea580c` / `#f97316`): Primary call-to-actions, highlight badges, and focus indicators.
+  - **No Gradients**: Strictly maintains clean, solid professional corporate colors without distracting gradients.
+
+---
+
+## 📚 Feature 1: Textbook Upload & Extraction
+
+Educators can upload school textbooks and have them automatically structured and tagged:
+- **Upload UI**: Drag-and-drop file picker supporting PDF (required), DOCX, TXT, and EPUB.
+- **Validation**: Enforces strict 50 MB limit and client/server filename sanitization.
+- **Page-by-Page Extraction**: Powered by `pdfjs-dist` extracting text page by page.
+- **Scanned PDF Detection**: Detects non-extractable / scanned documents (<15 chars/page) and shows clear alert banners.
+- **Structure & Exercise Detection**: Regex engine detects chapter headings and automatically tags exercise sections:
+  `"Practice set"`, `"Exercises"`, `"Practice Problems"`, `"Review Questions"`, `"Problems"`, and `"Questions"`.
+- **"My Textbooks" Management**: View uploaded textbooks with page counts, chapter tree, tagged exercise badges, rename, delete, and re-process buttons.
+
+---
+
+## 📝 Feature 2: Generate Test Papers from Textbook Exercises
+
+Synthesize board-standard examination question papers directly from textbook exercises:
+- **Generator Form**:
+  - Select textbook, target chapters, and tagged exercise sets.
+  - 6 Question Types: Multiple Choice (MCQ), True / False, Fill in Blanks, Short Answer (2-3M), Long Answer (4-5M), Numerical / Problem Solving.
+  - Live auto-calculated total questions and total marks balance.
+  - Difficulty selection: Easy, Medium, Hard, or Mixed.
+  - Test Duration (15m to 180m).
+  - Exercise Grounding Mode: *"Use exercise questions as-is"*, *"Create new similar questions based on exercises"*, or *"Mix of both"*.
+- **Strictly Grounded AI Synthesizer**:
+  - Prompts model strictly with textbook exercise text.
+  - JSON validation and auto-repair utility (`extractAndRepairJson`).
+  - Strict MCQ validation: exactly 4 options (A, B, C, D) and exactly 1 correct answer with plausible distractors.
+  - High-fidelity offline heuristic fallback if no API key is configured.
+- **Interactive Paper Preview & Editor**:
+  - Section-based board examination layout (Section A through Section D).
+  - Inline question edit modal, single question delete, up/down reordering.
+  - **Regenerate Single Question**: One-click AI regeneration for any specific question.
+  - **Dual PDF Export**:
+    - **Question Paper (PDF)**: Clean official examination copy with roll number box, general instructions, marks, and zero answers.
+    - **Answer Key & Marking Scheme (PDF)**: Complete step-wise solutions, rubrics, and Bloom level tags.
+  - **"Take this test online" Mode**: Launches interactive exam room with real countdown timer, question palette, answer submission, auto-scoring, and diagnostic review sheet.
+  - **Saved Test Papers Hub**: Reopen, duplicate, delete, or re-export previous papers.
+
+---
+
 ## 🔒 Security & Compliance
 
 - **DPDP Act Aligned**: Adheres to the principles of India's Digital Personal Data Protection Act, including parental consent verification and student data minimization.

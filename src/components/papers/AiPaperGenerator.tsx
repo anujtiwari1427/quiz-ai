@@ -150,8 +150,8 @@ export const AiPaperGenerator: React.FC = () => {
   const displayedQuestions = activeSectionFilter === "all" ? currentPaper.questions : currentPaper.questions.filter((q) => q.section === activeSectionFilter);
   
   const ic = isLight
-    ? "w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium"
-    : "w-full bg-[#1c2230] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all";
+    ? "w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-600 transition-all font-medium"
+    : "w-full bg-[#1c2230] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-600 transition-all";
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-fade-in-up">
@@ -167,10 +167,10 @@ export const AiPaperGenerator: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2">
               <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${
                 isLight
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                  : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                  ? 'bg-purple-50 text-purple-800 border-purple-200'
+                  : 'bg-purple-500/15 text-purple-300 border-purple-600/30'
               }`}>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{aiConfig.provider === "gemini" ? "Google Gemini 2.0 Flash" : `AI: ${aiConfig.model}`}</span>
               </span>
@@ -193,7 +193,7 @@ export const AiPaperGenerator: React.FC = () => {
                 <div className="flex flex-col items-center gap-1">
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all ${
                     i===0
-                      ? isLight ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+                      ? isLight ? 'bg-purple-100 text-purple-800 border-purple-300' : "bg-purple-500/20 border-purple-600/50 text-purple-300"
                       : isLight ? 'bg-slate-100 border-slate-200 text-slate-500' : "bg-white/[0.04] border-white/10 text-slate-400"
                   }`}><Icon className="w-4 h-4" /></div>
                   <span className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>{label}</span>
@@ -203,8 +203,8 @@ export const AiPaperGenerator: React.FC = () => {
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0 md:self-start">
-            <button onClick={() => setCurrentView("paper-builder")} className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-xs font-bold text-white shadow-sm transition-all flex items-center gap-2">
-              <Layers className="w-4 h-4 text-emerald-100" /> Open Split Canvas Studio (QP-M)
+            <button onClick={() => setCurrentView("paper-builder")} className="px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-xs font-bold text-white shadow-sm transition-all flex items-center gap-2">
+              <Layers className="w-4 h-4 text-white" /> Open Split Canvas Studio (QP-M)
             </button>
           </div>
         </div>
@@ -224,11 +224,11 @@ export const AiPaperGenerator: React.FC = () => {
               isLight ? 'border-slate-200' : 'border-white/[0.08]'
             }`}>
               <div className="flex items-center gap-2">
-                <div className={`p-1.5 rounded-lg ${isLight ? 'bg-emerald-100 text-emerald-800' : 'bg-emerald-500/10 text-emerald-400'}`}><Sliders className="w-4 h-4" /></div>
+                <div className={`p-1.5 rounded-lg ${isLight ? 'bg-purple-100 text-purple-800' : 'bg-purple-500/10 text-purple-400'}`}><Sliders className="w-4 h-4" /></div>
                 <h2 className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Paper Blueprint</h2>
               </div>
               <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
-                isLight ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                isLight ? 'text-purple-700 bg-purple-50 border-purple-200' : 'text-purple-400 bg-purple-500/10 border-purple-600/20'
               }`}>
                 {aiConfig.provider==="gemini"?"Gemini 2.0":aiConfig.model}
               </span>
@@ -241,18 +241,18 @@ export const AiPaperGenerator: React.FC = () => {
                 <label className={`flex items-center gap-1.5 text-[11px] font-semibold mb-1.5 ${
                   isLight ? 'text-slate-700' : 'text-slate-300'
                 }`}>
-                  <Upload className="w-3.5 h-3.5 text-emerald-500" /> Upload Syllabus (PDF/TXT/DOC)
+                  <Upload className="w-3.5 h-3.5 text-orange-500" /> Upload Syllabus (PDF/TXT/DOC)
                 </label>
                 <div onDragOver={(e)=>{e.preventDefault();setIsDragging(true);}} onDragLeave={()=>setIsDragging(false)} onDrop={handleDrop} onClick={()=>fileInputRef.current?.click()}
                   className={`w-full border-2 border-dashed rounded-2xl p-3.5 text-center cursor-pointer transition-all ${
                     isDragging
-                      ? "border-emerald-500 bg-emerald-500/10"
+                      ? "border-purple-600 bg-purple-500/10"
                       : isLight
-                        ? "border-slate-300 bg-slate-50/80 hover:border-emerald-500 hover:bg-emerald-50/40"
-                        : "border-white/10 bg-[#1c2230]/60 hover:border-emerald-500/40 hover:bg-emerald-500/5"
+                        ? "border-slate-300 bg-slate-50/80 hover:border-purple-600 hover:bg-purple-50/40"
+                        : "border-white/10 bg-[#1c2230]/60 hover:border-purple-600/40 hover:bg-orange-500/5"
                   }`}>
                   {uploadedFileName ? (
-                    <div className="flex items-center justify-center gap-2 text-emerald-600 font-medium">
+                    <div className="flex items-center justify-center gap-2 text-orange-600 font-medium">
                       <CheckCircle2 className="w-4 h-4" />
                       <span className="text-xs truncate max-w-[180px]">{uploadedFileName}</span>
                       <button type="button" onClick={(e)=>{e.stopPropagation();setUploadedFileName("");}} className="text-slate-400 hover:text-red-500 transition-colors"><X className="w-3.5 h-3.5" /></button>
@@ -307,8 +307,8 @@ export const AiPaperGenerator: React.FC = () => {
                   placeholder="e.g. Thermodynamics, Wave Optics, Trigonometry..."
                   className={`w-full rounded-xl p-3 text-xs leading-relaxed resize-none transition-all ${
                     isLight
-                      ? 'bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500'
-                      : 'bg-[#1c2230] border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500'
+                      ? 'bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-600'
+                      : 'bg-[#1c2230] border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-600'
                   }`} />
               </div>
 
@@ -340,10 +340,10 @@ export const AiPaperGenerator: React.FC = () => {
                     <button key={d.id} type="button" onClick={()=>setDifficulty(d.id as any)}
                       className={`text-left p-2.5 rounded-xl border text-xs transition-all ${
                         difficulty===d.id
-                          ? isLight ? "border-emerald-500 bg-emerald-50/80 ring-2 ring-emerald-500/20" : "border-emerald-500 bg-emerald-500/15"
+                          ? isLight ? "border-purple-600 bg-purple-50/80 ring-2 ring-emerald-500/20" : "border-purple-600 bg-purple-500/15"
                           : isLight ? "border-slate-200 bg-slate-50/80 hover:border-slate-300" : "border-white/5 bg-[#1c2230]/50 text-slate-400 hover:border-white/15"
                       }`}>
-                      <div className={`font-semibold ${isLight ? (difficulty===d.id ? 'text-emerald-900' : 'text-slate-800') : 'text-white'}`}>{d.label}</div>
+                      <div className={`font-semibold ${isLight ? (difficulty===d.id ? 'text-purple-900' : 'text-slate-800') : 'text-white'}`}>{d.label}</div>
                       <div className={`text-[10px] mt-0.5 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>{d.desc}</div>
                     </button>
                   ))}
@@ -353,21 +353,21 @@ export const AiPaperGenerator: React.FC = () => {
               {/* Paper Sets */}
               <div>
                 <label className={`flex items-center gap-1.5 text-[11px] font-semibold mb-1.5 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>
-                  <Shuffle className="w-3.5 h-3.5 text-teal-500" /> Paper Sets (anti-cheating MCQ shuffle)
+                  <Shuffle className="w-3.5 h-3.5 text-orange-500" /> Paper Sets (anti-cheating MCQ shuffle)
                 </label>
                 <div className="flex gap-2">
                   {([1,2,3] as const).map((n)=>(
                     <button key={n} type="button" onClick={()=>setSetCount(n)}
                       className={`flex-1 py-2 rounded-xl border text-xs font-bold transition-all ${
                         setCount===n
-                          ? isLight ? "bg-teal-50 border-teal-500 text-teal-800 ring-2 ring-teal-500/20" : "bg-teal-500/20 border-teal-500/60 text-teal-300"
+                          ? isLight ? "bg-orange-50 border-orange-500 text-orange-800 ring-2 ring-teal-500/20" : "bg-orange-500/20 border-orange-500/60 text-orange-300"
                           : isLight ? "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100" : "bg-[#1c2230]/50 border-white/5 text-slate-400 hover:border-white/15"
                       }`}>
                       {n===1?"1 Set":`${n} Sets`}
                     </button>
                   ))}
                 </div>
-                {setCount>1&&<p className={`text-[10px] mt-1.5 ${isLight ? 'text-teal-700 font-medium' : 'text-teal-400'}`}>Sec A MCQs shuffled between sets</p>}
+                {setCount>1&&<p className={`text-[10px] mt-1.5 ${isLight ? 'text-orange-700 font-medium' : 'text-orange-400'}`}>Sec A MCQs shuffled between sets</p>}
               </div>
 
               {/* School / Teacher */}
@@ -386,15 +386,15 @@ export const AiPaperGenerator: React.FC = () => {
 
               {/* Generate button */}
               <button type="submit" disabled={isGenerating}
-                className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
+                className="w-full py-3.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
                 {isGenerating?(<><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /><span>Generating{setCount>1?` ${setCount} Sets`:""}...</span></>):(<><Sparkles className="w-4 h-4" /><span>Generate{setCount>1?` ${setCount} Paper Sets`:""}</span></>)}
               </button>
 
               {isGenerating&&(
                 <div className="space-y-2 animate-fade-in">
-                  <div className="flex justify-between text-[11px]"><span className={`truncate pr-2 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>{progressMsg}</span><span className="font-mono text-emerald-600 font-bold">{progressPct}%</span></div>
+                  <div className="flex justify-between text-[11px]"><span className={`truncate pr-2 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>{progressMsg}</span><span className="font-mono text-orange-600 font-bold">{progressPct}%</span></div>
                   <div className={`w-full rounded-full h-1.5 overflow-hidden border ${isLight ? 'bg-slate-200 border-slate-300' : 'bg-black/40 border-white/5'}`}>
-                    <div className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500" style={{width:`${progressPct}%`}} />
+                    <div className="bg-orange-600 h-1.5 rounded-full transition-all duration-500" style={{width:`${progressPct}%`}} />
                   </div>
                 </div>
               )}
@@ -404,12 +404,12 @@ export const AiPaperGenerator: React.FC = () => {
           {/* AI Status */}
           <div className={`rounded-2xl p-4 border text-xs flex items-start gap-3 transition-all ${
             aiConfig.provider!=="offline"
-              ? isLight ? "bg-emerald-50/80 border-emerald-200" : "bg-emerald-500/5 border-emerald-500/20"
+              ? isLight ? "bg-purple-50/80 border-purple-200" : "bg-orange-500/5 border-purple-600/20"
               : isLight ? "bg-amber-50/80 border-amber-200" : "bg-amber-500/5 border-amber-500/20"
           }`}>
-            {aiConfig.provider!=="offline"?<CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />:<AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
+            {aiConfig.provider!=="offline"?<CheckCircle2 className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />:<AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
             <div>
-              <p className={`font-semibold ${aiConfig.provider!=="offline" ? (isLight ? "text-emerald-900" : "text-emerald-300") : (isLight ? "text-amber-900" : "text-amber-300")}`}>{aiConfig.provider!=="offline"?"Live AI Connected":"Offline Heuristic Mode"}</p>
+              <p className={`font-semibold ${aiConfig.provider!=="offline" ? (isLight ? "text-purple-900" : "text-purple-300") : (isLight ? "text-amber-900" : "text-amber-300")}`}>{aiConfig.provider!=="offline"?"Live AI Connected":"Offline Heuristic Mode"}</p>
               <p className={`mt-0.5 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>{aiConfig.provider!=="offline"?`Using ${aiConfig.model} — curriculum-accurate unique questions.`:"No API key. Blueprint engine generates structured template questions."}</p>
             </div>
           </div>
@@ -423,12 +423,12 @@ export const AiPaperGenerator: React.FC = () => {
             <div className={`flex items-center gap-2 rounded-2xl p-2 border backdrop-blur-xl transition-all ${
               isLight ? 'bg-white border-slate-200 shadow-md' : 'bg-[#141821]/90 border-white/[0.09]'
             }`}>
-              <span className={`text-[11px] font-semibold pl-1 flex items-center gap-1 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}><Shuffle className="w-3.5 h-3.5 text-teal-500" />Sets:</span>
+              <span className={`text-[11px] font-semibold pl-1 flex items-center gap-1 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}><Shuffle className="w-3.5 h-3.5 text-orange-500" />Sets:</span>
               {paperSets.map((ps,i)=>(
                 <button key={ps.id} onClick={()=>setActiveSetIdx(i)}
                   className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
                     activeSetIdx===i
-                      ? isLight ? "bg-teal-50 border border-teal-400 text-teal-800" : "bg-teal-500/20 border border-teal-500/50 text-teal-300"
+                      ? isLight ? "bg-orange-50 border border-teal-400 text-orange-800" : "bg-orange-500/20 border border-orange-500/50 text-orange-300"
                       : isLight ? "text-slate-600 hover:text-slate-900 border border-transparent" : "text-slate-400 hover:text-white border border-transparent"
                   }`}>Set {i+1}</button>
               ))}
@@ -447,7 +447,7 @@ export const AiPaperGenerator: React.FC = () => {
                 <button key={id} onClick={()=>setActiveTab(id as any)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                     activeTab===id
-                      ? isLight ? "bg-emerald-600 text-white shadow-sm" : "bg-emerald-500 text-black shadow-md"
+                      ? isLight ? "bg-orange-600 text-white shadow-sm" : "bg-orange-500 text-black shadow-md"
                       : isLight ? "text-slate-600 hover:text-slate-900" : "text-slate-400 hover:text-white"
                   }`}>
                   <Icon className="w-3.5 h-3.5" /><span>{label}</span>
@@ -460,9 +460,9 @@ export const AiPaperGenerator: React.FC = () => {
                   ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
                   : 'bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 border-white/10'
               }`}>
-                {copied?<Check className="w-3.5 h-3.5 text-emerald-500" />:<Copy className={`w-3.5 h-3.5 ${isLight ? 'text-slate-500' : 'text-slate-400'}`} />}<span>{copied?"Copied!":"Copy"}</span>
+                {copied?<Check className="w-3.5 h-3.5 text-orange-500" />:<Copy className={`w-3.5 h-3.5 ${isLight ? 'text-slate-500' : 'text-slate-400'}`} />}<span>{copied?"Copied!":"Copy"}</span>
               </button>
-              <button onClick={()=>setShowPdfModal(true)} className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
+              <button onClick={()=>setShowPdfModal(true)} className="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
                 <Download className="w-3.5 h-3.5 stroke-[2.5]" /><span>Export / Print Paper</span>
               </button>
             </div>
@@ -476,7 +476,7 @@ export const AiPaperGenerator: React.FC = () => {
                 <button key={sec} onClick={()=>setActiveSectionFilter(sec)}
                   className={`px-2.5 py-0.5 rounded-lg text-[11px] font-mono transition-all ${
                     activeSectionFilter===sec
-                      ? isLight ? "bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold" : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold"
+                      ? isLight ? "bg-purple-100 text-purple-800 border border-purple-300 font-bold" : "bg-purple-500/20 text-purple-400 border border-purple-600/40 font-bold"
                       : isLight ? "text-slate-600 hover:text-slate-900 bg-slate-100 border border-slate-200" : "text-slate-400 hover:text-white bg-white/[0.03] border border-white/5"
                   }`}>
                   {sec==="all"?"All":`Sec ${sec}`}
@@ -494,7 +494,7 @@ export const AiPaperGenerator: React.FC = () => {
             <div className={`border-b-2 pb-6 text-center space-y-2 ${isLight ? 'border-slate-300' : 'border-white/20'}`}>
               {(currentPaper as any).schoolName&&<div className={`text-sm font-bold uppercase tracking-wider ${isLight ? 'text-slate-900' : 'text-white'}`}>{(currentPaper as any).schoolName}</div>}
               <div className={`inline-block px-3 py-0.5 rounded-full text-[10px] font-mono tracking-widest uppercase border ${
-                isLight ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                isLight ? 'bg-purple-50 text-purple-800 border-purple-300' : 'bg-purple-500/10 text-purple-400 border-purple-600/20'
               }`}>OFFICIAL CURRICULAR ASSESSMENT · CONFIDENTIAL</div>
               <h2 className={`text-xl sm:text-2xl font-bold tracking-tight uppercase font-display ${isLight ? 'text-slate-900' : 'text-white'}`}>{currentPaper.title}</h2>
               <div className={`flex flex-wrap items-center justify-center gap-4 text-xs pt-1 ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
@@ -508,7 +508,7 @@ export const AiPaperGenerator: React.FC = () => {
                 isLight ? 'text-slate-600 border-slate-200' : 'text-slate-400 border-white/10'
               }`}>
                 <span>Time: <strong className={`font-mono ${isLight ? 'text-slate-900' : 'text-white'}`}>{currentPaper.durationMinutes} Min</strong></span>
-                <span>Max Marks: <strong className={`font-bold font-mono text-sm ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>{currentPaper.totalMarks}</strong></span>
+                <span>Max Marks: <strong className={`font-bold font-mono text-sm ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{currentPaper.totalMarks}</strong></span>
               </div>
             </div>
 
@@ -519,7 +519,7 @@ export const AiPaperGenerator: React.FC = () => {
                 }`}>
                   <div className={`flex items-center gap-2 font-bold uppercase tracking-wider text-[11px] ${
                     isLight ? 'text-slate-900' : 'text-white'
-                  }`}><FileText className="w-3.5 h-3.5 text-emerald-500" />General Instructions:</div>
+                  }`}><FileText className="w-3.5 h-3.5 text-orange-500" />General Instructions:</div>
                   <ul className={`list-decimal list-inside space-y-1 leading-relaxed pl-1 text-[11.5px] ${
                     isLight ? 'text-slate-700' : 'text-slate-400'
                   }`}>
@@ -535,7 +535,7 @@ export const AiPaperGenerator: React.FC = () => {
                         isLight ? 'border-slate-200' : 'border-white/10'
                       }`}>
                         <div>
-                          <h3 className={`text-sm font-bold uppercase tracking-wider ${isLight ? 'text-emerald-800' : 'text-emerald-400'}`}>{section.title}</h3>
+                          <h3 className={`text-sm font-bold uppercase tracking-wider ${isLight ? 'text-purple-800' : 'text-purple-400'}`}>{section.title}</h3>
                           <p className={`text-xs mt-0.5 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>{section.description}</p>
                         </div>
                         <span className={`text-xs font-mono font-bold px-3 py-1 rounded-full border ${
@@ -557,7 +557,7 @@ export const AiPaperGenerator: React.FC = () => {
                                 <span className="whitespace-pre-line">{q.questionText}</span>
                               </div>
                               <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-lg border whitespace-nowrap ${
-                                isLight ? 'text-emerald-800 bg-emerald-100 border-emerald-300' : 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                                isLight ? 'text-purple-800 bg-purple-100 border-purple-300' : 'text-purple-400 bg-purple-500/10 border-purple-600/20'
                               }`}>[{q.marks}M]</span>
                             </div>
                             {q.options&&q.options.length>0&&(
@@ -566,7 +566,7 @@ export const AiPaperGenerator: React.FC = () => {
                                   <div key={opt.id} className={`text-xs p-2.5 rounded-xl border flex items-start gap-2.5 ${
                                     isLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-black/40 border-white/5 text-slate-300'
                                   }`}>
-                                    <span className={`font-bold font-mono ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>({opt.id})</span>
+                                    <span className={`font-bold font-mono ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>({opt.id})</span>
                                     <span>{opt.text}</span>
                                   </div>
                                 ))}
@@ -590,9 +590,9 @@ export const AiPaperGenerator: React.FC = () => {
             {activeTab==="solutions"&&(
               <div className="mt-6 space-y-5">
                 <div className={`rounded-2xl p-4 text-xs flex items-center gap-2 border ${
-                  isLight ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
+                  isLight ? 'bg-purple-50 border-purple-200 text-purple-900' : 'bg-purple-500/10 border-purple-600/20 text-purple-300'
                 }`}>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-orange-600 shrink-0" />
                   <span><strong>Teacher &amp; Evaluator Answer Key</strong> — model solutions with step-wise rubrics.</span>
                 </div>
                 {displayedQuestions.map((q)=>(
@@ -612,16 +612,16 @@ export const AiPaperGenerator: React.FC = () => {
                         <span className={`text-[10px] px-2 py-0.5 rounded font-mono border ${
                           isLight ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/20'
                         }`}>Bloom: {q.bloomsLevel}</span>
-                        <span className={`font-bold font-mono ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>{q.marks}M</span>
+                        <span className={`font-bold font-mono ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{q.marks}M</span>
                       </div>
                     </div>
                     <div className={`border-l-4 p-3.5 rounded-r-xl text-xs space-y-1.5 ${
-                      isLight ? 'bg-emerald-50/80 border-emerald-500 text-slate-800' : 'bg-emerald-950/20 border-emerald-500 text-slate-200'
+                      isLight ? 'bg-purple-50/80 border-purple-600 text-slate-800' : 'bg-purple-950/20 border-purple-600 text-slate-200'
                     }`}>
-                      <strong className={`block ${isLight ? 'text-emerald-800' : 'text-emerald-400'}`}>Model Answer:</strong>
+                      <strong className={`block ${isLight ? 'text-purple-800' : 'text-purple-400'}`}>Model Answer:</strong>
                       <p className="whitespace-pre-line leading-relaxed">{q.correctAnswer}</p>
                       {q.solutionExplanation&&<p className={`text-[11px] pt-1.5 border-t ${
-                        isLight ? 'border-emerald-200 text-slate-600' : 'border-emerald-500/10 text-slate-400'
+                        isLight ? 'border-purple-200 text-slate-600' : 'border-purple-600/10 text-slate-400'
                       }`}><strong className={isLight ? 'text-slate-800' : 'text-slate-300'}>Examiner Note:</strong> {q.solutionExplanation}</p>}
                     </div>
                     {q.markingRubric&&q.markingRubric.length>0&&(
@@ -631,7 +631,7 @@ export const AiPaperGenerator: React.FC = () => {
                           <div key={i} className={`flex items-center justify-between text-[11px] p-2 rounded-xl border ${
                             isLight ? 'bg-white border-slate-200 text-slate-700' : 'bg-white/[0.03] border-white/5 text-slate-300'
                           }`}>
-                            <span>• {r.step}</span><span className={`font-mono font-bold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>+{r.marks}M</span>
+                            <span>• {r.step}</span><span className={`font-mono font-bold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>+{r.marks}M</span>
                           </div>
                         ))}
                       </div>
@@ -657,12 +657,12 @@ export const AiPaperGenerator: React.FC = () => {
                         <tr key={sec.sectionId} className={isLight ? "hover:bg-slate-50" : "hover:bg-white/[0.02]"}>
                           <td className={`p-3.5 font-bold font-mono ${isLight ? 'text-slate-900' : 'text-white'}`}>Section {sec.sectionId}</td>
                           <td className="p-3.5">{sec.description}</td><td className="p-3.5 font-mono">{sec.questionCount}</td>
-                          <td className="p-3.5 font-mono">{sec.marksPerQuestion}</td><td className={`p-3.5 text-right font-mono font-bold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>{sec.totalMarks}M</td>
+                          <td className="p-3.5 font-mono">{sec.marksPerQuestion}</td><td className={`p-3.5 text-right font-mono font-bold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{sec.totalMarks}M</td>
                         </tr>
                       ))}
                       <tr className={`font-bold ${isLight ? 'bg-slate-100 text-slate-900' : 'bg-white/[0.06] text-white'}`}>
                         <td colSpan={2} className="p-3.5">Grand Total</td><td className="p-3.5 font-mono">{currentPaper.questions.length} Qs</td>
-                        <td className="p-3.5">—</td><td className={`p-3.5 text-right font-mono text-sm ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>{currentPaper.totalMarks}M</td>
+                        <td className="p-3.5">—</td><td className={`p-3.5 text-right font-mono text-sm ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{currentPaper.totalMarks}M</td>
                       </tr>
                     </tbody>
                   </table>
@@ -670,7 +670,7 @@ export const AiPaperGenerator: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className={`border rounded-2xl p-4 ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-black/40 border-white/10'}`}>
                     <div className={`text-[10px] uppercase tracking-wider font-mono ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>AI Engine</div>
-                    <div className={`text-sm font-bold flex items-center gap-1.5 mt-1 ${isLight ? 'text-slate-900' : 'text-white'}`}><Sparkles className="w-4 h-4 text-emerald-500" /><span>{currentPaper.modelUsed}</span></div>
+                    <div className={`text-sm font-bold flex items-center gap-1.5 mt-1 ${isLight ? 'text-slate-900' : 'text-white'}`}><Sparkles className="w-4 h-4 text-orange-500" /><span>{currentPaper.modelUsed}</span></div>
                   </div>
                   <div className={`border rounded-2xl p-4 ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-black/40 border-white/10'}`}>
                     <div className={`text-[10px] uppercase tracking-wider font-mono ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Curriculum</div>
@@ -678,7 +678,7 @@ export const AiPaperGenerator: React.FC = () => {
                   </div>
                   <div className={`border rounded-2xl p-4 ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-black/40 border-white/10'}`}>
                     <div className={`text-[10px] uppercase tracking-wider font-mono ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Sets Generated</div>
-                    <div className={`text-sm font-bold mt-1 flex items-center gap-1.5 ${isLight ? 'text-teal-700' : 'text-teal-400'}`}><Shuffle className="w-4 h-4" />{paperSets.length} Set{paperSets.length>1?"s":""}</div>
+                    <div className={`text-sm font-bold mt-1 flex items-center gap-1.5 ${isLight ? 'text-orange-700' : 'text-orange-400'}`}><Shuffle className="w-4 h-4" />{paperSets.length} Set{paperSets.length>1?"s":""}</div>
                   </div>
                 </div>
               </div>
@@ -697,11 +697,11 @@ export const AiPaperGenerator: React.FC = () => {
               ? 'bg-white border-slate-200 text-slate-900 shadow-2xl'
               : 'bg-[#111622] border-white/20 text-white'
           }`}>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-700 rounded-t-3xl" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-purple-700 rounded-t-3xl" />
             <div className="flex items-start justify-between">
               <div>
                 <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mb-2 border ${
-                  isLight ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400'
+                  isLight ? 'bg-purple-50 border-purple-200 text-purple-800' : 'bg-purple-500/10 border-purple-600/25 text-purple-400'
                 }`}>
                   <Download className="w-3 h-3" /> Export Examination Documents
                 </div>
@@ -714,8 +714,8 @@ export const AiPaperGenerator: React.FC = () => {
             </div>
             <div className="space-y-3">
               {[
-                {mode:"student_paper" as PdfExportMode,title:"Student Question Paper",badge:"Official Exam Copy",desc:"Roll No boxes, sections, marks. Zero answers.",icon:FileText,btnColor:"bg-emerald-600 hover:bg-emerald-500 text-white"},
-                {mode:"marking_scheme" as PdfExportMode,title:"Teacher Marking Scheme",badge:"Confidential Evaluator",desc:"Model answers, step-wise rubrics, Bloom tags, examiner notes.",icon:FileCheck,btnColor:"bg-teal-600 hover:bg-teal-500 text-white"},
+                {mode:"student_paper" as PdfExportMode,title:"Student Question Paper",badge:"Official Exam Copy",desc:"Roll No boxes, sections, marks. Zero answers.",icon:FileText,btnColor:"bg-orange-600 hover:bg-orange-700 text-white"},
+                {mode:"marking_scheme" as PdfExportMode,title:"Teacher Marking Scheme",badge:"Confidential Evaluator",desc:"Model answers, step-wise rubrics, Bloom tags, examiner notes.",icon:FileCheck,btnColor:"bg-purple-700 hover:bg-purple-800 text-white"},
                 {mode:"complete_bundle" as PdfExportMode,title:"Complete Exam Bundle",badge:"Archival Master",desc:"Question paper + marking scheme, one document with page break.",icon:Layers,btnColor:"bg-blue-600 hover:bg-blue-500 text-white"},
               ].map((opt)=>(
                 <div key={opt.mode} className={`p-4 rounded-2xl border transition-all ${
@@ -757,18 +757,18 @@ export const AiPaperGenerator: React.FC = () => {
             </div>
             {paperSets.length>1&&(
               <div className={`rounded-2xl p-3 text-xs flex items-center gap-2 border ${
-                isLight ? 'bg-teal-50 border-teal-200 text-teal-800' : 'bg-teal-500/10 border-teal-500/20 text-teal-300'
+                isLight ? 'bg-orange-50 border-teal-200 text-orange-800' : 'bg-teal-500/10 border-orange-500/20 text-orange-300'
               }`}>
                 <Shuffle className="w-4 h-4 shrink-0" />
                 <span><strong>{paperSets.length} sets</strong> generated. Switch sets using the tabs above the preview before exporting each one.</span>
               </div>
             )}
             <div className={`p-3.5 rounded-2xl border flex items-start gap-3 text-xs ${
-              isLight ? 'bg-emerald-50/70 border-emerald-200 text-slate-700' : 'bg-emerald-500/5 border-emerald-500/15 text-slate-400'
+              isLight ? 'bg-purple-50/70 border-purple-200 text-slate-700' : 'bg-orange-500/5 border-purple-600/15 text-slate-400'
             }`}>
-              <Sparkles className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <Sparkles className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
               <div>
-                <strong className={isLight ? 'text-slate-900' : 'text-slate-200'}>PDF:</strong> In print dialog → <code className={isLight ? 'text-emerald-700 font-bold' : 'text-emerald-400'}>Save as PDF</code>, A4 size, enable Background graphics.
+                <strong className={isLight ? 'text-slate-900' : 'text-slate-200'}>PDF:</strong> In print dialog → <code className={isLight ? 'text-purple-700 font-bold' : 'text-purple-400'}>Save as PDF</code>, A4 size, enable Background graphics.
                 <br /><strong className={`mt-1 block ${isLight ? 'text-slate-900' : 'text-slate-200'}`}>Word (.docx):</strong> Opens in Microsoft Word or LibreOffice Writer for editing before printing.
               </div>
             </div>

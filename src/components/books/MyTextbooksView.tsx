@@ -113,7 +113,7 @@ export const MyTextbooksView: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-900 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
                 Textbook Ingestion Engine
               </span>
             </div>
@@ -127,7 +127,7 @@ export const MyTextbooksView: React.FC = () => {
 
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition-all flex-shrink-0"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-xs transition-all flex-shrink-0"
           >
             <Plus className="w-4 h-4" />
             Upload New Textbook
@@ -143,7 +143,7 @@ export const MyTextbooksView: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by textbook title, subject, chapter name, or uploader..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -152,7 +152,7 @@ export const MyTextbooksView: React.FC = () => {
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="all">All Subjects ({books.length})</option>
               {subjects.map(s => (
@@ -165,7 +165,7 @@ export const MyTextbooksView: React.FC = () => {
         {/* Books List */}
         {filteredBooks.length === 0 ? (
           <div className="text-center py-16 px-4 bg-white dark:bg-slate-900/40 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
-            <div className="w-16 h-16 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mb-4">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4">
               <BookOpen className="w-8 h-8" />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -176,7 +176,7 @@ export const MyTextbooksView: React.FC = () => {
             </p>
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all"
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition-all shadow-xs"
             >
               <Upload className="w-4 h-4" />
               Upload Textbook Now
@@ -192,15 +192,15 @@ export const MyTextbooksView: React.FC = () => {
               return (
                 <div
                   key={book.id}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden transition-all"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden transition-all"
                 >
                   {/* Book Card Summary Row */}
                   <div className="p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     
                     {/* Left: Info */}
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-14 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center flex-shrink-0 text-slate-700 dark:text-slate-300 font-bold">
-                        <FileText className="w-6 h-6 text-emerald-600" />
+                      <div className="w-12 h-14 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 flex flex-col items-center justify-center flex-shrink-0 text-purple-800 dark:text-purple-300 font-bold">
+                        <FileText className="w-6 h-6 text-purple-700 dark:text-purple-400" />
                         <span className="text-[9px] uppercase tracking-wider font-mono mt-0.5">
                           {book.fileType || 'PDF'}
                         </span>
@@ -211,14 +211,14 @@ export const MyTextbooksView: React.FC = () => {
                           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                             {book.title}
                           </h2>
-                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-purple-50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
                             {book.subject}
                           </span>
 
                           {/* Status Badge */}
                           {book.status === 'ready' && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-purple-50 text-purple-800 dark:bg-purple-950/40 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                              <span className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-pulse" />
                               Ready
                             </span>
                           )}
@@ -252,7 +252,7 @@ export const MyTextbooksView: React.FC = () => {
                             <BookOpen className="w-3.5 h-3.5 text-slate-400" />
                             {(book.chapters || []).length} Chapters
                           </span>
-                          <span className="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
+                          <span className="flex items-center gap-1 font-semibold text-orange-600 dark:text-orange-400">
                             <Tag className="w-3.5 h-3.5" />
                             {totalExercises} Exercises Detected
                           </span>
@@ -283,13 +283,12 @@ export const MyTextbooksView: React.FC = () => {
                       {/* Generate Test Paper Button */}
                       <button
                         onClick={() => {
-                          // Sets active textbook and navigates to exercise test generator
                           localStorage.setItem('qpm_selected_book_id', book.id);
-                          setCurrentView('ai-paper-gen');
+                          setCurrentView('textbook-paper');
                         }}
-                        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm"
+                        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold transition-all shadow-xs"
                       >
-                        <Sparkles className="w-3.5 h-3.5" />
+                        <Sparkles className="w-3.5 h-3.5 text-orange-400" />
                         Generate Test Paper
                       </button>
 
@@ -300,7 +299,7 @@ export const MyTextbooksView: React.FC = () => {
                         title="Re-extract and detect chapters/exercises again"
                         className="flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-all disabled:opacity-50"
                       >
-                        <RotateCcw className={`w-3.5 h-3.5 ${isReprocessing ? 'animate-spin text-emerald-600' : ''}`} />
+                        <RotateCcw className={`w-3.5 h-3.5 ${isReprocessing ? 'animate-spin text-orange-600' : ''}`} />
                         <span className="hidden sm:inline">Re-process</span>
                       </button>
 
@@ -339,8 +338,8 @@ export const MyTextbooksView: React.FC = () => {
 
                   {/* Reprocess Status Bar */}
                   {isReprocessing && (
-                    <div className="px-6 py-2 bg-emerald-50 dark:bg-emerald-950/30 border-t border-emerald-200 dark:border-emerald-800/50 flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-300">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <div className="px-6 py-2 bg-purple-50 dark:bg-purple-950/40 border-t border-purple-200 dark:border-purple-800/50 flex items-center gap-2 text-xs text-purple-800 dark:text-purple-300">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-orange-600" />
                       <span>{reprocessStatus}</span>
                     </div>
                   )}
@@ -385,18 +384,18 @@ export const MyTextbooksView: React.FC = () => {
                               {/* Detected Exercises Badges */}
                               {ch.detectedExercises && ch.detectedExercises.length > 0 ? (
                                 <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-700/40">
-                                  <p className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
+                                  <p className="text-[10px] font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wider">
                                     Exercises Detected ({ch.detectedExercises.length}):
                                   </p>
                                   <div className="flex flex-wrap gap-1.5">
                                     {ch.detectedExercises.map((ex, exIdx) => (
                                       <span
                                         key={ex.id || exIdx}
-                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
+                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-800 dark:bg-orange-950/40 dark:text-orange-300 border border-orange-200 dark:border-orange-800"
                                       >
-                                        <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />
+                                        <CheckCircle2 className="w-2.5 h-2.5 text-orange-600" />
                                         <span className="font-semibold">{ex.title}</span>
-                                        <span className="text-emerald-600/70">(p.{ex.page})</span>
+                                        <span className="text-orange-600/70">(p.{ex.page})</span>
                                       </span>
                                     ))}
                                   </div>

@@ -1,31 +1,21 @@
 import React, { useState } from 'react';
-import {
-  FileText,
-  Sparkles,
-  Layers,
-  Download,
-  Shuffle,
-  Upload,
-  CheckCircle2,
-  ChevronRight,
-  Printer,
-  ShieldCheck,
-  Award,
-  BookOpen,
-  ArrowRight,
-  School,
-  FileCheck,
-  Zap,
-  Sliders,
-  HelpCircle,
-  Copy,
-  ChevronDown,
-  Check,
-  Star,
-  ExternalLink,
-  Laptop,
-  Clock,
-  Settings
+import { 
+  FileText, 
+  Sparkles, 
+  Download, 
+  Layers, 
+  Shuffle, 
+  ArrowRight, 
+  CheckCircle2, 
+  BookOpen, 
+  Clock, 
+  ChevronRight, 
+  ChevronDown, 
+  Printer, 
+  ShieldCheck, 
+  Upload, 
+  Cpu, 
+  FileCheck
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -33,6 +23,7 @@ export const PaperWebsiteHome: React.FC = () => {
   const { setCurrentView, theme } = useApp();
   const isDark = theme === 'dark';
 
+  // Interactive FAQ state
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
@@ -41,49 +32,45 @@ export const PaperWebsiteHome: React.FC = () => {
 
   const faqs = [
     {
-      q: 'Can I export the question paper to Microsoft Word for custom editing?',
-      a: 'Yes, absolutely! QP-M includes a native Word (.doc) exporter that preserves standard board examination typography, school headers, two-column MCQ option tables, right-aligned marks columns, and general instructions. You can open and edit it in Microsoft Word, Google Docs, or LibreOffice.'
+      q: 'Does QP-M generate papers conforming to official CBSE and ICSE blueprints?',
+      a: 'Yes. QP-M is purpose-built to enforce official CBSE, ICSE, and State Board blueprint structures, including Section A (MCQs & Assertion-Reason), Section B (Short Answer I), Section C (Short Answer II), Section D (Long Answer), and Section E (Case-Based Integrated units).'
     },
     {
-      q: 'Does QP-M calculate and balance total marks automatically?',
-      a: 'Yes. The real-time marks tracker monitors allocated marks across every section (Section A through Section D) against your target exam marks (e.g. 80 Marks, 70 Marks, or 50 Marks). The Auto-Assemble engine can also automatically select questions matching your exact difficulty ratio (e.g. 40% Easy, 40% Medium, 20% Hard).'
+      q: 'Can I export the question paper to Microsoft Word (.doc) as well as PDF?',
+      a: 'Absolutely. You can export a fully editable Microsoft Word document (.doc) with native tables, section headers, marks allocations, and candidate roll number boxes, or print directly to print-ready vector A4 PDF.'
     },
     {
-      q: 'Can I import questions from past papers or scanned notes?',
-      a: 'Yes! Using the Import / OCR tool, you can paste raw question text from documents, syllabus PDFs, or typed notes. The parser automatically detects question numbers, options (a, b, c, d), and assigns them directly to your Question Bank.'
+      q: 'How does real-time marks balancing work?',
+      a: 'As you drag questions into Section A, B, C, or D, the top status bar continuously calculates the total marks for each section and alerts you when your paper matches your target examination blueprint (e.g. 80 / 80 marks balanced).'
     },
     {
-      q: 'How does the AI Blueprint Generator work with Google Gemini?',
-      a: 'The AI Blueprint Generator uses Google Gemini 2.0 to analyze your syllabus topics or uploaded document and generate a full multi-section board exam paper with marking schemes, Bloom\'s taxonomy tags, and anti-cheating shuffled paper sets (Set 1, Set 2, Set 3).'
+      q: 'Can I upload our school textbook and generate questions directly from exercises?',
+      a: 'Yes! Navigate to the "My Textbooks" tab, upload your curriculum PDF, and our parser will automatically detect chapters and exercise sections ("Practice Set", "Exercises", "Review Questions"). You can then generate test papers grounded strictly in those exercises.'
     },
     {
-      q: 'Can I print directly to A4 without formatting issues?',
-      a: 'Yes. The Print engine outputs clean vector A4 portrait layouts with official school headers, candidate roll number boxes, Q.P. Codes, general instructions, and optional teacher answer schemes.'
-    },
-    {
-      q: 'Is my Question Bank stored securely?',
-      a: 'All question bank items and custom layouts are stored locally in your browser. You can export a JSON backup at any time to transfer between computers or back up your school repository with zero cloud data lock-in.'
+      q: 'Is my school examination data kept private and secure?',
+      a: '100% confidential. Question papers, school names, student keys, and questions are stored locally in your browser storage or private server. No exam papers are ever made public.'
     }
   ];
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 selection:bg-emerald-500 selection:text-white ${
-      isDark ? 'bg-[#07090e] text-slate-100' : 'bg-white text-slate-900'
+    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 selection:bg-orange-500 selection:text-white ${
+      isDark ? 'bg-[#090714] text-slate-100' : 'bg-white text-slate-900'
     }`}>
 
       {/* ──────────────────────────────────────────────────────────
-          1. HERO SECTION (Clean, Solid, Professional Styling)
+          1. HERO SECTION (Orange, White & Purple Theme)
           ────────────────────────────────────────────────────────── */}
       <section className={`relative pt-12 pb-20 sm:pt-20 sm:pb-28 overflow-hidden border-b transition-colors duration-300 ${
         isDark
-          ? 'bg-[#090d16] border-slate-800'
+          ? 'bg-[#0c091d] border-purple-950/60'
           : 'bg-white border-slate-200'
       }`}>
-        {/* Clean, Subtle Micro-Grid Pattern */}
+        {/* Subtle geometric dot pattern */}
         <div className={`absolute inset-0 pointer-events-none [background-size:24px_24px] ${
           isDark
-            ? 'bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-30'
-            : 'bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] opacity-40'
+            ? 'bg-[radial-gradient(#2e1065_1px,transparent_1px)] opacity-30'
+            : 'bg-[radial-gradient(#ede9fe_1px,transparent_1px)] opacity-70'
         }`} />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-7">
@@ -91,15 +78,15 @@ export const PaperWebsiteHome: React.FC = () => {
           {/* Top Pill Announcement */}
           <div 
             onClick={() => setCurrentView('paper-builder')}
-            className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border shadow-sm transition-all cursor-pointer group ${
+            className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border shadow-xs transition-all cursor-pointer group ${
               isDark
-                ? 'bg-slate-900 border-slate-700 hover:border-emerald-500 text-slate-300'
-                : 'bg-slate-50 border-slate-200 hover:border-emerald-600 text-slate-700'
+                ? 'bg-purple-950/50 border-purple-900/60 hover:border-orange-500 text-purple-200'
+                : 'bg-purple-50 border-purple-200 hover:border-orange-500 text-purple-900'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
             <span className={`text-xs font-semibold transition-colors ${
-              isDark ? 'group-hover:text-emerald-400' : 'group-hover:text-emerald-800'
+              isDark ? 'group-hover:text-orange-400' : 'group-hover:text-orange-700'
             }`}>
               QP-M 2.0 • The Professional Question Paper Maker for Schools
             </span>
@@ -112,7 +99,7 @@ export const PaperWebsiteHome: React.FC = () => {
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
               Craft Board-Standard <br />
-              <span className={isDark ? "text-emerald-400" : "text-emerald-700"}>
+              <span className="text-purple-700 dark:text-purple-400">
                 Question Papers
               </span> in Minutes.
             </h1>
@@ -127,7 +114,7 @@ export const PaperWebsiteHome: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3">
             <button
               onClick={() => setCurrentView('paper-builder')}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2.5 active:scale-95 group"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2.5 active:scale-95 group"
             >
               <Layers className="w-4 h-4 text-white" />
               <span>Launch QP-M Studio</span>
@@ -136,35 +123,47 @@ export const PaperWebsiteHome: React.FC = () => {
 
             <button
               onClick={() => setCurrentView('ai-paper-gen')}
-              className={`w-full sm:w-auto px-7 py-3.5 rounded-xl border font-bold text-sm shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 active:scale-95 ${
+              className={`w-full sm:w-auto px-7 py-3.5 rounded-xl border font-bold text-sm shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 active:scale-95 ${
                 isDark
-                  ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-100'
-                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-800'
+                  ? 'bg-purple-950/40 hover:bg-purple-900/60 border-purple-800 text-purple-200'
+                  : 'bg-white hover:bg-purple-50 border-purple-300 text-purple-900'
               }`}
             >
-              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <Sparkles className="w-4 h-4 text-orange-500" />
               <span>Generate with AI Blueprint</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentView('textbook-paper')}
+              className={`w-full sm:w-auto px-6 py-3.5 rounded-xl border font-bold text-sm shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 active:scale-95 ${
+                isDark
+                  ? 'bg-purple-900/40 hover:bg-purple-900/70 border-purple-700 text-purple-100'
+                  : 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-900'
+              }`}
+            >
+              <BookOpen className="w-4 h-4 text-orange-500" />
+              <span>From Textbook Exercises</span>
             </button>
           </div>
 
           {/* Trust strip */}
           <div className={`pt-8 border-t flex flex-wrap items-center justify-center gap-6 text-xs font-medium ${
-            isDark ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-600'
+            isDark ? 'border-purple-950 text-slate-400' : 'border-slate-200 text-slate-600'
           }`}>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400" />
               <span>CBSE &amp; ICSE Format Compliant</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <span>Real-Time Marks Balancing</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400" />
               <span>Word (.doc) &amp; Vector A4 Print</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <span>100% Private &amp; Offline Ready</span>
             </div>
           </div>
@@ -175,13 +174,13 @@ export const PaperWebsiteHome: React.FC = () => {
           2. INTERACTIVE CANVAS SHOWCASE MOCKUP
           ────────────────────────────────────────────────────────── */}
       <section className={`py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300 ${
-        isDark ? 'bg-[#07090e]' : 'bg-white'
+        isDark ? 'bg-[#090714]' : 'bg-white'
       }`}>
         <div className="text-center space-y-3 mb-12">
           <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold border ${
             isDark
-              ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+              ? 'bg-purple-950/50 text-purple-300 border-purple-800'
+              : 'bg-purple-50 text-purple-800 border-purple-200'
           }`}>
             <span>SPLIT-SCREEN CANVAS</span>
           </div>
@@ -197,35 +196,35 @@ export const PaperWebsiteHome: React.FC = () => {
           </p>
         </div>
 
-        {/* Visual Studio Showcase Frame (macOS Style) */}
+        {/* Visual Studio Showcase Frame (Clean Window Style) */}
         <div className={`rounded-3xl border overflow-hidden transition-all duration-300 ${
           isDark
-            ? 'border-white/10 bg-[#0d1322] shadow-2xl shadow-emerald-950/20'
-            : 'border-slate-200 bg-white shadow-2xl shadow-slate-200/80'
+            ? 'border-purple-900/40 bg-[#0e0c1f] shadow-2xl shadow-purple-950/40'
+            : 'border-slate-200 bg-white shadow-xl shadow-slate-200/70'
         }`}>
           
           {/* Window Chrome Header Bar */}
           <div className={`px-4 py-3 border-b flex items-center justify-between ${
-            isDark ? 'bg-[#090d16] border-white/10' : 'bg-slate-100/90 border-slate-200'
+            isDark ? 'bg-[#120f26] border-purple-900/40' : 'bg-slate-100/90 border-slate-200'
           }`}>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-rose-400 border border-rose-500/30" />
               <span className="w-3 h-3 rounded-full bg-amber-400 border border-amber-500/30" />
               <span className="w-3 h-3 rounded-full bg-emerald-400 border border-emerald-500/30" />
-              <span className={`ml-2 text-xs font-mono font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>qpm-canvas-workspace.exam</span>
+              <span className={`ml-2 text-xs font-mono font-medium ${isDark ? 'text-purple-300' : 'text-slate-600'}`}>qpm-canvas-workspace.exam</span>
             </div>
 
             <div className="flex items-center gap-3">
               <span className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border ${
                 isDark
-                  ? 'text-emerald-300 bg-emerald-500/15 border-emerald-500/30'
-                  : 'text-emerald-700 bg-emerald-100/80 border-emerald-200'
+                  ? 'text-orange-300 bg-orange-950/40 border-orange-800'
+                  : 'text-orange-800 bg-orange-100 border-orange-200'
               }`}>
                 80 / 80 Marks Balanced
               </span>
               <button
                 onClick={() => setCurrentView('paper-builder')}
-                className="px-3 py-1 rounded-lg bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition-colors shadow-sm"
+                className="px-3 py-1 rounded-lg bg-orange-600 text-white font-bold text-xs hover:bg-orange-700 transition-colors shadow-xs"
               >
                 Open Studio
               </button>
@@ -234,26 +233,26 @@ export const PaperWebsiteHome: React.FC = () => {
 
           {/* Interactive Preview Body (Split Screen) */}
           <div className={`grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x min-h-[500px] ${
-            isDark ? 'divide-white/10' : 'divide-slate-200'
+            isDark ? 'divide-purple-950' : 'divide-slate-200'
           }`}>
             
             {/* Left Column: Question Bank */}
             <div className={`lg:col-span-5 p-5 space-y-3.5 ${
-              isDark ? 'bg-[#0b101d]' : 'bg-slate-50/70'
+              isDark ? 'bg-[#0b0917]' : 'bg-slate-50/70'
             }`}>
               <div className={`flex items-center justify-between pb-2 border-b ${
-                isDark ? 'border-white/10' : 'border-slate-200'
+                isDark ? 'border-purple-950' : 'border-slate-200'
               }`}>
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-emerald-500" />
+                  <BookOpen className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                   <span className={`text-xs font-bold uppercase tracking-wider font-mono ${
-                    isDark ? 'text-slate-200' : 'text-slate-800'
+                    isDark ? 'text-purple-200' : 'text-slate-800'
                   }`}>Question Bank</span>
                 </div>
                 <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
                   isDark
-                    ? 'text-slate-400 bg-white/5 border-white/10'
-                    : 'text-slate-500 bg-white border-slate-200'
+                    ? 'text-purple-300 bg-purple-950/40 border-purple-800'
+                    : 'text-purple-800 bg-purple-50 border-purple-200'
                 }`}>
                   24 Available
                 </span>
@@ -261,14 +260,14 @@ export const PaperWebsiteHome: React.FC = () => {
 
               {/* Sample Question Cards */}
               <div className="space-y-2.5">
-                <div className={`p-3.5 rounded-2xl border shadow-sm transition-all cursor-grab group ${
+                <div className={`p-3.5 rounded-2xl border shadow-xs transition-all cursor-grab group ${
                   isDark
-                    ? 'bg-[#131b2e] border-white/[0.08] hover:border-emerald-500/40 hover:bg-[#162138]'
-                    : 'bg-white border-slate-200 hover:border-emerald-500/50 hover:shadow-md'
+                    ? 'bg-[#15122b] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#1a1636]'
+                    : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-md'
                 }`}>
                   <div className="flex items-center justify-between text-[10px] mb-1.5">
                     <span className={`px-2 py-0.5 rounded font-mono font-bold border ${
-                      isDark ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                      isDark ? 'bg-purple-950/60 text-purple-300 border-purple-800' : 'bg-purple-50 text-purple-800 border-purple-200'
                     }`}>
                       1 Mark • MCQ
                     </span>
@@ -281,18 +280,18 @@ export const PaperWebsiteHome: React.FC = () => {
                     isDark ? 'border-white/5 text-slate-500' : 'border-slate-100 text-slate-400'
                   }`}>
                     <span>Bloom: Apply (L3)</span>
-                    <span className="text-emerald-500 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
+                    <span className="text-orange-600 dark:text-orange-400 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
                   </div>
                 </div>
 
-                <div className={`p-3.5 rounded-2xl border shadow-sm transition-all cursor-grab group ${
+                <div className={`p-3.5 rounded-2xl border shadow-xs transition-all cursor-grab group ${
                   isDark
-                    ? 'bg-[#131b2e] border-white/[0.08] hover:border-amber-500/40 hover:bg-[#162138]'
-                    : 'bg-white border-slate-200 hover:border-amber-500/50 hover:shadow-md'
+                    ? 'bg-[#15122b] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#1a1636]'
+                    : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-md'
                 }`}>
                   <div className="flex items-center justify-between text-[10px] mb-1.5">
                     <span className={`px-2 py-0.5 rounded font-mono font-bold border ${
-                      isDark ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-amber-50 text-amber-700 border-amber-100'
+                      isDark ? 'bg-orange-950/40 text-orange-300 border-orange-800' : 'bg-orange-50 text-orange-800 border-orange-200'
                     }`}>
                       3 Marks • Short Answer
                     </span>
@@ -305,18 +304,18 @@ export const PaperWebsiteHome: React.FC = () => {
                     isDark ? 'border-white/5 text-slate-500' : 'border-slate-100 text-slate-400'
                   }`}>
                     <span>Bloom: Analyze (L4)</span>
-                    <span className="text-amber-500 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
+                    <span className="text-purple-600 dark:text-purple-400 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
                   </div>
                 </div>
 
-                <div className={`p-3.5 rounded-2xl border shadow-sm transition-all cursor-grab group ${
+                <div className={`p-3.5 rounded-2xl border shadow-xs transition-all cursor-grab group ${
                   isDark
-                    ? 'bg-[#131b2e] border-white/[0.08] hover:border-rose-500/40 hover:bg-[#162138]'
-                    : 'bg-white border-slate-200 hover:border-rose-500/50 hover:shadow-md'
+                    ? 'bg-[#15122b] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#1a1636]'
+                    : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-md'
                 }`}>
                   <div className="flex items-center justify-between text-[10px] mb-1.5">
                     <span className={`px-2 py-0.5 rounded font-mono font-bold border ${
-                      isDark ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' : 'bg-rose-50 text-rose-700 border-rose-100'
+                      isDark ? 'bg-purple-950/60 text-purple-300 border-purple-800' : 'bg-purple-50 text-purple-800 border-purple-200'
                     }`}>
                       5 Marks • Long Answer
                     </span>
@@ -329,7 +328,7 @@ export const PaperWebsiteHome: React.FC = () => {
                     isDark ? 'border-white/5 text-slate-500' : 'border-slate-100 text-slate-400'
                   }`}>
                     <span>Bloom: Prove &amp; Calculate</span>
-                    <span className="text-rose-500 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
+                    <span className="text-orange-600 dark:text-orange-400 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
                   </div>
                 </div>
               </div>
@@ -337,19 +336,19 @@ export const PaperWebsiteHome: React.FC = () => {
 
             {/* Right Column: Realistic A4 Examination Sheet */}
             <div className={`lg:col-span-7 p-6 sm:p-8 flex flex-col justify-center items-center ${
-              isDark ? 'bg-[#070b13]' : 'bg-slate-100/50'
+              isDark ? 'bg-[#080613]' : 'bg-slate-100/50'
             }`}>
               <div className={`rounded-2xl border p-6 sm:p-8 max-w-xl w-full space-y-5 transition-all ${
                 isDark
-                  ? 'bg-[#111827] border-white/15 text-white shadow-2xl'
-                  : 'bg-white border-slate-200 text-slate-900 shadow-xl'
+                  ? 'bg-[#120f24] border-purple-900/40 text-white shadow-2xl'
+                  : 'bg-white border-slate-200 text-slate-900 shadow-lg'
               }`}>
                 
                 {/* School Header */}
                 <div className={`border-b-2 pb-4 text-center space-y-1 ${
-                  isDark ? 'border-white/20' : 'border-slate-900'
+                  isDark ? 'border-purple-800' : 'border-purple-900'
                 }`}>
-                  <div className="text-[11px] font-mono uppercase tracking-widest text-emerald-500 font-bold">
+                  <div className="text-[11px] font-mono uppercase tracking-widest text-purple-700 dark:text-purple-400 font-bold">
                     APEX ACADEMY OF SCIENCES · TERMINAL EXAM 2026
                   </div>
                   <h3 className={`text-lg font-black uppercase font-display tracking-tight ${
@@ -361,13 +360,13 @@ export const PaperWebsiteHome: React.FC = () => {
                     isDark ? 'text-slate-300' : 'text-slate-700'
                   }`}>
                     <span>Time Allowed: <strong>3 Hours</strong></span>
-                    <span className="text-emerald-500 font-bold">Maximum Marks: 80</span>
+                    <span className="text-orange-600 font-bold">Maximum Marks: 80</span>
                   </div>
                 </div>
 
                 {/* Candidate Roll Number Box */}
                 <div className={`flex items-center justify-between text-[11px] font-mono p-2 rounded-lg border ${
-                  isDark ? 'bg-black/30 border-white/10 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-600'
+                  isDark ? 'bg-black/30 border-purple-900/40 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-600'
                 }`}>
                   <span>Candidate Roll No: [ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ]</span>
                   <span>Q.P. Code: <strong>30/10/402</strong></span>
@@ -375,9 +374,9 @@ export const PaperWebsiteHome: React.FC = () => {
 
                 {/* Instructions Box */}
                 <div className={`p-3 rounded-xl border text-[11px] space-y-1 ${
-                  isDark ? 'bg-black/30 border-white/10 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700'
+                  isDark ? 'bg-black/30 border-purple-900/40 text-slate-300' : 'bg-purple-50/50 border-purple-100 text-slate-700'
                 }`}>
-                  <div className={`font-bold uppercase text-[10px] font-mono ${isDark ? 'text-white' : 'text-slate-900'}`}>General Instructions:</div>
+                  <div className={`font-bold uppercase text-[10px] font-mono ${isDark ? 'text-white' : 'text-purple-950'}`}>General Instructions:</div>
                   <ol className={`list-decimal list-inside leading-relaxed space-y-0.5 ${
                     isDark ? 'text-slate-400' : 'text-slate-600'
                   }`}>
@@ -389,10 +388,10 @@ export const PaperWebsiteHome: React.FC = () => {
                 {/* Section Preview */}
                 <div className="space-y-3">
                   <div className={`flex items-center justify-between border-b pb-1.5 ${
-                    isDark ? 'border-white/10' : 'border-slate-200'
+                    isDark ? 'border-purple-900/40' : 'border-slate-200'
                   }`}>
                     <span className={`text-xs font-bold font-mono uppercase ${
-                      isDark ? 'text-emerald-400' : 'text-emerald-800'
+                      isDark ? 'text-purple-400' : 'text-purple-800'
                     }`}>
                       Section A — Multiple Choice Questions
                     </span>
@@ -404,14 +403,14 @@ export const PaperWebsiteHome: React.FC = () => {
                   </div>
 
                   <div className={`p-3 rounded-xl border flex items-start justify-between gap-3 ${
-                    isDark ? 'bg-white/[0.03] border-white/10 text-slate-200' : 'bg-slate-50/70 border-slate-200 text-slate-800'
+                    isDark ? 'bg-white/[0.03] border-purple-900/30 text-slate-200' : 'bg-slate-50/70 border-slate-200 text-slate-800'
                   }`}>
                     <div className="text-xs">
                       <span className={`font-bold mr-2 font-mono ${isDark ? 'text-white' : 'text-slate-900'}`}>Q1.</span>
                       Which of the following organic functional groups is present in butanone?
                     </div>
                     <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
-                      isDark ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      isDark ? 'bg-orange-950/40 text-orange-300 border-orange-800' : 'bg-orange-50 text-orange-800 border-orange-200'
                     }`}>
                       [1M]
                     </span>
@@ -429,12 +428,12 @@ export const PaperWebsiteHome: React.FC = () => {
           3. HOW IT WORKS (3 Simple Steps)
           ────────────────────────────────────────────────────────── */}
       <section className={`py-16 sm:py-20 border-t border-b transition-colors duration-300 ${
-        isDark ? 'bg-[#090d16] border-white/[0.08]' : 'bg-slate-50 border-slate-200/80'
+        isDark ? 'bg-[#0c091d] border-purple-950/60' : 'bg-slate-50 border-slate-200/80'
       }`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-emerald-500 font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-orange-600 font-bold">
               EFFORTLESS THREE-STEP WORKFLOW
             </span>
             <h2 className={`text-3xl sm:text-4xl font-display font-black ${
@@ -452,11 +451,11 @@ export const PaperWebsiteHome: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Step 1 */}
-            <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-4 ${
-              isDark ? 'bg-[#101726] border-white/10 hover:border-emerald-500/30' : 'bg-white border-slate-200 hover:shadow-md'
+            <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-4 ${
+              isDark ? 'bg-[#120f26] border-purple-900/40 hover:border-purple-500/40' : 'bg-white border-slate-200 hover:shadow-md'
             }`}>
               <div className={`w-10 h-10 rounded-xl font-mono font-bold text-base flex items-center justify-center ${
-                isDark ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-emerald-100 text-emerald-700'
+                isDark ? 'bg-purple-950/80 text-purple-300 border border-purple-800' : 'bg-purple-100 text-purple-800'
               }`}>
                 01
               </div>
@@ -467,11 +466,11 @@ export const PaperWebsiteHome: React.FC = () => {
             </div>
 
             {/* Step 2 */}
-            <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-4 ${
-              isDark ? 'bg-[#101726] border-white/10 hover:border-teal-500/30' : 'bg-white border-slate-200 hover:shadow-md'
+            <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-4 ${
+              isDark ? 'bg-[#120f26] border-purple-900/40 hover:border-orange-500/40' : 'bg-white border-slate-200 hover:shadow-md'
             }`}>
               <div className={`w-10 h-10 rounded-xl font-mono font-bold text-base flex items-center justify-center ${
-                isDark ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30' : 'bg-teal-100 text-teal-700'
+                isDark ? 'bg-orange-950/80 text-orange-300 border border-orange-800' : 'bg-orange-100 text-orange-800'
               }`}>
                 02
               </div>
@@ -482,11 +481,11 @@ export const PaperWebsiteHome: React.FC = () => {
             </div>
 
             {/* Step 3 */}
-            <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-4 ${
-              isDark ? 'bg-[#101726] border-white/10 hover:border-cyan-500/30' : 'bg-white border-slate-200 hover:shadow-md'
+            <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-4 ${
+              isDark ? 'bg-[#120f26] border-purple-900/40 hover:border-purple-500/40' : 'bg-white border-slate-200 hover:shadow-md'
             }`}>
               <div className={`w-10 h-10 rounded-xl font-mono font-bold text-base flex items-center justify-center ${
-                isDark ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-cyan-100 text-cyan-700'
+                isDark ? 'bg-purple-950/80 text-purple-300 border border-purple-800' : 'bg-purple-100 text-purple-800'
               }`}>
                 03
               </div>
@@ -504,10 +503,10 @@ export const PaperWebsiteHome: React.FC = () => {
           4. CORE SUPERPOWERS / FEATURE GRID
           ────────────────────────────────────────────────────────── */}
       <section className={`py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 transition-colors duration-300 ${
-        isDark ? 'bg-[#07090e]' : 'bg-white'
+        isDark ? 'bg-[#090714]' : 'bg-white'
       }`}>
         <div className="text-center space-y-3">
-          <span className="text-xs font-mono uppercase tracking-widest text-emerald-500 font-bold">
+          <span className="text-xs font-mono uppercase tracking-widest text-purple-700 dark:text-purple-400 font-bold">
             WHY EDUCATORS CHOOSE QP-M
           </span>
           <h2 className={`text-3xl sm:text-4xl font-display font-black ${
@@ -525,15 +524,15 @@ export const PaperWebsiteHome: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {/* Feature 1 */}
-          <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-3 group ${
+          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
             isDark
-              ? 'bg-[#101726] border-white/10 hover:border-emerald-500/40 hover:bg-[#141d30]'
-              : 'bg-white border-slate-200 hover:border-emerald-500/50 hover:shadow-xl'
+              ? 'bg-[#120f26] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#161233]'
+              : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-xl'
           }`}>
             <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
               isDark
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-black'
-                : 'bg-emerald-50 text-emerald-600 border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white'
+                ? 'bg-purple-950/60 text-purple-300 border-purple-800 group-hover:bg-purple-700 group-hover:text-white'
+                : 'bg-purple-50 text-purple-700 border-purple-200 group-hover:bg-purple-700 group-hover:text-white'
             }`}>
               <Layers className="w-6 h-6" />
             </div>
@@ -544,15 +543,15 @@ export const PaperWebsiteHome: React.FC = () => {
           </div>
 
           {/* Feature 2 */}
-          <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-3 group ${
+          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
             isDark
-              ? 'bg-[#101726] border-white/10 hover:border-teal-500/40 hover:bg-[#141d30]'
-              : 'bg-white border-slate-200 hover:border-teal-500/50 hover:shadow-xl'
+              ? 'bg-[#120f26] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#161233]'
+              : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-xl'
           }`}>
             <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
               isDark
-                ? 'bg-teal-500/10 text-teal-400 border-teal-500/20 group-hover:bg-teal-500 group-hover:text-black'
-                : 'bg-teal-50 text-teal-600 border-teal-100 group-hover:bg-teal-600 group-hover:text-white'
+                ? 'bg-orange-950/60 text-orange-300 border-orange-800 group-hover:bg-orange-600 group-hover:text-white'
+                : 'bg-orange-50 text-orange-700 border-orange-200 group-hover:bg-orange-600 group-hover:text-white'
             }`}>
               <Shuffle className="w-6 h-6" />
             </div>
@@ -563,15 +562,15 @@ export const PaperWebsiteHome: React.FC = () => {
           </div>
 
           {/* Feature 3 */}
-          <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-3 group ${
+          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
             isDark
-              ? 'bg-[#101726] border-white/10 hover:border-cyan-500/40 hover:bg-[#141d30]'
-              : 'bg-white border-slate-200 hover:border-cyan-500/50 hover:shadow-xl'
+              ? 'bg-[#120f26] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#161233]'
+              : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-xl'
           }`}>
             <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
               isDark
-                ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 group-hover:bg-cyan-500 group-hover:text-black'
-                : 'bg-cyan-50 text-cyan-600 border-cyan-100 group-hover:bg-cyan-600 group-hover:text-white'
+                ? 'bg-purple-950/60 text-purple-300 border-purple-800 group-hover:bg-purple-700 group-hover:text-white'
+                : 'bg-purple-50 text-purple-700 border-purple-200 group-hover:bg-purple-700 group-hover:text-white'
             }`}>
               <Download className="w-6 h-6" />
             </div>
@@ -582,15 +581,15 @@ export const PaperWebsiteHome: React.FC = () => {
           </div>
 
           {/* Feature 4 */}
-          <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-3 group ${
+          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
             isDark
-              ? 'bg-[#101726] border-white/10 hover:border-emerald-500/40 hover:bg-[#141d30]'
-              : 'bg-white border-slate-200 hover:border-emerald-500/50 hover:shadow-xl'
+              ? 'bg-[#120f26] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#161233]'
+              : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-xl'
           }`}>
             <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
               isDark
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-black'
-                : 'bg-emerald-50 text-emerald-600 border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white'
+                ? 'bg-orange-950/60 text-orange-300 border-orange-800 group-hover:bg-orange-600 group-hover:text-white'
+                : 'bg-orange-50 text-orange-700 border-orange-200 group-hover:bg-orange-600 group-hover:text-white'
             }`}>
               <Sparkles className="w-6 h-6" />
             </div>
@@ -601,34 +600,34 @@ export const PaperWebsiteHome: React.FC = () => {
           </div>
 
           {/* Feature 5 */}
-          <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-3 group ${
+          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
             isDark
-              ? 'bg-[#101726] border-white/10 hover:border-teal-500/40 hover:bg-[#141d30]'
-              : 'bg-white border-slate-200 hover:border-teal-500/50 hover:shadow-xl'
+              ? 'bg-[#120f26] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#161233]'
+              : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-xl'
           }`}>
             <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
               isDark
-                ? 'bg-teal-500/10 text-teal-400 border-teal-500/20 group-hover:bg-teal-500 group-hover:text-black'
-                : 'bg-teal-50 text-teal-600 border-teal-100 group-hover:bg-teal-600 group-hover:text-white'
+                ? 'bg-purple-950/60 text-purple-300 border-purple-800 group-hover:bg-purple-700 group-hover:text-white'
+                : 'bg-purple-50 text-purple-700 border-purple-200 group-hover:bg-purple-700 group-hover:text-white'
             }`}>
               <Upload className="w-6 h-6" />
             </div>
-            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>OCR &amp; Document Text Importer</h3>
+            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Textbook &amp; Exercise Ingestion</h3>
             <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Paste question papers from previous years or scanned OCR text. The intelligent parser extracts questions, options, and marks with zero manual re-typing.
+              Upload full curriculum textbooks in PDF, DOCX, or TXT. Automatically detect chapters and exercise sets to generate grounded test papers.
             </p>
           </div>
 
           {/* Feature 6 */}
-          <div className={`p-6 rounded-3xl border shadow-sm transition-all space-y-3 group ${
+          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
             isDark
-              ? 'bg-[#101726] border-white/10 hover:border-cyan-500/40 hover:bg-[#141d30]'
-              : 'bg-white border-slate-200 hover:border-cyan-500/50 hover:shadow-xl'
+              ? 'bg-[#120f26] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#161233]'
+              : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-xl'
           }`}>
             <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
               isDark
-                ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 group-hover:bg-cyan-500 group-hover:text-black'
-                : 'bg-cyan-50 text-cyan-600 border-cyan-100 group-hover:bg-cyan-600 group-hover:text-white'
+                ? 'bg-orange-950/60 text-orange-300 border-orange-800 group-hover:bg-orange-600 group-hover:text-white'
+                : 'bg-orange-50 text-orange-700 border-orange-200 group-hover:bg-orange-600 group-hover:text-white'
             }`}>
               <ShieldCheck className="w-6 h-6" />
             </div>
@@ -642,21 +641,21 @@ export const PaperWebsiteHome: React.FC = () => {
       </section>
 
       {/* ──────────────────────────────────────────────────────────
-          5. BOARD STANDARDS COMPLIANCE CARD (Solid Professional Theme)
+          5. BOARD STANDARDS COMPLIANCE CARD (Orange-White-Purple)
           ────────────────────────────────────────────────────────── */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`rounded-3xl p-8 sm:p-12 border relative overflow-hidden transition-all duration-300 ${
           isDark
-            ? 'bg-[#0e1626] border-slate-800 shadow-xl'
-            : 'bg-slate-50 border-slate-200 shadow-sm'
+            ? 'bg-[#100d24] border-purple-900/50 shadow-xl'
+            : 'bg-slate-50 border-slate-200 shadow-xs'
         }`}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             
             <div className="space-y-4">
               <span className={`px-3 py-1 rounded-full text-[11px] font-mono font-bold border ${
                 isDark
-                  ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                  : 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                  ? 'bg-purple-950/60 text-purple-300 border-purple-800'
+                  : 'bg-purple-100 text-purple-900 border-purple-200'
               }`}>
                 OFFICIAL FORMATS
               </span>
@@ -673,7 +672,7 @@ export const PaperWebsiteHome: React.FC = () => {
               <div className="pt-2">
                 <button
                   onClick={() => setCurrentView('paper-builder')}
-                  className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-xs"
                 >
                   <span>Build Paper Now</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -682,28 +681,28 @@ export const PaperWebsiteHome: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-              <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
+              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
+                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-emerald-500 dark:text-emerald-400 font-bold">CBSE Class 10 &amp; 12</span>
+                <span className="text-purple-700 dark:text-purple-400 font-bold">CBSE Class 10 &amp; 12</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>80 Marks • 3 Hours • 39 Questions Standard Pattern</p>
               </div>
-              <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
+              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
+                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-teal-600 dark:text-teal-400 font-bold">ICSE / ISC Board</span>
+                <span className="text-orange-600 dark:text-orange-400 font-bold">ICSE / ISC Board</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Compulsory Section I &amp; Section II Internal Choices</p>
               </div>
-              <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
+              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
+                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-cyan-600 dark:text-cyan-400 font-bold">State Board Formats</span>
+                <span className="text-purple-700 dark:text-purple-400 font-bold">State Board Formats</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Maharashtra, Karnataka &amp; Tamil Nadu Blueprint Rules</p>
               </div>
-              <div className={`p-4 rounded-2xl border shadow-sm space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
+              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
+                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
               }`}>
-                <span className="text-indigo-600 dark:text-indigo-400 font-bold">Foundation &amp; Olympiad</span>
+                <span className="text-orange-600 dark:text-orange-400 font-bold">Foundation &amp; Olympiad</span>
                 <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>JEE/NEET diagnostic weighting &amp; negative marking keys</p>
               </div>
             </div>
@@ -716,11 +715,11 @@ export const PaperWebsiteHome: React.FC = () => {
           6. FAQ SECTION (Theme-Aware Accordion)
           ────────────────────────────────────────────────────────── */}
       <section className={`py-16 sm:py-24 border-t transition-colors duration-300 ${
-        isDark ? 'bg-[#090d16] border-white/[0.08]' : 'bg-slate-50 border-slate-200'
+        isDark ? 'bg-[#0c091d] border-purple-950/60' : 'bg-slate-50 border-slate-200'
       }`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-emerald-500 font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-orange-600 font-bold">
               COMMON QUESTIONS
             </span>
             <h2 className={`text-2xl sm:text-3xl font-display font-extrabold ${
@@ -734,20 +733,20 @@ export const PaperWebsiteHome: React.FC = () => {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className={`rounded-2xl border shadow-sm overflow-hidden transition-all ${
-                  isDark ? 'border-white/10 bg-[#101726]' : 'border-slate-200 bg-white'
+                className={`rounded-2xl border shadow-xs overflow-hidden transition-all ${
+                  isDark ? 'border-purple-900/40 bg-[#120f26]' : 'border-slate-200 bg-white'
                 }`}
               >
                 <button
                   onClick={() => toggleFaq(idx)}
                   className={`w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 text-xs sm:text-sm font-bold transition-colors ${
-                    isDark ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-700'
+                    isDark ? 'text-white hover:text-orange-400' : 'text-slate-900 hover:text-orange-700'
                   }`}
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
                     className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
-                      activeFaq === idx ? 'rotate-180 text-emerald-500' : ''
+                      activeFaq === idx ? 'rotate-180 text-orange-600' : ''
                     }`}
                   />
                 </button>
@@ -768,7 +767,7 @@ export const PaperWebsiteHome: React.FC = () => {
           7. BOTTOM CALL TO ACTION
           ────────────────────────────────────────────────────────── */}
       <section className={`py-16 sm:py-20 text-center border-t transition-colors duration-300 ${
-        isDark ? 'bg-[#07090e] border-white/[0.08]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#090714] border-purple-950/60' : 'bg-white border-slate-200'
       }`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
           <h2 className={`text-3xl sm:text-4xl font-display font-black ${
@@ -784,7 +783,7 @@ export const PaperWebsiteHome: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
               onClick={() => setCurrentView('paper-builder')}
-              className="px-8 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2"
+              className="px-8 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-2"
             >
               <Layers className="w-4 h-4" />
               <span>Open QP-M Studio</span>
@@ -793,11 +792,11 @@ export const PaperWebsiteHome: React.FC = () => {
               onClick={() => setCurrentView('ai-paper-gen')}
               className={`px-7 py-3.5 rounded-xl border font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
                 isDark
-                  ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-100'
-                  : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-800'
+                  ? 'bg-purple-950/40 hover:bg-purple-900/60 border-purple-800 text-purple-200'
+                  : 'bg-white hover:bg-purple-50 border-purple-300 text-purple-900'
               }`}
             >
-              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <Sparkles className="w-4 h-4 text-orange-500" />
               <span>AI Blueprint Generator</span>
             </button>
           </div>
@@ -808,15 +807,15 @@ export const PaperWebsiteHome: React.FC = () => {
           8. FOOTER
           ────────────────────────────────────────────────────────── */}
       <footer className={`border-t py-8 text-xs transition-colors duration-300 ${
-        isDark ? 'border-white/[0.08] bg-[#05070b] text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-500'
+        isDark ? 'border-purple-950/60 bg-[#06040e] text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-500'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white p-1.5 flex items-center justify-center shadow-sm">
+            <div className="w-7 h-7 rounded-lg bg-purple-700 text-white p-1.5 flex items-center justify-center shadow-xs">
               <FileText className="w-4 h-4" />
             </div>
             <span className={`font-display font-black text-sm ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              QP-<span className="text-emerald-500">M</span>
+              QP-<span className="text-orange-600">M</span>
             </span>
             <span className={`text-[11px] ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>• Professional Question Paper Generator</span>
           </div>
@@ -824,10 +823,13 @@ export const PaperWebsiteHome: React.FC = () => {
           <div className={`flex items-center gap-6 text-[11px] font-medium ${
             isDark ? 'text-slate-400' : 'text-slate-600'
           }`}>
-            <button onClick={() => setCurrentView('paper-builder')} className="hover:text-emerald-500 transition-colors">
+            <button onClick={() => setCurrentView('paper-builder')} className="hover:text-orange-600 transition-colors">
               Canvas Studio
             </button>
-            <button onClick={() => setCurrentView('ai-paper-gen')} className="hover:text-emerald-500 transition-colors">
+            <button onClick={() => setCurrentView('books')} className="hover:text-orange-600 transition-colors">
+              My Textbooks
+            </button>
+            <button onClick={() => setCurrentView('ai-paper-gen')} className="hover:text-orange-600 transition-colors">
               AI Blueprint
             </button>
             <span>CBSE &amp; ICSE Compliant</span>

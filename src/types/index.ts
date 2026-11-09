@@ -13,6 +13,7 @@ export type ActiveAppView =
   | 'marks' 
   | 'syllabus' 
   | 'books' 
+  | 'textbook-paper'
   | 'questions' 
   | 'create-exam' 
   | 'take-exam' 

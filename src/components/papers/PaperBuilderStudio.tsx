@@ -573,12 +573,12 @@ Respond with ONLY valid JSON array with this structure:
       {toast && (
         <div className={`fixed top-5 right-5 z-[9999] px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 border text-xs font-semibold backdrop-blur-md animate-slide-in ${
           toast.type === 'success'
-            ? isLight ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+            ? isLight ? 'bg-purple-50 text-purple-800 border-purple-300' : 'bg-purple-500/20 text-purple-300 border-purple-600/40'
             : toast.type === 'error'
             ? isLight ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
             : isLight ? 'bg-blue-50 text-blue-800 border-blue-300' : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
         }`}>
-          {toast.type === 'success' ? <Check className="w-4 h-4 text-emerald-500" /> : <AlertTriangle className="w-4 h-4" />}
+          {toast.type === 'success' ? <Check className="w-4 h-4 text-orange-500" /> : <AlertTriangle className="w-4 h-4" />}
           <span>{toast.message}</span>
         </div>
       )}
@@ -589,7 +589,7 @@ Respond with ONLY valid JSON array with this structure:
           
           {/* Brand & Title */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-700 p-2 flex items-center justify-center shadow-sm border border-emerald-800">
+            <div className="w-10 h-10 rounded-2xl bg-purple-700 p-2 flex items-center justify-center shadow-sm border border-purple-800">
               <FileText className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -598,7 +598,7 @@ Respond with ONLY valid JSON array with this structure:
                   Question Paper Studio
                 </h1>
                 <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold font-mono border ${
-                  isLight ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-[#00b87c]/20 text-[#34d399] border-[#00b87c]/30'
+                  isLight ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-[#00b87c]/20 text-[#34d399] border-[#00b87c]/30'
                 }`}>
                   QP-M Maker
                 </span>
@@ -614,7 +614,7 @@ Respond with ONLY valid JSON array with this structure:
             {/* Live Marks Pill */}
             <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 text-xs font-mono font-bold ${
               paperStats.totalMarks === meta.targetMarks
-                ? isLight ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                ? isLight ? 'bg-purple-50 text-purple-800 border-purple-300' : 'bg-purple-500/15 text-purple-300 border-purple-600/30'
                 : paperStats.totalMarks < meta.targetMarks
                 ? isLight ? 'bg-amber-50 text-amber-800 border-amber-300' : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
                 : isLight ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'
@@ -622,7 +622,7 @@ Respond with ONLY valid JSON array with this structure:
               <span>Paper Marks:</span>
               <span className="text-sm font-extrabold">{paperStats.totalMarks} / {meta.targetMarks}</span>
               {paperStats.totalMarks === meta.targetMarks ? (
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
               ) : (
                 <span className="text-[10px] uppercase font-sans">
                   ({paperStats.totalMarks < meta.targetMarks ? `-${meta.targetMarks - paperStats.totalMarks}` : `+${paperStats.totalMarks - meta.targetMarks}`})
@@ -642,8 +642,8 @@ Respond with ONLY valid JSON array with this structure:
               onClick={() => setCurrentView('ai-paper-gen')}
               className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors border ${
                 isLight 
-                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200' 
-                  : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  ? 'bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200' 
+                  : 'bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border-purple-600/30'
               }`}
               title="Generate a full examination paper using AI Blueprint Generator"
             >
@@ -653,7 +653,7 @@ Respond with ONLY valid JSON array with this structure:
 
             <button
               onClick={() => setShowAutoModal(true)}
-              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all"
+              className="px-3 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all"
               title="Automatically assemble a balanced paper"
             >
               <Shuffle className="w-3.5 h-3.5" />
@@ -738,10 +738,10 @@ Respond with ONLY valid JSON array with this structure:
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowAiModal(true)}
-                  className="px-2.5 py-1 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
+                  className="px-2.5 py-1 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
                   title="Generate new questions using AI"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
+                  <Sparkles className="w-3.5 h-3.5 text-orange-200" />
                   <span>AI Generate</span>
                 </button>
 
@@ -754,7 +754,7 @@ Respond with ONLY valid JSON array with this structure:
                   }`}
                   title="Add question manually"
                 >
-                  <Plus className="w-3.5 h-3.5 text-emerald-500" />
+                  <Plus className="w-3.5 h-3.5 text-orange-500" />
                   <span>Add</span>
                 </button>
               </div>
@@ -854,7 +854,7 @@ Respond with ONLY valid JSON array with this structure:
                   onDragStart={e => handleDragStartFromBank(e, q.id)}
                   className={`group relative pt-2.5 p-3 rounded-2xl border transition-all cursor-grab active:cursor-grabbing shadow-sm ${
                     isLight 
-                      ? 'bg-white hover:bg-slate-50/80 border-slate-200 hover:border-emerald-500/50 hover:shadow-md' 
+                      ? 'bg-white hover:bg-slate-50/80 border-slate-200 hover:border-purple-600/50 hover:shadow-md' 
                       : 'bg-slate-900/70 hover:bg-slate-800/80 border-white/[0.08] hover:border-[#00b87c]/40'
                   }`}
                 >
@@ -868,7 +868,7 @@ Respond with ONLY valid JSON array with this structure:
                       </span>
                       <span className={`px-1.5 py-0.5 rounded font-bold uppercase ${
                         q.difficulty === 'easy'
-                          ? 'bg-emerald-500/20 text-emerald-600'
+                          ? 'bg-purple-500/20 text-orange-600'
                           : q.difficulty === 'medium'
                           ? 'bg-amber-500/20 text-amber-600'
                           : 'bg-rose-500/20 text-rose-600'
@@ -937,7 +937,7 @@ Respond with ONLY valid JSON array with this structure:
                         <button
                           key={sec.id}
                           onClick={() => handleAddQuestionToSection(q.id, sec.id)}
-                          className="px-2 py-0.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-600 hover:text-white font-mono font-bold text-[10px] transition-all"
+                          className="px-2 py-0.5 rounded-lg bg-purple-500/20 hover:bg-orange-500 text-orange-600 hover:text-white font-mono font-bold text-[10px] transition-all"
                           title={`Add directly to ${sec.title}`}
                         >
                           +{String.fromCharCode(65 + idx)}
@@ -990,7 +990,7 @@ Respond with ONLY valid JSON array with this structure:
                       : 'bg-white/[0.08] hover:bg-white/[0.15] text-white border-white/10'
                   }`}
                 >
-                  <Plus className="w-3.5 h-3.5 text-emerald-500" />
+                  <Plus className="w-3.5 h-3.5 text-orange-500" />
                   <span>New Section</span>
                 </button>
               </div>
@@ -1003,7 +1003,7 @@ Respond with ONLY valid JSON array with this structure:
               <div className="flex items-center justify-between text-xs">
                 <span className={`font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Difficulty Distribution:</span>
                 <div className="flex items-center gap-3 text-[11px] font-mono">
-                  <span className="text-emerald-500 font-bold">Easy: {paperStats.easyPct}% ({paperStats.easyMarks}m)</span>
+                  <span className="text-orange-500 font-bold">Easy: {paperStats.easyPct}% ({paperStats.easyMarks}m)</span>
                   <span className="text-amber-500 font-bold">Med: {paperStats.medPct}% ({paperStats.medMarks}m)</span>
                   <span className="text-rose-500 font-bold">Hard: {paperStats.hardPct}% ({paperStats.hardMarks}m)</span>
                 </div>
@@ -1011,7 +1011,7 @@ Respond with ONLY valid JSON array with this structure:
 
               {/* Segmented Progress Bar */}
               <div className={`h-2 w-full rounded-full overflow-hidden flex ${isLight ? 'bg-slate-200' : 'bg-slate-900'}`}>
-                <div style={{ width: `${paperStats.easyPct}%` }} className="bg-emerald-500 transition-all duration-300" title={`Easy: ${paperStats.easyPct}%`} />
+                <div style={{ width: `${paperStats.easyPct}%` }} className="bg-orange-500 transition-all duration-300" title={`Easy: ${paperStats.easyPct}%`} />
                 <div style={{ width: `${paperStats.medPct}%` }} className="bg-amber-500 transition-all duration-300" title={`Medium: ${paperStats.medPct}%`} />
                 <div style={{ width: `${paperStats.hardPct}%` }} className="bg-rose-500 transition-all duration-300" title={`Hard: ${paperStats.hardPct}%`} />
               </div>
@@ -1044,7 +1044,7 @@ Respond with ONLY valid JSON array with this structure:
                     isLight ? 'bg-slate-50/90 border-slate-200' : 'bg-slate-900/90 border-white/[0.08]'
                   }`}>
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                      <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-600 font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                      <span className="w-6 h-6 rounded-lg bg-purple-500/20 text-orange-600 font-mono font-bold text-xs flex items-center justify-center shrink-0">
                         {String.fromCharCode(65 + secIndex)}
                       </span>
                       <input
@@ -1123,7 +1123,7 @@ Respond with ONLY valid JSON array with this structure:
                               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                                 {q.subject} • {q.topic}
                               </span>
-                              <span className="font-mono font-bold text-xs text-emerald-600">
+                              <span className="font-mono font-bold text-xs text-orange-600">
                                 [{q.marks} Mark{q.marks > 1 ? 's' : ''}]
                               </span>
                             </div>
@@ -1147,10 +1147,10 @@ Respond with ONLY valid JSON array with this structure:
                             {q.answer && (
                               <div className={`mt-2 text-[10px] p-1.5 rounded-lg border line-clamp-1 ${
                                 isLight 
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
-                                  : 'bg-emerald-950/30 text-emerald-300/80 border-emerald-500/20'
+                                  ? 'bg-purple-50 text-purple-800 border-purple-200' 
+                                  : 'bg-purple-950/30 text-purple-300/80 border-purple-600/20'
                               }`}>
-                                <strong className="text-emerald-600">Ans:</strong> {q.answer}
+                                <strong className="text-orange-600">Ans:</strong> {q.answer}
                               </div>
                             )}
                           </div>
@@ -1366,7 +1366,7 @@ Respond with ONLY valid JSON array with this structure:
               isLight ? 'border-slate-200' : 'border-white/10'
             }`}>
               <div className="flex items-center gap-2">
-                <Shuffle className="w-5 h-5 text-emerald-500" />
+                <Shuffle className="w-5 h-5 text-orange-500" />
                 <h3 className={`font-display font-bold text-base ${isLight ? 'text-slate-900' : 'text-white'}`}>Auto-Assemble Paper</h3>
               </div>
               <button onClick={() => setShowAutoModal(false)} className={`text-sm ${
@@ -1418,7 +1418,7 @@ Respond with ONLY valid JSON array with this structure:
                 <span className={`block font-semibold ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Difficulty Ratio Target (%):</span>
                 
                 <div>
-                  <div className={`flex justify-between text-[11px] mb-0.5 ${isLight ? 'text-emerald-700 font-medium' : 'text-emerald-400'}`}>
+                  <div className={`flex justify-between text-[11px] mb-0.5 ${isLight ? 'text-purple-700 font-medium' : 'text-purple-400'}`}>
                     <span>Easy Questions:</span>
                     <span>{autoEasyPct}%</span>
                   </div>
@@ -1488,7 +1488,7 @@ Respond with ONLY valid JSON array with this structure:
               </button>
               <button
                 onClick={handleExecuteAutoGenerate}
-                className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition-all"
+                className="px-5 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-sm transition-all"
               >
                 Assemble Balanced Paper
               </button>
@@ -1778,7 +1778,7 @@ Respond with ONLY valid JSON array with this structure:
               }`}>
                 <div className="flex items-center justify-between">
                   <span className={`font-semibold ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Total Paper Marks:</span>
-                  <span className={`font-bold font-mono ${isLight ? 'text-emerald-750 text-emerald-700' : 'text-emerald-400'}`}>{paperStats.totalMarks} Marks</span>
+                  <span className={`font-bold font-mono ${isLight ? 'text-emerald-750 text-purple-700' : 'text-purple-400'}`}>{paperStats.totalMarks} Marks</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className={`font-semibold ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Total Questions:</span>
@@ -1823,11 +1823,11 @@ Respond with ONLY valid JSON array with this structure:
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={handlePrint}
-                  className="p-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-center font-bold space-y-1 shadow-sm transition-all"
+                  className="p-4 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white text-center font-bold space-y-1 shadow-sm transition-all"
                 >
-                  <Printer className="w-5 h-5 mx-auto text-emerald-100" />
+                  <Printer className="w-5 h-5 mx-auto text-white" />
                   <div>Print / A4 PDF</div>
-                  <div className="text-[10px] text-emerald-200 font-normal">Native clean layout</div>
+                  <div className="text-[10px] text-orange-200 font-normal">Native clean layout</div>
                 </button>
 
                 <button
@@ -1890,7 +1890,7 @@ Respond with ONLY valid JSON array with this structure:
                   ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-800'
                   : 'bg-white/[0.04] hover:bg-white/[0.08] border-white/10 text-slate-200'
               }`}>
-                <FolderUp className="w-4 h-4 text-emerald-500" />
+                <FolderUp className="w-4 h-4 text-orange-500" />
                 <span>Restore from JSON File</span>
                 <input
                   type="file"
@@ -1918,7 +1918,7 @@ Respond with ONLY valid JSON array with this structure:
               isLight ? 'border-slate-200' : 'border-white/10'
             }`}>
               <div className="flex items-center gap-2">
-                <div className={`p-1.5 rounded-lg ${isLight ? 'bg-emerald-100 text-emerald-800' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                <div className={`p-1.5 rounded-lg ${isLight ? 'bg-purple-100 text-purple-800' : 'bg-purple-500/20 text-purple-400'}`}>
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
@@ -1941,7 +1941,7 @@ Respond with ONLY valid JSON array with this structure:
                   value={aiSubject}
                   onChange={e => setAiSubject(e.target.value)}
                   placeholder="e.g. Physics, Mathematics, Biology, Chemistry, English"
-                  className={`w-full p-2.5 rounded-xl border focus:outline-none focus:border-emerald-500 ${
+                  className={`w-full p-2.5 rounded-xl border focus:outline-none focus:border-purple-600 ${
                     isLight ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-slate-900 border-white/10 text-white'
                   }`}
                 />
@@ -1954,7 +1954,7 @@ Respond with ONLY valid JSON array with this structure:
                   value={aiTopic}
                   onChange={e => setAiTopic(e.target.value)}
                   placeholder="e.g. Chemical Reactions, Lens Formula, Triangle Theorems"
-                  className={`w-full p-2.5 rounded-xl border focus:outline-none focus:border-emerald-500 ${
+                  className={`w-full p-2.5 rounded-xl border focus:outline-none focus:border-purple-600 ${
                     isLight ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-slate-900 border-white/10 text-white'
                   }`}
                 />
@@ -1966,7 +1966,7 @@ Respond with ONLY valid JSON array with this structure:
                   <select
                     value={aiCount}
                     onChange={e => setAiCount(Number(e.target.value))}
-                    className={`w-full p-2 rounded-xl border focus:outline-none focus:border-emerald-500 ${
+                    className={`w-full p-2 rounded-xl border focus:outline-none focus:border-purple-600 ${
                       isLight ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-slate-900 border-white/10 text-white'
                     }`}
                   >
@@ -1982,7 +1982,7 @@ Respond with ONLY valid JSON array with this structure:
                   <select
                     value={aiType}
                     onChange={e => setAiType(e.target.value as any)}
-                    className={`w-full p-2 rounded-xl border focus:outline-none focus:border-emerald-500 ${
+                    className={`w-full p-2 rounded-xl border focus:outline-none focus:border-purple-600 ${
                       isLight ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-slate-900 border-white/10 text-white'
                     }`}
                   >
@@ -1998,7 +1998,7 @@ Respond with ONLY valid JSON array with this structure:
                   <select
                     value={aiDifficulty}
                     onChange={e => setAiDifficulty(e.target.value as any)}
-                    className={`w-full p-2 rounded-xl border focus:outline-none focus:border-emerald-500 ${
+                    className={`w-full p-2 rounded-xl border focus:outline-none focus:border-purple-600 ${
                       isLight ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-slate-900 border-white/10 text-white'
                     }`}
                   >
@@ -2027,7 +2027,7 @@ Respond with ONLY valid JSON array with this structure:
                 type="button"
                 onClick={handleGenerateAiQuestions}
                 disabled={isAiGenerating}
-                className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm flex items-center gap-2 disabled:opacity-50 transition-all"
+                className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-sm flex items-center gap-2 disabled:opacity-50 transition-all"
               >
                 {isAiGenerating ? (
                   <>

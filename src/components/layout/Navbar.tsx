@@ -57,18 +57,18 @@ export const Navbar: React.FC = () => {
               onClick={() => setCurrentView('marketing')}
               className="flex items-center gap-2.5 focus:outline-none text-left group"
             >
-              <div className="relative w-9 h-9 rounded-xl bg-emerald-700 p-2 flex items-center justify-center shadow-sm border border-emerald-800 transition-transform">
+              <div className="relative w-9 h-9 rounded-xl bg-purple-700 p-2 flex items-center justify-center shadow-sm border border-purple-800 transition-transform">
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <span className={`font-display font-black text-lg tracking-tight leading-none ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                    QP-<span className="text-emerald-600">M</span>
+                    QP-<span className="text-orange-600">M</span>
                   </span>
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold border ${
                     isLight 
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                      : 'bg-[#00b87c]/15 text-[#34d399] border-[#00b87c]/30'
+                      ? 'bg-purple-50 text-purple-700 border-purple-200' 
+                      : 'bg-purple-950/40 text-purple-300 border-purple-800'
                   }`}>
                     Pro Studio
                   </span>
@@ -90,9 +90,9 @@ export const Navbar: React.FC = () => {
               onClick={() => setCurrentView('marketing')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'marketing'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                  ? 'bg-purple-700 text-white shadow-sm'
                   : isLight
-                    ? 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                    ? 'text-slate-600 hover:text-purple-700 hover:bg-purple-50'
                     : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
               }`}
             >
@@ -104,9 +104,9 @@ export const Navbar: React.FC = () => {
               onClick={() => setCurrentView('books')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'books'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                  ? 'bg-purple-700 text-white shadow-sm'
                   : isLight
-                    ? 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                    ? 'text-slate-600 hover:text-purple-700 hover:bg-purple-50'
                     : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
               }`}
             >
@@ -118,9 +118,9 @@ export const Navbar: React.FC = () => {
               onClick={() => setCurrentView('paper-builder')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'paper-builder'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                  ? 'bg-purple-700 text-white shadow-sm'
                   : isLight 
-                    ? 'text-slate-600 hover:text-slate-900 hover:bg-white/60' 
+                    ? 'text-slate-600 hover:text-purple-700 hover:bg-purple-50' 
                     : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
               }`}
             >
@@ -129,16 +129,30 @@ export const Navbar: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setCurrentView('ai-paper-gen')}
+              onClick={() => setCurrentView('textbook-paper')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                currentView === 'ai-paper-gen'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                currentView === 'textbook-paper'
+                  ? 'bg-purple-700 text-white shadow-sm'
                   : isLight 
-                    ? 'text-slate-600 hover:text-slate-900 hover:bg-white/60' 
+                    ? 'text-slate-600 hover:text-purple-700 hover:bg-purple-50' 
                     : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+              <Sparkles className="w-3.5 h-3.5 text-orange-500" />
+              <span>Exercise Test Papers</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentView('ai-paper-gen')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                currentView === 'ai-paper-gen'
+                  ? 'bg-purple-700 text-white shadow-sm'
+                  : isLight 
+                    ? 'text-slate-600 hover:text-purple-700 hover:bg-purple-50' 
+                    : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
               <span>AI Blueprint</span>
             </button>
           </nav>
@@ -157,12 +171,12 @@ export const Navbar: React.FC = () => {
             >
               {isLight ? (
                 <>
-                  <Moon className="w-3.5 h-3.5 text-indigo-600" />
+                  <Moon className="w-3.5 h-3.5 text-purple-600" />
                   <span>Dark Mode</span>
                 </>
               ) : (
                 <>
-                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <Sun className="w-3.5 h-3.5 text-orange-400" />
                   <span>White Theme</span>
                 </>
               )}
@@ -178,8 +192,8 @@ export const Navbar: React.FC = () => {
               }`}
               title="Configure Gemini Live AI"
             >
-              <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse' : 'bg-amber-400'}`} />
-              <Cpu className="w-3.5 h-3.5 text-emerald-600" />
+              <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-orange-500 shadow-[0_0_8px_#f97316] animate-pulse' : 'bg-purple-400'}`} />
+              <Cpu className="w-3.5 h-3.5 text-purple-600" />
               <span className="text-[11px] font-semibold">{isLive ? 'Gemini 2.0 Live' : 'AI Setup'}</span>
             </button>
 
@@ -193,7 +207,7 @@ export const Navbar: React.FC = () => {
               }`}
               title="Cycle Text Size (Normal / Large / Extra-Large)"
             >
-              <Type className="w-3.5 h-3.5 text-blue-600" />
+              <Type className="w-3.5 h-3.5 text-purple-600" />
               <span className="font-mono text-[10px] uppercase font-bold">{textSizeTheme}</span>
             </button>
 
@@ -201,7 +215,7 @@ export const Navbar: React.FC = () => {
             {currentView === 'marketing' ? (
               <button
                 onClick={() => setCurrentView('paper-builder')}
-                className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
+                className="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
               >
                 <span>Launch Studio</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -235,12 +249,12 @@ export const Navbar: React.FC = () => {
                 isLight ? 'bg-slate-100 border-slate-200 text-slate-700' : 'bg-white/[0.06] border-white/[0.1] text-slate-200'
               }`}
             >
-              {isLight ? <Moon className="w-4 h-4 text-indigo-600" /> : <Sun className="w-4 h-4 text-amber-400" />}
+              {isLight ? <Moon className="w-4 h-4 text-purple-600" /> : <Sun className="w-4 h-4 text-orange-400" />}
             </button>
 
             <button
               onClick={() => setCurrentView(currentView === 'paper-builder' ? 'marketing' : 'paper-builder')}
-              className="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold shadow-sm"
+              className="px-2.5 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-sm"
             >
               {currentView === 'paper-builder' ? 'Overview' : 'Studio'}
             </button>
@@ -268,7 +282,7 @@ export const Navbar: React.FC = () => {
               }}
               className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold ${
                 currentView === 'marketing' 
-                  ? 'bg-emerald-50 text-emerald-700' 
+                  ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300' 
                   : isLight ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-300 hover:bg-white/5'
               }`}
             >
@@ -286,7 +300,7 @@ export const Navbar: React.FC = () => {
               }}
               className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold ${
                 currentView === 'books' 
-                  ? 'bg-emerald-50 text-emerald-700' 
+                  ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300' 
                   : isLight ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-300 hover:bg-white/5'
               }`}
             >
@@ -304,7 +318,7 @@ export const Navbar: React.FC = () => {
               }}
               className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold ${
                 currentView === 'paper-builder' 
-                  ? 'bg-emerald-50 text-emerald-700' 
+                  ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300' 
                   : isLight ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-300 hover:bg-white/5'
               }`}
             >
@@ -317,17 +331,35 @@ export const Navbar: React.FC = () => {
 
             <button
               onClick={() => {
+                setCurrentView('textbook-paper');
+                setMobileMenuOpen(false);
+              }}
+              className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold ${
+                currentView === 'textbook-paper' 
+                  ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300' 
+                  : isLight ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-300 hover:bg-white/5'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-orange-500" />
+                <span>Exercise Test Papers</span>
+              </span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </button>
+
+            <button
+              onClick={() => {
                 setCurrentView('ai-paper-gen');
                 setMobileMenuOpen(false);
               }}
               className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold ${
                 currentView === 'ai-paper-gen' 
-                  ? 'bg-emerald-50 text-emerald-700' 
+                  ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300' 
                   : isLight ? 'text-slate-700 hover:bg-slate-50' : 'text-slate-300 hover:bg-white/5'
               }`}
             >
               <span className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-500" />
+                <Sparkles className="w-4 h-4 text-orange-500" />
                 <span>AI Blueprint Generator</span>
               </span>
               <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -339,7 +371,7 @@ export const Navbar: React.FC = () => {
                   setShowAiSettings(true);
                   setMobileMenuOpen(false);
                 }}
-                className="text-xs text-emerald-600 font-semibold flex items-center gap-1.5"
+                className="text-xs text-purple-700 dark:text-purple-300 font-semibold flex items-center gap-1.5"
               >
                 <Cpu className="w-3.5 h-3.5" />
                 <span>{isLive ? 'Gemini 2.0 Live' : 'AI Setup'}</span>

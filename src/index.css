@@ -6,25 +6,27 @@
    BASE RESETS & ROOT VARS (Apple Aesthetic)
    ============================ */
 :root {
-  --brand: #0071e3; /* Apple Blue */
-  --brand-light: #2997ff; /* Apple Neon Blue */
-  --brand-dark: #005bb5;
-  --accent: #5e5ce6; /* Apple Indigo */
-  --accent-light: #bf5af2; /* Apple Purple */
-  --amber: #ff9f0a; /* Apple Orange */
-  --rose: #ff453a; /* Apple System Red */
-  --green: #30d158; /* Apple System Green */
-  --bg-deep: #000000; /* Apple Deep Black */
-  --bg-dark: #0a0a0c;
-  --bg-card: rgba(28, 28, 30, 0.75); /* Apple Dark Material */
-  --border-subtle: rgba(255, 255, 255, 0.11);
-  --border-glow: rgba(41, 151, 255, 0.35);
-  --apple-text: #f5f5f7;
-  --apple-muted: #9da3ae;
-  --apple-secondary: #c9ccd3;
-  --transition-base: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-  --transition-spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --transition-slow: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --brand: #ea580c; /* Professional Vibrant Orange */
+  --brand-light: #f97316;
+  --brand-dark: #c2410c;
+  --accent: #7c3aed; /* Royal Purple */
+  --accent-light: #8b5cf6;
+  --accent-dark: #6d28d9;
+  --amber: #ea580c;
+  --purple: #7c3aed;
+  --rose: #ef4444;
+  --green: #10b981;
+  --bg-deep: #ffffff;
+  --bg-dark: #090714;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --border-subtle: #e2e8f0;
+  --border-glow: rgba(234, 88, 12, 0.25);
+  --apple-text: #0f172a;
+  --apple-muted: #64748b;
+  --apple-secondary: #334155;
+  --transition-base: 0.15s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-spring: 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-slow: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 *, *::before, *::after {
@@ -198,7 +200,7 @@ body::before {
 }
 
 /* ============================
-   APPLE PILL & CAPSULE BUTTONS
+   PROFESSIONAL PILL & CAPSULE BUTTONS (Orange & Purple Theme)
    ============================ */
 .btn-primary {
   display: inline-flex;
@@ -206,42 +208,56 @@ body::before {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.55rem 1.25rem;
-  border-radius: 9999px;
+  border-radius: 0.75rem;
   font-size: 0.8125rem;
-  font-weight: 500;
-  background: #0071e3;
+  font-weight: 600;
+  background: #ea580c; /* Professional Vibrant Orange */
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 113, 227, 0.3);
-  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+  border: 1px solid #c2410c;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease-in-out;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
-}
-
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.2s;
 }
 
 .btn-primary:hover {
-  background: #0077ed;
-  transform: scale(1.02);
-  box-shadow: 0 4px 20px rgba(0, 113, 227, 0.45);
+  background: #c2410c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-.btn-primary:hover::before { opacity: 1; }
 
 .btn-primary:active {
   transform: scale(0.98);
-  background: #0062c4;
+  background: #9a3412;
 }
 
-.btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
+.btn-purple {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: #7c3aed; /* Professional Royal Purple */
+  color: #ffffff;
+  border: 1px solid #6d28d9;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-purple:hover {
+  background: #6d28d9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-purple:active {
+  transform: scale(0.98);
+  background: #5b21b6;
+}
+
+.btn-primary span, .btn-primary svg, .btn-purple span, .btn-purple svg { position: relative; z-index: 1; }
 
 .btn-secondary {
   display: inline-flex;

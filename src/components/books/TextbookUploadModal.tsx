@@ -150,8 +150,8 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm">
-              <Upload className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-purple-700 flex items-center justify-center text-white shadow-xs">
+              <Upload className="w-5 h-5 text-orange-400" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -198,10 +198,10 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
               onClick={() => !isProcessing && fileInputRef.current?.click()}
               className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
                 isDragging
-                  ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/20'
+                  ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20'
                   : selectedFile
-                  ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/10'
-                  : 'border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-600 bg-slate-50/50 dark:bg-slate-900/30'
+                  ? 'border-purple-500 bg-purple-50/40 dark:bg-purple-950/10'
+                  : 'border-slate-300 dark:border-slate-700 hover:border-orange-500 dark:hover:border-orange-600 bg-slate-50/50 dark:bg-slate-900/30'
               }`}
             >
               <input
@@ -214,9 +214,9 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
               />
 
               {selectedFile ? (
-                <div className="flex items-center justify-between gap-4 p-3 rounded-lg bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-700">
+                <div className="flex items-center justify-between gap-4 p-3 rounded-lg bg-white dark:bg-slate-800 border border-purple-300 dark:border-purple-700">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 flex items-center justify-center flex-shrink-0">
                       <FileText className="w-5 h-5" />
                     </div>
                     <div className="text-left truncate">
@@ -243,11 +243,11 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
                 </div>
               ) : (
                 <div className="py-4">
-                  <div className="w-12 h-12 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center mb-3">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-3">
                     <Upload className="w-6 h-6" />
                   </div>
                   <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                    Drag and drop your textbook here, or <span className="text-emerald-600 dark:text-emerald-400 underline">browse files</span>
+                    Drag and drop your textbook here, or <span className="text-orange-600 dark:text-orange-400 underline">browse files</span>
                   </p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                     Accepts PDF (required), DOCX, TXT, EPUB up to 50 MB
@@ -270,7 +270,7 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Standard 9 Mathematics Part 1"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
@@ -282,7 +282,7 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
                 disabled={isProcessing}
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="Mathematics">Mathematics / Algebra / Geometry</option>
                 <option value="Science">Science & Technology</option>
@@ -308,7 +308,7 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 placeholder="e.g. Maharashtra State Bureau / NCERT"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
@@ -322,13 +322,13 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
                 value={uploaderName}
                 onChange={(e) => setUploaderName(e.target.value)}
                 placeholder="e.g. Prof. R. Sharma"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
           </div>
 
           {/* Legal Rights Declaration */}
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+          <div className="p-3.5 rounded-xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900/40">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -336,7 +336,7 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
                 disabled={isProcessing}
                 checked={hasRightsDeclaration}
                 onChange={(e) => setHasRightsDeclaration(e.target.checked)}
-                className="mt-1 w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                className="mt-1 w-4 h-4 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
               />
               <span className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 <strong className="text-slate-900 dark:text-white">Copyright & Right to Use Declaration:</strong> I confirm that I have the legitimate academic right to upload and process this textbook material to create test papers for students.
@@ -349,21 +349,21 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
             <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
               <div className="flex items-center justify-between text-xs font-medium text-slate-700 dark:text-slate-300">
                 <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 text-emerald-600 animate-spin" />
+                  <Loader2 className="w-4 h-4 text-orange-600 animate-spin" />
                   <span className="font-semibold capitalize">{stage}:</span> {statusMessage}
                 </span>
-                <span className="font-mono font-bold text-emerald-600">{progressPercent}%</span>
+                <span className="font-mono font-bold text-orange-600">{progressPercent}%</span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
                 <div 
-                  className="h-full bg-emerald-600 transition-all duration-300 ease-out"
+                  className="h-full bg-orange-600 transition-all duration-300 ease-out"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
               <div className="grid grid-cols-3 gap-2 text-[10px] text-slate-500 dark:text-slate-400">
-                <span className={stage === 'uploading' ? 'text-emerald-600 font-bold' : ''}>1. Validating</span>
-                <span className={stage === 'extracting' ? 'text-emerald-600 font-bold' : ''}>2. Page Extraction</span>
-                <span className={stage === 'indexing' ? 'text-emerald-600 font-bold' : ''}>3. Exercise Tagging</span>
+                <span className={stage === 'uploading' ? 'text-orange-600 font-bold' : ''}>1. Validating</span>
+                <span className={stage === 'extracting' ? 'text-orange-600 font-bold' : ''}>2. Page Extraction</span>
+                <span className={stage === 'indexing' ? 'text-orange-600 font-bold' : ''}>3. Exercise Tagging</span>
               </div>
             </div>
           )}
@@ -381,7 +381,7 @@ export const TextbookUploadModal: React.FC<TextbookUploadModalProps> = ({
             <button
               type="submit"
               disabled={isProcessing || !selectedFile || !hasRightsDeclaration}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
                 <>

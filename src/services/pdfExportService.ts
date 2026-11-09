@@ -1,10 +1,88 @@
 import { AiGeneratedPaper, PaperQuestionItem } from '../types';
+import { SavedTestPaper } from '../types/schemas';
 
 export type PdfExportMode = 'student_paper' | 'marking_scheme' | 'complete_bundle';
 
 export const PDF_EXPORT_SERVICE = {
   exportPaper(paper: AiGeneratedPaper, mode: PdfExportMode = 'student_paper'): void {
     this.generateAndPrintPaperPdf(paper, mode);
+  },
+
+  /**
+   * Export a SavedTestPaper from Feature 2
+   */
+  exportSavedPaper(saved: SavedTestPaper, mode: PdfExportMode = 'student_paper'): void {
+    let qNum = 1;
+    const sectionIds: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
+
+    const sectionsMeta = saved.sections.map((s, idx) => ({
+      sectionId: sectionIds[idx % 4] || 'A',
+      title: s.name,
+      description: s.instructions,
+      questionCount: s.questions.length,
+      marksPerQuestion: s.marksPerQuestion,
+      totalMarks: s.totalMarks
+    }));
+
+    const flatQuestions: PaperQuestionItem[] = [];
+    saved.sections.forEach((s, sIdx) => {
+      const secLetter: 'A' | 'B' | 'C' | 'D' = sectionIds[sIdx % 4] || 'A';
+      s.questions.forEach(q => {
+        const qType: 'mcq' | 'assertion_reason' | 'short_answer_2m' | 'short_answer_3m' | 'long_answer_5m' | 'case_study' = 
+          q.type === 'mcq' 
+            ? 'mcq' 
+            : q.type === 'short_answer' 
+              ? (q.marks >= 3 ? 'short_answer_3m' : 'short_answer_2m')
+              : q.type === 'long_answer' || q.type === 'numerical'
+                ? 'long_answer_5m' 
+                : 'assertion_reason';
+
+        flatQuestions.push({
+          id: q.id,
+          questionNumber: qNum++,
+          section: secLetter,
+          questionText: q.question,
+          type: qType,
+          marks: q.marks,
+          topic: q.chapterName,
+          difficulty: (q.difficulty === 'hard' || q.difficulty === 'easy' || q.difficulty === 'medium') ? q.difficulty : 'medium',
+          bloomsLevel: (['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create'].includes(q.bloomLevel) 
+            ? q.bloomLevel 
+            : 'Understand') as any,
+          options: q.options ? q.options.map(o => ({ id: o.id, text: o.text })) : undefined,
+          correctAnswer: q.correctAnswer,
+          solutionExplanation: q.explanation || `Derived from ${q.sourceExerciseRef || q.chapterName} (Page ${q.pageRef})`,
+          markingRubric: [
+            { step: 'Core conceptual solution and explanation', marks: q.marks }
+          ]
+        });
+      });
+    });
+
+    const aiPaper: AiGeneratedPaper = {
+      id: saved.id,
+      title: saved.title,
+      board: 'State Board (Maharashtra)',
+      classGrade: 9,
+      subject: saved.subject,
+      topics: Array.from(new Set(saved.questions.map(q => q.chapterName))),
+      totalMarks: saved.totalMarks,
+      durationMinutes: saved.durationMinutes,
+      createdAt: saved.createdAt,
+      academicYear: '2025-26',
+      generalInstructions: [
+        'All questions are compulsory.',
+        'The question paper consists of designated sections with marks indicated against each question.',
+        'Use of calculators is strictly prohibited unless specifically permitted.',
+        'Read each question carefully before attempting.'
+      ],
+      sections: sectionsMeta,
+      questions: flatQuestions,
+      modelUsed: 'Textbook Exercise Grounded Synthesizer',
+      isAiGenerated: true
+    };
+
+    this.generateAndPrintPaperPdf(aiPaper, mode);
   },
 
   /**
