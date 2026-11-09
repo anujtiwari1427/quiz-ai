@@ -1,759 +1,986 @@
 import React, { useState } from 'react';
 import { 
-  FileText, 
   Sparkles, 
-  Download, 
   Layers, 
-  Shuffle, 
-  ArrowRight, 
-  CheckCircle2, 
   BookOpen, 
-  Clock, 
-  ChevronRight, 
-  ChevronDown, 
-  Printer, 
+  ArrowUpRight, 
+  CheckCircle2, 
   ShieldCheck, 
-  Upload, 
   Cpu, 
-  FileCheck
+  FileText, 
+  Download, 
+  Printer, 
+  HelpCircle, 
+  ChevronDown, 
+  Star, 
+  Clock, 
+  Users, 
+  ExternalLink,
+  Zap,
+  Lock,
+  MessageSquare,
+  GraduationCap,
+  Award,
+  BarChart3,
+  Check
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { MarklabButton } from '../common/MarklabButton';
 
 export const PaperWebsiteHome: React.FC = () => {
   const { setCurrentView, theme } = useApp();
-  const isDark = theme === 'dark';
+  const isLight = theme === 'light';
 
-  // Interactive FAQ state
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  // Interactive 4-Step Accordion State (Section 4)
+  const [activeStep, setActiveStep] = useState<number>(0);
+
+  // Interactive FAQ State (Section 7)
+  const [activeFaq, setActiveFaq] = useState<number | null>(0);
+
+  // Newsletter Email State
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+
+  // Interactive Hero Preview Tab
+  const [heroTab, setHeroTab] = useState<'blueprint' | 'proctor' | 'reader'>('blueprint');
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
-  const faqs = [
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newsletterEmail) {
+      setNewsletterSubmitted(true);
+      setTimeout(() => {
+        setNewsletterEmail('');
+        setNewsletterSubmitted(false);
+      }, 4000);
+    }
+  };
+
+  const stepsData = [
     {
-      q: 'Does QP-M generate papers conforming to official CBSE and ICSE blueprints?',
-      a: 'Yes. QP-M is purpose-built to enforce official CBSE, ICSE, and State Board blueprint structures, including Section A (MCQs & Assertion-Reason), Section B (Short Answer I), Section C (Short Answer II), Section D (Long Answer), and Section E (Case-Based Integrated units).'
+      step: '01',
+      title: 'Ingest Blueprint, Syllabus or NCERT Chapters',
+      description: 'Select your target board (CBSE, ICSE, State), standard (6-12), and subject. Upload custom syllabus documents or select straight from the built-in NCERT textbook library.',
+      badge: 'Step 01 • Curriculum Mapping'
     },
     {
-      q: 'Can I export the question paper to Microsoft Word (.doc) as well as PDF?',
-      a: 'Absolutely. You can export a fully editable Microsoft Word document (.doc) with native tables, section headers, marks allocations, and candidate roll number boxes, or print directly to print-ready vector A4 PDF.'
+      step: '02',
+      title: 'AI Auto-Generates Balanced Question Paper',
+      description: 'Our Gemini 2.0 engine constructs Section A through E with exact mark allocations (MCQs, Short Answer, Long Answer, and Case Studies), difficulty balancing, and marking rubrics.',
+      badge: 'Step 02 • Intelligent Synthesis'
     },
     {
-      q: 'How does real-time marks balancing work?',
-      a: 'As you drag questions into Section A, B, C, or D, the top status bar continuously calculates the total marks for each section and alerts you when your paper matches your target examination blueprint (e.g. 80 / 80 marks balanced).'
+      step: '03',
+      title: 'Dispatch Proctored Link or Export to DOC/PDF',
+      description: 'Share a zero-app web test room link with anti-cheat fullscreen lock and tab-switch telemetry, or print directly to clean vector A4 PDF or editable Microsoft Word (.doc).',
+      badge: 'Step 03 • Zero-Friction Delivery'
     },
     {
-      q: 'Can I upload our school textbook and generate questions directly from exercises?',
-      a: 'Yes! Navigate to the "My Textbooks" tab, upload your curriculum PDF, and our parser will automatically detect chapters and exercise sections ("Practice Set", "Exercises", "Review Questions"). You can then generate test papers grounded strictly in those exercises.'
-    },
-    {
-      q: 'Is my school examination data kept private and secure?',
-      a: '100% confidential. Question papers, school names, student keys, and questions are stored locally in your browser storage or private server. No exam papers are ever made public.'
+      step: '04',
+      title: 'Instant Auto-Grading & 360° Academic Intelligence',
+      description: 'Objective MCQs are evaluated instantly. Subjective answers receive rubric evaluations with teacher review, class mastery heatmaps, and automated WhatsApp parent digests.',
+      badge: 'Step 04 • 360° Mastery Analytics'
     }
   ];
 
+  const faqData = [
+    {
+      q: 'Does EduPulse AI strictly adhere to CBSE and ICSE examination blueprints?',
+      a: 'Yes. EduPulse AI is purpose-built to enforce official board blueprints. For example, in CBSE Class 10 Science, it rigorously structures Section A (20 MCQs & Assertion-Reason, 1M each), Section B (6 Short Answer I, 2M each), Section C (7 Short Answer II, 3M each), Section D (3 Long Answer, 5M each), and Section E (3 Case-Based Units, 4M each), preserving exact weightage and internal choice rules.'
+    },
+    {
+      q: 'How does the zero-friction student test room prevent cheating?',
+      a: 'Students access tests via a single unique link with zero app downloads or accounts required. The room activates full-screen enforcement, real-time tab-switch interception, clipboard copy-paste blocking, idle timeouts, and continuous device telemetry that flags unauthorized background processes immediately on the teacher dashboard.'
+    },
+    {
+      q: 'Can teachers edit generated questions and export them to Microsoft Word and PDF?',
+      a: 'Absolutely. Every single question, mark weightage, and rubric detail is fully editable on the split-screen Canvas Studio. You can export clean, print-ready vector A4 PDFs with school header logos and candidate roll number boxes, or download editable Microsoft Word (.doc) documents.'
+    },
+    {
+      q: 'How does the hybrid subjective auto-grading engine work?',
+      a: 'Objective questions are evaluated instantaneously with 100% precision. Subjective short and long answers are evaluated by our AI grader mapped against official board step-marking rubrics. Teachers receive an intuitive verification queue where they can accept, tweak, or override marks in one click before publishing results.'
+    },
+    {
+      q: 'Is EduPulse AI compliant with India\'s Digital Personal Data Protection Act (DPDPA 2023)?',
+      a: 'Yes. EduPulse AI is built from the ground up for strict DPDPA 2023 compliance. Student data is encrypted in transit and at rest, zero identifiable student data is used to train public AI models, role-based access control (RBAC) separates staff permissions, and immutable audit logs record every grade adjustment.'
+    },
+    {
+      q: 'Can parents receive automated test reports and attendance on WhatsApp?',
+      a: 'Yes. Schools can enable automated WhatsApp parent notifications. Parents receive immediate exam completion notices, PDF grade cards with concept breakdown charts, and an AI home tutor link tailored specifically to address their child\'s mistakes from recent tests.'
+    }
+  ];
+
+  const partnerLogos = [
+    { name: 'CBSE Affiliated Schools', code: 'CBSE' },
+    { name: 'Council for the Indian School Certificate (CISCE)', code: 'ICSE / ISC' },
+    { name: 'Kendriya Vidyalaya Sangathan', code: 'KVS' },
+    { name: 'Delhi Public School Society', code: 'DPS' },
+    { name: 'DAV College Managing Committee', code: 'DAV' },
+    { name: 'Ryan International Group of Institutions', code: 'RYAN' },
+    { name: 'National Board Examination Forum', code: 'NBEF' },
+    { name: 'Maharashtra State Board of Secondary & Higher Secondary', code: 'MSBSHSE' },
+    { name: 'Karnataka Pre-University Examination Board', code: 'PUE' }
+  ];
+
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 selection:bg-orange-500 selection:text-white ${
-      isDark ? 'bg-[#090714] text-slate-100' : 'bg-white text-slate-900'
+    <div className={`w-full overflow-hidden transition-colors duration-300 font-['Tasaorbiterdeck',sans-serif] ${
+      isLight ? 'bg-[#f7f8fc] text-[#202342]' : 'bg-[#0f1225] text-white'
     }`}>
 
       {/* ──────────────────────────────────────────────────────────
-          1. HERO SECTION (Orange, White & Purple Theme)
+          SECTION 0: HERO BANNER (home-banner)
+          Matches Marklab home-banner layout, typography & badges
           ────────────────────────────────────────────────────────── */}
-      <section className={`relative pt-12 pb-20 sm:pt-20 sm:pb-28 overflow-hidden border-b transition-colors duration-300 ${
-        isDark
-          ? 'bg-[#0c091d] border-purple-950/60'
-          : 'bg-white border-slate-200'
-      }`}>
-        {/* Subtle geometric dot pattern */}
-        <div className={`absolute inset-0 pointer-events-none [background-size:24px_24px] ${
-          isDark
-            ? 'bg-[radial-gradient(#2e1065_1px,transparent_1px)] opacity-30'
-            : 'bg-[radial-gradient(#ede9fe_1px,transparent_1px)] opacity-70'
-        }`} />
+      <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden" id="Service">
+        {/* Subtle Ambient Background Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-radial from-[#4555fd]/15 via-[#4555fd]/5 to-transparent pointer-events-none blur-3xl -z-10" />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-7">
-          
-          {/* Top Pill Announcement */}
-          <div 
-            onClick={() => setCurrentView('paper-builder')}
-            className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border shadow-xs transition-all cursor-pointer group ${
-              isDark
-                ? 'bg-purple-950/50 border-purple-900/60 hover:border-orange-500 text-purple-200'
-                : 'bg-purple-50 border-purple-200 hover:border-orange-500 text-purple-900'
-            }`}
-          >
-            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-            <span className={`text-xs font-semibold transition-colors ${
-              isDark ? 'group-hover:text-orange-400' : 'group-hover:text-orange-700'
-            }`}>
-              QP-M 2.0 • The Professional Question Paper Maker for Schools
-            </span>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </div>
-
-          {/* Main Headline with Solid, Authoritative Typography */}
-          <div className="space-y-4 max-w-4xl mx-auto">
-            <h1 className={`text-4xl sm:text-6xl lg:text-7xl font-display font-black tracking-tight leading-[1.1] ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}>
-              Craft Board-Standard <br />
-              <span className="text-purple-700 dark:text-purple-400">
-                Question Papers
-              </span> in Minutes.
-            </h1>
-            <p className={`text-base sm:text-xl max-w-2xl mx-auto leading-relaxed font-normal ${
-              isDark ? 'text-slate-400' : 'text-slate-600'
-            }`}>
-              Say goodbye to broken Word formatting and marks-balancing headaches. Drag &amp; drop questions into official CBSE &amp; ICSE blueprints, auto-balance section marks, and export to Word or print-ready A4 PDF.
-            </p>
-          </div>
-
-          {/* Call to Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3">
-            <button
-              onClick={() => setCurrentView('paper-builder')}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2.5 active:scale-95 group"
-            >
-              <Layers className="w-4 h-4 text-white" />
-              <span>Launch QP-M Studio</span>
-              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
-            </button>
-
-            <button
-              onClick={() => setCurrentView('ai-paper-gen')}
-              className={`w-full sm:w-auto px-7 py-3.5 rounded-xl border font-bold text-sm shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 active:scale-95 ${
-                isDark
-                  ? 'bg-purple-950/40 hover:bg-purple-900/60 border-purple-800 text-purple-200'
-                  : 'bg-white hover:bg-purple-50 border-purple-300 text-purple-900'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-orange-500" />
-              <span>Generate with AI Blueprint</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentView('textbook-paper')}
-              className={`w-full sm:w-auto px-6 py-3.5 rounded-xl border font-bold text-sm shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 active:scale-95 ${
-                isDark
-                  ? 'bg-purple-900/40 hover:bg-purple-900/70 border-purple-700 text-purple-100'
-                  : 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-900'
-              }`}
-            >
-              <BookOpen className="w-4 h-4 text-orange-500" />
-              <span>From Textbook Exercises</span>
-            </button>
-          </div>
-
-          {/* Trust strip */}
-          <div className={`pt-8 border-t flex flex-wrap items-center justify-center gap-6 text-xs font-medium ${
-            isDark ? 'border-purple-950 text-slate-400' : 'border-slate-200 text-slate-600'
-          }`}>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-              <span>CBSE &amp; ICSE Format Compliant</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-              <span>Real-Time Marks Balancing</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-              <span>Word (.doc) &amp; Vector A4 Print</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-              <span>100% Private &amp; Offline Ready</span>
-            </div>
-          </div>
+        {/* Decorative Floating 3D Bell Icon */}
+        <div className="hidden lg:block absolute top-12 right-[12%] animate-float pointer-events-none z-10">
+          <img 
+            src="/marklab/bell-dynamic-gradient.svg" 
+            alt="Notification" 
+            className="w-16 h-16 drop-shadow-[0_12px_24px_rgba(69,85,253,0.25)]" 
+          />
         </div>
-      </section>
 
-      {/* ──────────────────────────────────────────────────────────
-          2. INTERACTIVE CANVAS SHOWCASE MOCKUP
-          ────────────────────────────────────────────────────────── */}
-      <section className={`py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300 ${
-        isDark ? 'bg-[#090714]' : 'bg-white'
-      }`}>
-        <div className="text-center space-y-3 mb-12">
-          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold border ${
-            isDark
-              ? 'bg-purple-950/50 text-purple-300 border-purple-800'
-              : 'bg-purple-50 text-purple-800 border-purple-200'
-          }`}>
-            <span>SPLIT-SCREEN CANVAS</span>
+        {/* Decorative Vector Hand-drawn Line */}
+        <div className="hidden md:block absolute top-40 left-[8%] animate-pulse-subtle pointer-events-none -z-10 opacity-70">
+          <img 
+            src="/marklab/vector-1.svg" 
+            alt="Decoration" 
+            className="w-28 h-auto" 
+          />
+        </div>
+
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-20">
+          
+          {/* Top Pill Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#edf2ff] border border-[#c2d4ff] text-[#4555fd] text-xs font-semibold uppercase tracking-wider mb-6 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#4555fd] animate-ping" />
+            <span>✦ Next-Gen K-12 AI Assessment Platform</span>
           </div>
-          <h2 className={`text-3xl sm:text-4xl font-display font-extrabold ${
-            isDark ? 'text-white' : 'text-slate-900'
-          }`}>
-            Designed for Speed, Precision &amp; Official Standards
-          </h2>
-          <p className={`text-sm sm:text-base max-w-xl mx-auto ${
-            isDark ? 'text-slate-400' : 'text-slate-600'
-          }`}>
-            Experience the dual-pane workflow: drag questions from your repository on the left straight onto your examination sheet on the right.
+
+          {/* Signature Marklab Headline with Editorial Serif Italic Accent */}
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#202342] dark:text-white max-w-4xl mx-auto leading-[1.08]">
+            Assessment that <span className="itlic text-[#4555fd]">moves the</span> Needle
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mt-6 text-base sm:text-xl text-[#4e516a] dark:text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+            All examination authoring, anti-cheat proctoring, and CBSE/ICSE evaluation here is designed to deliver impact—not just test scores.
           </p>
-        </div>
 
-        {/* Visual Studio Showcase Frame (Clean Window Style) */}
-        <div className={`rounded-3xl border overflow-hidden transition-all duration-300 ${
-          isDark
-            ? 'border-purple-900/40 bg-[#0e0c1f] shadow-2xl shadow-purple-950/40'
-            : 'border-slate-200 bg-white shadow-xl shadow-slate-200/70'
-        }`}>
-          
-          {/* Window Chrome Header Bar */}
-          <div className={`px-4 py-3 border-b flex items-center justify-between ${
-            isDark ? 'bg-[#120f26] border-purple-900/40' : 'bg-slate-100/90 border-slate-200'
-          }`}>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-rose-400 border border-rose-500/30" />
-              <span className="w-3 h-3 rounded-full bg-amber-400 border border-amber-500/30" />
-              <span className="w-3 h-3 rounded-full bg-emerald-400 border border-emerald-500/30" />
-              <span className={`ml-2 text-xs font-mono font-medium ${isDark ? 'text-purple-300' : 'text-slate-600'}`}>qpm-canvas-workspace.exam</span>
-            </div>
+          {/* Dual Action Buttons (Marklab Webflow Rolling-Text Style) */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <MarklabButton
+              onClick={() => setCurrentView('paper-builder')}
+              variant="dark"
+              className="text-base px-7 py-3.5"
+            >
+              Launch Exam Studio
+            </MarklabButton>
 
-            <div className="flex items-center gap-3">
-              <span className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border ${
-                isDark
-                  ? 'text-orange-300 bg-orange-950/40 border-orange-800'
-                  : 'text-orange-800 bg-orange-100 border-orange-200'
-              }`}>
-                80 / 80 Marks Balanced
-              </span>
-              <button
-                onClick={() => setCurrentView('paper-builder')}
-                className="px-3 py-1 rounded-lg bg-orange-600 text-white font-bold text-xs hover:bg-orange-700 transition-colors shadow-xs"
-              >
-                Open Studio
-              </button>
-            </div>
+            <MarklabButton
+              onClick={() => setCurrentView('ai-paper-gen')}
+              variant="primary"
+              className="text-base px-7 py-3.5"
+            >
+              AI Blueprint Generator
+            </MarklabButton>
           </div>
 
-          {/* Interactive Preview Body (Split Screen) */}
-          <div className={`grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x min-h-[500px] ${
-            isDark ? 'divide-purple-950' : 'divide-slate-200'
-          }`}>
+          {/* Decorative Underline Accent */}
+          <div className="flex justify-center mt-6">
+            <img 
+              src="/marklab/line.svg" 
+              alt="Line" 
+              className="w-48 opacity-80" 
+            />
+          </div>
+
+          {/* ────────────────────────────────────────────────────────
+              HERO INTERACTIVE DASHBOARD SHOWCASE CARD
+              Gives immediate hands-on proof of the platform
+              ──────────────────────────────────────────────────────── */}
+          <div className="mt-14 max-w-5xl mx-auto rounded-3xl bg-white dark:bg-[#161a35] border border-[#dcdde2] dark:border-white/10 shadow-[0_24px_70px_rgba(32,35,66,0.12)] p-4 sm:p-7 text-left transition-all">
             
-            {/* Left Column: Question Bank */}
-            <div className={`lg:col-span-5 p-5 space-y-3.5 ${
-              isDark ? 'bg-[#0b0917]' : 'bg-slate-50/70'
-            }`}>
-              <div className={`flex items-center justify-between pb-2 border-b ${
-                isDark ? 'border-purple-950' : 'border-slate-200'
-              }`}>
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                  <span className={`text-xs font-bold uppercase tracking-wider font-mono ${
-                    isDark ? 'text-purple-200' : 'text-slate-800'
-                  }`}>Question Bank</span>
+            {/* Card Header Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-[#efeff1] dark:border-white/10 gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-amber-400" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
                 </div>
-                <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${
-                  isDark
-                    ? 'text-purple-300 bg-purple-950/40 border-purple-800'
-                    : 'text-purple-800 bg-purple-50 border-purple-200'
-                }`}>
-                  24 Available
+                <div className="h-4 w-[1px] bg-slate-200 dark:bg-white/10 mx-1" />
+                <span className="text-xs font-semibold tracking-wide text-[#202342] dark:text-white flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-[#4555fd]" />
+                  CBSE Class 10 Board Science 2026 • Official Blueprint Spec
                 </span>
               </div>
 
-              {/* Sample Question Cards */}
-              <div className="space-y-2.5">
-                <div className={`p-3.5 rounded-2xl border shadow-xs transition-all cursor-grab group ${
-                  isDark
-                    ? 'bg-[#15122b] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#1a1636]'
-                    : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-md'
-                }`}>
-                  <div className="flex items-center justify-between text-[10px] mb-1.5">
-                    <span className={`px-2 py-0.5 rounded font-mono font-bold border ${
-                      isDark ? 'bg-purple-950/60 text-purple-300 border-purple-800' : 'bg-purple-50 text-purple-800 border-purple-200'
-                    }`}>
-                      1 Mark • MCQ
-                    </span>
-                    <span className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Physics • Optics</span>
-                  </div>
-                  <p className={`text-xs font-medium leading-relaxed ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                    A concave mirror produces a real inverted image twice the object size. What is the object distance (u)?
-                  </p>
-                  <div className={`flex items-center justify-between mt-2 pt-1.5 border-t text-[10px] font-mono ${
-                    isDark ? 'border-white/5 text-slate-500' : 'border-slate-100 text-slate-400'
-                  }`}>
-                    <span>Bloom: Apply (L3)</span>
-                    <span className="text-orange-600 dark:text-orange-400 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
-                  </div>
-                </div>
-
-                <div className={`p-3.5 rounded-2xl border shadow-xs transition-all cursor-grab group ${
-                  isDark
-                    ? 'bg-[#15122b] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#1a1636]'
-                    : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-md'
-                }`}>
-                  <div className="flex items-center justify-between text-[10px] mb-1.5">
-                    <span className={`px-2 py-0.5 rounded font-mono font-bold border ${
-                      isDark ? 'bg-orange-950/40 text-orange-300 border-orange-800' : 'bg-orange-50 text-orange-800 border-orange-200'
-                    }`}>
-                      3 Marks • Short Answer
-                    </span>
-                    <span className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Biology • Circulation</span>
-                  </div>
-                  <p className={`text-xs font-medium leading-relaxed ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                    Explain why the muscular wall of the left ventricle is significantly thicker than that of the right ventricle in humans.
-                  </p>
-                  <div className={`flex items-center justify-between mt-2 pt-1.5 border-t text-[10px] font-mono ${
-                    isDark ? 'border-white/5 text-slate-500' : 'border-slate-100 text-slate-400'
-                  }`}>
-                    <span>Bloom: Analyze (L4)</span>
-                    <span className="text-purple-600 dark:text-purple-400 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
-                  </div>
-                </div>
-
-                <div className={`p-3.5 rounded-2xl border shadow-xs transition-all cursor-grab group ${
-                  isDark
-                    ? 'bg-[#15122b] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#1a1636]'
-                    : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-md'
-                }`}>
-                  <div className="flex items-center justify-between text-[10px] mb-1.5">
-                    <span className={`px-2 py-0.5 rounded font-mono font-bold border ${
-                      isDark ? 'bg-purple-950/60 text-purple-300 border-purple-800' : 'bg-purple-50 text-purple-800 border-purple-200'
-                    }`}>
-                      5 Marks • Long Answer
-                    </span>
-                    <span className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Mathematics • Triangles</span>
-                  </div>
-                  <p className={`text-xs font-medium leading-relaxed ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                    State and prove the Basic Proportionality Theorem (Thales Theorem). Hence prove that parallel lines divide triangle sides proportionally.
-                  </p>
-                  <div className={`flex items-center justify-between mt-2 pt-1.5 border-t text-[10px] font-mono ${
-                    isDark ? 'border-white/5 text-slate-500' : 'border-slate-100 text-slate-400'
-                  }`}>
-                    <span>Bloom: Prove &amp; Calculate</span>
-                    <span className="text-orange-600 dark:text-orange-400 font-bold group-hover:translate-x-0.5 transition-transform">Drag to Canvas →</span>
-                  </div>
-                </div>
+              {/* Interactive Tabs */}
+              <div className="flex items-center gap-1 bg-[#f4f6fb] dark:bg-white/5 p-1 rounded-xl text-xs font-medium">
+                <button
+                  onClick={() => setHeroTab('blueprint')}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${
+                    heroTab === 'blueprint' 
+                      ? 'bg-white dark:bg-[#202342] text-[#4555fd] shadow-xs font-semibold' 
+                      : 'text-[#4e516a] dark:text-slate-400 hover:text-[#202342]'
+                  }`}
+                >
+                  Blueprint Engine
+                </button>
+                <button
+                  onClick={() => setHeroTab('proctor')}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${
+                    heroTab === 'proctor' 
+                      ? 'bg-white dark:bg-[#202342] text-[#4555fd] shadow-xs font-semibold' 
+                      : 'text-[#4e516a] dark:text-slate-400 hover:text-[#202342]'
+                  }`}
+                >
+                  Anti-Cheat Guard
+                </button>
+                <button
+                  onClick={() => setHeroTab('reader')}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${
+                    heroTab === 'reader' 
+                      ? 'bg-white dark:bg-[#202342] text-[#4555fd] shadow-xs font-semibold' 
+                      : 'text-[#4e516a] dark:text-slate-400 hover:text-[#202342]'
+                  }`}
+                >
+                  NCERT Split-Reader
+                </button>
               </div>
             </div>
 
-            {/* Right Column: Realistic A4 Examination Sheet */}
-            <div className={`lg:col-span-7 p-6 sm:p-8 flex flex-col justify-center items-center ${
-              isDark ? 'bg-[#080613]' : 'bg-slate-100/50'
-            }`}>
-              <div className={`rounded-2xl border p-6 sm:p-8 max-w-xl w-full space-y-5 transition-all ${
-                isDark
-                  ? 'bg-[#120f24] border-purple-900/40 text-white shadow-2xl'
-                  : 'bg-white border-slate-200 text-slate-900 shadow-lg'
-              }`}>
-                
-                {/* School Header */}
-                <div className={`border-b-2 pb-4 text-center space-y-1 ${
-                  isDark ? 'border-purple-800' : 'border-purple-900'
-                }`}>
-                  <div className="text-[11px] font-mono uppercase tracking-widest text-purple-700 dark:text-purple-400 font-bold">
-                    APEX ACADEMY OF SCIENCES · TERMINAL EXAM 2026
+            {/* Tab 1: Blueprint Engine Preview */}
+            {heroTab === 'blueprint' && (
+              <div className="pt-6 space-y-6">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                  <div className="p-3.5 rounded-2xl bg-[#edf2ff] border border-[#c2d4ff]/70">
+                    <span className="text-[11px] font-semibold text-[#4555fd] uppercase tracking-wider block">Section A</span>
+                    <span className="text-xl font-bold text-[#202342] dark:text-white mt-1 block">20 Marks</span>
+                    <span className="text-[11px] text-[#4e516a] dark:text-slate-300">20 MCQs &amp; A-R</span>
                   </div>
-                  <h3 className={`text-lg font-black uppercase font-display tracking-tight ${
-                    isDark ? 'text-white' : 'text-slate-900'
-                  }`}>
-                    Class X — General Science &amp; Mathematics
-                  </h3>
-                  <div className={`flex items-center justify-between text-xs pt-2 font-mono font-semibold ${
-                    isDark ? 'text-slate-300' : 'text-slate-700'
-                  }`}>
-                    <span>Time Allowed: <strong>3 Hours</strong></span>
-                    <span className="text-orange-600 font-bold">Maximum Marks: 80</span>
+                  <div className="p-3.5 rounded-2xl bg-[#f7f8fc] dark:bg-white/5 border border-[#dcdde2] dark:border-white/10">
+                    <span className="text-[11px] font-semibold text-[#4e516a] dark:text-slate-400 uppercase tracking-wider block">Section B</span>
+                    <span className="text-xl font-bold text-[#202342] dark:text-white mt-1 block">12 Marks</span>
+                    <span className="text-[11px] text-[#4e516a] dark:text-slate-400">6 Short Answer (2M)</span>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#f7f8fc] dark:bg-white/5 border border-[#dcdde2] dark:border-white/10">
+                    <span className="text-[11px] font-semibold text-[#4e516a] dark:text-slate-400 uppercase tracking-wider block">Section C</span>
+                    <span className="text-xl font-bold text-[#202342] dark:text-white mt-1 block">21 Marks</span>
+                    <span className="text-[11px] text-[#4e516a] dark:text-slate-400">7 Short Answer (3M)</span>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#f7f8fc] dark:bg-white/5 border border-[#dcdde2] dark:border-white/10">
+                    <span className="text-[11px] font-semibold text-[#4e516a] dark:text-slate-400 uppercase tracking-wider block">Section D</span>
+                    <span className="text-xl font-bold text-[#202342] dark:text-white mt-1 block">15 Marks</span>
+                    <span className="text-[11px] text-[#4e516a] dark:text-slate-400">3 Long Answer (5M)</span>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#edf2ff] border border-[#c2d4ff]/70 col-span-2 sm:col-span-1">
+                    <span className="text-[11px] font-semibold text-[#4555fd] uppercase tracking-wider block">Section E</span>
+                    <span className="text-xl font-bold text-[#202342] dark:text-white mt-1 block">12 Marks</span>
+                    <span className="text-[11px] text-[#4e516a] dark:text-slate-300">3 Case Studies (4M)</span>
                   </div>
                 </div>
 
-                {/* Candidate Roll Number Box */}
-                <div className={`flex items-center justify-between text-[11px] font-mono p-2 rounded-lg border ${
-                  isDark ? 'bg-black/30 border-purple-900/40 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-600'
-                }`}>
-                  <span>Candidate Roll No: [ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ]</span>
-                  <span>Q.P. Code: <strong>30/10/402</strong></span>
-                </div>
-
-                {/* Instructions Box */}
-                <div className={`p-3 rounded-xl border text-[11px] space-y-1 ${
-                  isDark ? 'bg-black/30 border-purple-900/40 text-slate-300' : 'bg-purple-50/50 border-purple-100 text-slate-700'
-                }`}>
-                  <div className={`font-bold uppercase text-[10px] font-mono ${isDark ? 'text-white' : 'text-purple-950'}`}>General Instructions:</div>
-                  <ol className={`list-decimal list-inside leading-relaxed space-y-0.5 ${
-                    isDark ? 'text-slate-400' : 'text-slate-600'
-                  }`}>
-                    <li>All questions are compulsory. Section A consists of 20 MCQs (1 Mark each).</li>
-                    <li>Section B consists of 6 Short Answer questions (2 Marks each).</li>
-                  </ol>
-                </div>
-
-                {/* Section Preview */}
-                <div className="space-y-3">
-                  <div className={`flex items-center justify-between border-b pb-1.5 ${
-                    isDark ? 'border-purple-900/40' : 'border-slate-200'
-                  }`}>
-                    <span className={`text-xs font-bold font-mono uppercase ${
-                      isDark ? 'text-purple-400' : 'text-purple-800'
-                    }`}>
-                      Section A — Multiple Choice Questions
+                {/* Sample Live Question generated */}
+                <div className="p-4 rounded-2xl bg-[#fbfbfe] dark:bg-white/[0.02] border border-[#e5e7eb] dark:border-white/10">
+                  <div className="flex items-center justify-between text-xs font-semibold mb-2">
+                    <span className="px-2 py-0.5 rounded-full bg-[#edf2ff] text-[#4555fd] font-mono">
+                      Q.17 • Section A • Assertion &amp; Reason (1 Mark)
                     </span>
-                    <span className={`text-[11px] font-mono font-semibold ${
-                      isDark ? 'text-slate-400' : 'text-slate-500'
-                    }`}>
-                      20 Questions • 20 Marks
+                    <span className="text-emerald-700 dark:text-emerald-400 font-medium flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> CBSE Blueprinted
                     </span>
                   </div>
-
-                  <div className={`p-3 rounded-xl border flex items-start justify-between gap-3 ${
-                    isDark ? 'bg-white/[0.03] border-purple-900/30 text-slate-200' : 'bg-slate-50/70 border-slate-200 text-slate-800'
-                  }`}>
-                    <div className="text-xs">
-                      <span className={`font-bold mr-2 font-mono ${isDark ? 'text-white' : 'text-slate-900'}`}>Q1.</span>
-                      Which of the following organic functional groups is present in butanone?
+                  <p className="text-xs sm:text-sm text-[#202342] dark:text-slate-200 font-medium leading-relaxed">
+                    <strong>Assertion (A):</strong> When white light passes through a glass prism, red light deviates the least while violet light deviates the most.<br />
+                    <strong>Reason (R):</strong> The refractive index of glass is highest for violet light and lowest for red light.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 pt-3 border-t border-[#efeff1] dark:border-white/10 text-xs">
+                    <div className="p-2 rounded-xl bg-white dark:bg-white/5 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-medium">
+                      ✓ (a) Both (A) and (R) are true and (R) is correct explanation of (A)
                     </div>
-                    <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
-                      isDark ? 'bg-orange-950/40 text-orange-300 border-orange-800' : 'bg-orange-50 text-orange-800 border-orange-200'
-                    }`}>
-                      [1M]
-                    </span>
+                    <div className="p-2 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500">
+                      (b) Both (A) and (R) are true but (R) is not correct explanation
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 2: Anti-Cheat Guard Preview */}
+            {heroTab === 'proctor' && (
+              <div className="pt-6 space-y-4">
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+                  <ShieldCheck className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                      Zero-Install Real-Time Student Anti-Cheat Telemetry
+                    </h4>
+                    <p className="text-xs text-amber-800 dark:text-amber-300 mt-1">
+                      Enforces full-screen mode, intercepts Alt+Tab and OS shortcuts, and logs all anomaly timestamps in real time.
+                    </p>
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-[#fbfbfe] dark:bg-white/5 border border-[#e5e7eb] dark:border-white/10">
+                    <span className="text-slate-400 block text-[11px]">Fullscreen Lock</span>
+                    <span className="font-bold text-emerald-700 dark:text-emerald-400 text-sm mt-0.5 block">100% Enforced</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-[#fbfbfe] dark:bg-white/5 border border-[#e5e7eb] dark:border-white/10">
+                    <span className="text-slate-400 block text-[11px]">Tab-Switch Interception</span>
+                    <span className="font-bold text-amber-700 dark:text-amber-400 text-sm mt-0.5 block">Active Logging</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-[#fbfbfe] dark:bg-white/5 border border-[#e5e7eb] dark:border-white/10">
+                    <span className="text-slate-400 block text-[11px]">Clipboard Copy-Paste</span>
+                    <span className="font-bold text-red-700 dark:text-red-400 text-sm mt-0.5 block">Strictly Blocked</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
+            {/* Tab 3: NCERT Split-Reader Preview */}
+            {heroTab === 'reader' && (
+              <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-2xl bg-[#fbfbfe] dark:bg-white/5 border border-[#e5e7eb] dark:border-white/10">
+                  <span className="text-[11px] font-semibold text-[#4555fd] uppercase tracking-wider block mb-1">
+                    NCERT Biology • Chapter 6: Life Processes
+                  </span>
+                  <p className="text-[#202342] dark:text-slate-300 leading-relaxed font-serif text-sm">
+                    "The human heart is a muscular organ which is as big as our fist. Because both oxygen and carbon dioxide have to be transported by the blood, the heart has different chambers to prevent oxygen-rich blood from mixing with carbon dioxide-rich blood..."
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-[#edf2ff] border border-[#c2d4ff] flex flex-col justify-between">
+                  <div>
+                    <span className="text-[11px] font-semibold text-[#4555fd] uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                      <Sparkles className="w-3.5 h-3.5" /> AI Inline Explainer &amp; Diagram Breakdown
+                    </span>
+                    <p className="text-[#202342] text-xs leading-relaxed mt-1">
+                      <strong>Double Circulation:</strong> Blood flows through the heart twice in one complete cycle (Pulmonary and Systemic loops). Ensures high oxygen efficiency required by warm-blooded mammals.
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-[#c2d4ff]/60 flex items-center justify-between text-[11px] font-semibold text-[#4555fd]">
+                    <span>Generate Instant 5-Question Quiz</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Bottom Card Action Footer */}
+            <div className="mt-5 pt-4 border-t border-[#efeff1] dark:border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-4 text-[#4e516a] dark:text-slate-400">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+                  CBSE 2026 Marking Scheme Included
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-[#4555fd]" />
+                  Word (.doc) &amp; A4 Print Ready
+                </span>
+              </div>
+              <button
+                onClick={() => setCurrentView('paper-builder')}
+                className="text-[#4555fd] font-semibold hover:underline flex items-center gap-1"
+              >
+                <span>Open in Canvas Studio</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ──────────────────────────────────────────────────────────
-          3. HOW IT WORKS (3 Simple Steps)
+          SECTION 1: MARQUEE INSTITUTION SLIDER (home-slider)
+          Matches Marklab home-slider infinite animation
           ────────────────────────────────────────────────────────── */}
-      <section className={`py-16 sm:py-20 border-t border-b transition-colors duration-300 ${
-        isDark ? 'bg-[#0c091d] border-purple-950/60' : 'bg-slate-50 border-slate-200/80'
-      }`}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-orange-600 font-bold">
-              EFFORTLESS THREE-STEP WORKFLOW
-            </span>
-            <h2 className={`text-3xl sm:text-4xl font-display font-black ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}>
-              How QP-M Transforms Exam Preparation
-            </h2>
-            <p className={`text-sm sm:text-base max-w-xl mx-auto ${
-              isDark ? 'text-slate-400' : 'text-slate-600'
-            }`}>
-              Built for examiners who value clean layout, balanced marks, and zero wasted hours in word processors.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Step 1 */}
-            <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-4 ${
-              isDark ? 'bg-[#120f26] border-purple-900/40 hover:border-purple-500/40' : 'bg-white border-slate-200 hover:shadow-md'
-            }`}>
-              <div className={`w-10 h-10 rounded-xl font-mono font-bold text-base flex items-center justify-center ${
-                isDark ? 'bg-purple-950/80 text-purple-300 border border-purple-800' : 'bg-purple-100 text-purple-800'
-              }`}>
-                01
-              </div>
-              <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Set Exam Meta &amp; Rules</h3>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                Configure your school name, examination title, class grade, subject, time allowed, and general instructions in one clear dialog.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-4 ${
-              isDark ? 'bg-[#120f26] border-purple-900/40 hover:border-orange-500/40' : 'bg-white border-slate-200 hover:shadow-md'
-            }`}>
-              <div className={`w-10 h-10 rounded-xl font-mono font-bold text-base flex items-center justify-center ${
-                isDark ? 'bg-orange-950/80 text-orange-300 border border-orange-800' : 'bg-orange-100 text-orange-800'
-              }`}>
-                02
-              </div>
-              <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Assemble &amp; Drag-and-Drop</h3>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                Drag questions into Section A, B, C, or D. Or hit "Auto-Assemble" to automatically select questions matching your target marks and difficulty mix.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-4 ${
-              isDark ? 'bg-[#120f26] border-purple-900/40 hover:border-purple-500/40' : 'bg-white border-slate-200 hover:shadow-md'
-            }`}>
-              <div className={`w-10 h-10 rounded-xl font-mono font-bold text-base flex items-center justify-center ${
-                isDark ? 'bg-purple-950/80 text-purple-300 border border-purple-800' : 'bg-purple-100 text-purple-800'
-              }`}>
-                03
-              </div>
-              <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Export Word or Print A4</h3>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                Download a clean, fully formatted editable Word document (.doc) or print directly to A4 portrait with candidate roll number grids and answer keys.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ──────────────────────────────────────────────────────────
-          4. CORE SUPERPOWERS / FEATURE GRID
-          ────────────────────────────────────────────────────────── */}
-      <section className={`py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 transition-colors duration-300 ${
-        isDark ? 'bg-[#090714]' : 'bg-white'
-      }`}>
-        <div className="text-center space-y-3">
-          <span className="text-xs font-mono uppercase tracking-widest text-purple-700 dark:text-purple-400 font-bold">
-            WHY EDUCATORS CHOOSE QP-M
-          </span>
-          <h2 className={`text-3xl sm:text-4xl font-display font-black ${
-            isDark ? 'text-white' : 'text-slate-900'
-          }`}>
-            Engineered for Official Board Workflows
-          </h2>
-          <p className={`text-sm sm:text-base max-w-xl mx-auto ${
-            isDark ? 'text-slate-400' : 'text-slate-600'
-          }`}>
-            Everything required to assemble, balance, proof, and print curricular examination papers.
+      <section className="py-12 border-y border-[#dcdde2] dark:border-white/10 bg-white dark:bg-[#12162e]">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 mb-6 text-center">
+          <p className="text-xs sm:text-sm font-medium text-[#4e516a] dark:text-slate-400 uppercase tracking-widest">
+            Be part of the 120+ schools &amp; institutions transforming their examination standards
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
-          {/* Feature 1 */}
-          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
-            isDark
-              ? 'bg-[#120f26] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#161233]'
-              : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-xl'
-          }`}>
-            <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
-              isDark
-                ? 'bg-purple-950/60 text-purple-300 border-purple-800 group-hover:bg-purple-700 group-hover:text-white'
-                : 'bg-purple-50 text-purple-700 border-purple-200 group-hover:bg-purple-700 group-hover:text-white'
-            }`}>
-              <Layers className="w-6 h-6" />
-            </div>
-            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Split-Screen Drag &amp; Drop Canvas</h3>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Move questions seamlessly between Section A, B, C, and D. Watch live section marks and overall balance calculate instantly in real time.
-            </p>
+        {/* Infinite Scrolling Marquee Track */}
+        <div className="relative w-full overflow-hidden flex items-center">
+          <div className="flex animate-marquee whitespace-nowrap items-center gap-12 sm:gap-16 py-2">
+            {[...partnerLogos, ...partnerLogos].map((partner, idx) => (
+              <div 
+                key={idx} 
+                className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#f7f8fc] dark:bg-white/5 border border-[#dcdde2] dark:border-white/10 hover:border-[#4555fd] transition-colors cursor-pointer group"
+              >
+                <div className="w-7 h-7 rounded-full bg-[#edf2ff] text-[#4555fd] font-bold text-xs flex items-center justify-center font-mono">
+                  {partner.code.slice(0, 2)}
+                </div>
+                <span className="text-xs sm:text-sm font-semibold text-[#202342] dark:text-slate-200 group-hover:text-[#4555fd] transition-colors">
+                  {partner.name}
+                </span>
+              </div>
+            ))}
           </div>
-
-          {/* Feature 2 */}
-          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
-            isDark
-              ? 'bg-[#120f26] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#161233]'
-              : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-xl'
-          }`}>
-            <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
-              isDark
-                ? 'bg-orange-950/60 text-orange-300 border-orange-800 group-hover:bg-orange-600 group-hover:text-white'
-                : 'bg-orange-50 text-orange-700 border-orange-200 group-hover:bg-orange-600 group-hover:text-white'
-            }`}>
-              <Shuffle className="w-6 h-6" />
-            </div>
-            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Target-Balanced Auto Assembler</h3>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Define your target marks (80, 70, 40) and difficulty distribution (e.g. 40% Easy, 40% Medium, 20% Hard). The solver picks the ideal question mix automatically.
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
-            isDark
-              ? 'bg-[#120f26] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#161233]'
-              : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-xl'
-          }`}>
-            <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
-              isDark
-                ? 'bg-purple-950/60 text-purple-300 border-purple-800 group-hover:bg-purple-700 group-hover:text-white'
-                : 'bg-purple-50 text-purple-700 border-purple-200 group-hover:bg-purple-700 group-hover:text-white'
-            }`}>
-              <Download className="w-6 h-6" />
-            </div>
-            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Word (.doc) &amp; A4 Print Ready</h3>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              One-click export to native Microsoft Word format or print directly to A4 portrait with candidate roll number boxes, Q.P. Code, and signature blocks.
-            </p>
-          </div>
-
-          {/* Feature 4 */}
-          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
-            isDark
-              ? 'bg-[#120f26] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#161233]'
-              : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-xl'
-          }`}>
-            <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
-              isDark
-                ? 'bg-orange-950/60 text-orange-300 border-orange-800 group-hover:bg-orange-600 group-hover:text-white'
-                : 'bg-orange-50 text-orange-700 border-orange-200 group-hover:bg-orange-600 group-hover:text-white'
-            }`}>
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Gemini 2.0 AI Synthesis</h3>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Integrate Google Gemini to generate board-standard questions for any subject or topic, complete with model answers and Bloom taxonomy classifications.
-            </p>
-          </div>
-
-          {/* Feature 5 */}
-          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
-            isDark
-              ? 'bg-[#120f26] border-purple-900/30 hover:border-purple-500/50 hover:bg-[#161233]'
-              : 'bg-white border-slate-200 hover:border-purple-500/50 hover:shadow-xl'
-          }`}>
-            <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
-              isDark
-                ? 'bg-purple-950/60 text-purple-300 border-purple-800 group-hover:bg-purple-700 group-hover:text-white'
-                : 'bg-purple-50 text-purple-700 border-purple-200 group-hover:bg-purple-700 group-hover:text-white'
-            }`}>
-              <Upload className="w-6 h-6" />
-            </div>
-            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Textbook &amp; Exercise Ingestion</h3>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Upload full curriculum textbooks in PDF, DOCX, or TXT. Automatically detect chapters and exercise sets to generate grounded test papers.
-            </p>
-          </div>
-
-          {/* Feature 6 */}
-          <div className={`p-6 rounded-3xl border shadow-xs transition-all space-y-3 group ${
-            isDark
-              ? 'bg-[#120f26] border-purple-900/30 hover:border-orange-500/50 hover:bg-[#161233]'
-              : 'bg-white border-slate-200 hover:border-orange-500/50 hover:shadow-xl'
-          }`}>
-            <div className={`w-12 h-12 rounded-2xl p-3 flex items-center justify-center transition-colors border ${
-              isDark
-                ? 'bg-orange-950/60 text-orange-300 border-orange-800 group-hover:bg-orange-600 group-hover:text-white'
-                : 'bg-orange-50 text-orange-700 border-orange-200 group-hover:bg-orange-600 group-hover:text-white'
-            }`}>
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className={`text-base font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Confidential &amp; 100% Offline</h3>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              School test papers stay strictly within your browser. Export and restore your private question repository as encrypted JSON backups anytime.
-            </p>
-          </div>
-
         </div>
       </section>
 
       {/* ──────────────────────────────────────────────────────────
-          5. BOARD STANDARDS COMPLIANCE CARD (Orange-White-Purple)
+          SECTION 2: WHY CHOOSE US / WHO WE ARE (no-padding-top)
+          Matches Marklab choose-wrapper 2-column layout
           ────────────────────────────────────────────────────────── */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`rounded-3xl p-8 sm:p-12 border relative overflow-hidden transition-all duration-300 ${
-          isDark
-            ? 'bg-[#100d24] border-purple-900/50 shadow-xl'
-            : 'bg-slate-50 border-slate-200 shadow-xs'
-        }`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <section className="py-20 md:py-28">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
             
-            <div className="space-y-4">
-              <span className={`px-3 py-1 rounded-full text-[11px] font-mono font-bold border ${
-                isDark
-                  ? 'bg-purple-950/60 text-purple-300 border-purple-800'
-                  : 'bg-purple-100 text-purple-900 border-purple-200'
-              }`}>
-                OFFICIAL FORMATS
-              </span>
-              <h2 className={`text-2xl sm:text-3xl font-display font-black ${
-                isDark ? 'text-white' : 'text-slate-900'
-              }`}>
-                Pre-configured for CBSE, ICSE &amp; State Board Guidelines
-              </h2>
-              <p className={`text-xs sm:text-sm leading-relaxed ${
-                isDark ? 'text-slate-300' : 'text-slate-700'
-              }`}>
-                QP-M formats papers to match official board requirements: Section A (MCQs / Assert-Reason), Section B (Very Short Answer), Section C (Short Answer), Section D (Long Answer 5M), and Section E (Case-Based Integrated Units).
-              </p>
-              <div className="pt-2">
-                <button
-                  onClick={() => setCurrentView('paper-builder')}
-                  className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-xs"
-                >
-                  <span>Build Paper Now</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+            {/* Left Card: Growth Image + Content */}
+            <div className="marklab-card p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-[#161a35]">
+              <div className="relative mb-8">
+                <img 
+                  src="/marklab/choose-image.png" 
+                  alt="Student Growth" 
+                  className="w-full h-64 object-cover rounded-2xl shadow-sm"
+                />
+                <div className="absolute top-4 right-4 bg-white/95 dark:bg-[#202342]/95 backdrop-blur-md px-4 py-2 rounded-full border border-[#dcdde2] dark:border-white/10 shadow-md flex items-center gap-2">
+                  <img src="/marklab/growth.svg" alt="Growth" className="w-4 h-4" />
+                  <span className="text-xs font-bold text-[#4555fd]">+84% Time Saved</span>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-[#202342] dark:text-white leading-tight">
+                  Choose EduPulse AI <span className="itlic black text-[#4555fd]">for Academic Growth</span>
+                </h3>
+                <p className="mt-4 text-sm sm:text-base text-[#4e516a] dark:text-slate-300 leading-relaxed">
+                  We go beyond traditional test authoring. We deliver value with cutting-edge, board-aligned academic intelligence and automated grading pipelines.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <MarklabButton
+                    onClick={() => setCurrentView('paper-builder')}
+                    variant="primary"
+                  >
+                    Open Canvas Studio
+                  </MarklabButton>
+
+                  <MarklabButton
+                    onClick={() => setCurrentView('books')}
+                    variant="outline"
+                  >
+                    Read NCERT Books
+                  </MarklabButton>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
-              }`}>
-                <span className="text-purple-700 dark:text-purple-400 font-bold">CBSE Class 10 &amp; 12</span>
-                <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>80 Marks • 3 Hours • 39 Questions Standard Pattern</p>
+            {/* Right Card: Who We Are & Mission */}
+            <div className="marklab-card-tint p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden bg-[#edf2ff] dark:bg-[#1a214d]/60 border-[#c2d4ff] dark:border-white/10">
+              <div className="flex items-center justify-between mb-8">
+                <span className="px-3.5 py-1 rounded-full bg-white dark:bg-white/10 text-xs font-semibold text-[#4555fd] uppercase tracking-wider border border-[#c2d4ff] dark:border-transparent">
+                  Who We Are
+                </span>
+                <img 
+                  src="/marklab/circle.svg" 
+                  alt="Circle Decorative" 
+                  className="w-12 h-12 opacity-80" 
+                />
               </div>
-              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
-              }`}>
-                <span className="text-orange-600 dark:text-orange-400 font-bold">ICSE / ISC Board</span>
-                <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Compulsory Section I &amp; Section II Internal Choices</p>
-              </div>
-              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
-              }`}>
-                <span className="text-purple-700 dark:text-purple-400 font-bold">State Board Formats</span>
-                <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Maharashtra, Karnataka &amp; Tamil Nadu Blueprint Rules</p>
-              </div>
-              <div className={`p-4 rounded-2xl border shadow-xs space-y-1 ${
-                isDark ? 'bg-slate-900/80 border-purple-900/40' : 'bg-white border-slate-200'
-              }`}>
-                <span className="text-orange-600 dark:text-orange-400 font-bold">Foundation &amp; Olympiad</span>
-                <p className={`text-[11px] font-sans ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>JEE/NEET diagnostic weighting &amp; negative marking keys</p>
+
+              <div>
+                <h3 className="text-3xl sm:text-4xl font-bold text-[#202342] dark:text-white leading-snug">
+                  Become the <span className="itlic text-[#4555fd]">Next-Gen Assessment</span> squad
+                </h3>
+                <p className="mt-6 text-sm sm:text-base text-[#4e516a] dark:text-slate-300 leading-relaxed">
+                  We exist to fuel the academic growth of leading CBSE, ICSE, and State Board institutions across India. Our mission is to be the strategic digital powerhouse behind every teacher and student—transforming complex curriculum guidelines and manual evaluation fatigue into automated, scalable excellence.
+                </p>
+
+                <div className="mt-8 grid grid-cols-2 gap-4 pt-6 border-t border-[#c2d4ff]/60 dark:border-white/10">
+                  <div>
+                    <span className="text-3xl font-extrabold text-[#4555fd] block">100%</span>
+                    <span className="text-xs font-medium text-[#4e516a] dark:text-slate-400 mt-1 block">
+                      CBSE/ICSE Blueprint Fidelity
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-3xl font-extrabold text-[#202342] dark:text-white block">DPDPA</span>
+                    <span className="text-xs font-medium text-[#4e516a] dark:text-slate-400 mt-1 block">
+                      Indian Data Protection Certified
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
       {/* ──────────────────────────────────────────────────────────
-          6. FAQ SECTION (Theme-Aware Accordion)
+          SECTION 3: SMART SERVICES / CAPABILITIES (service-section)
+          Matches Marklab service-section 4-card grid
           ────────────────────────────────────────────────────────── */}
-      <section className={`py-16 sm:py-24 border-t transition-colors duration-300 ${
-        isDark ? 'bg-[#0c091d] border-purple-950/60' : 'bg-slate-50 border-slate-200'
-      }`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-orange-600 font-bold">
-              COMMON QUESTIONS
-            </span>
-            <h2 className={`text-2xl sm:text-3xl font-display font-extrabold ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}>
-              Frequently Asked Questions
-            </h2>
+      <section className="py-20 md:py-28 bg-white dark:bg-[#12162e] border-y border-[#dcdde2] dark:border-white/10">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#edf2ff] text-[#4555fd] text-xs font-semibold mb-3">
+                <Sparkles className="w-3.5 h-3.5" /> Core Platform Capabilities
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-bold text-[#202342] dark:text-white leading-tight">
+                Smart <span className="itlic text-[#4555fd]">Features That Deliver</span> Real Impact.
+              </h2>
+            </div>
+
+            <MarklabButton
+              onClick={() => setCurrentView('paper-builder')}
+              variant="dark"
+            >
+              Explore Capabilities
+            </MarklabButton>
           </div>
 
-          <div className="space-y-3">
-            {faqs.map((faq, idx) => (
+          {/* 4 Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            {/* Card 1 */}
+            <div className="marklab-card p-6 flex flex-col justify-between hover:border-[#4555fd] group">
+              <div>
+                <div className="w-14 h-14 rounded-2xl bg-[#edf2ff] flex items-center justify-center p-3 mb-6 group-hover:scale-110 transition-transform">
+                  <img src="/marklab/sheild-iso-gradient.svg" alt="Authoring" className="w-8 h-8" />
+                </div>
+                <h4 className="text-lg font-bold text-[#202342] dark:text-white mb-2.5">
+                  AI Question Authoring &amp; Blueprint Studio
+                </h4>
+                <p className="text-xs sm:text-sm text-[#4e516a] dark:text-slate-400 leading-relaxed">
+                  Synthesize chapter-wise MCQs, assertion-reason, and competency-based questions aligned with official marking schemes.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Launch Authoring</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="marklab-card-tint p-6 flex flex-col justify-between hover:border-[#4555fd] group bg-[#edf2ff] dark:bg-[#1a214d]">
+              <div>
+                <div className="w-14 h-14 rounded-2xl bg-white dark:bg-white/10 flex items-center justify-center p-3 mb-6 group-hover:scale-110 transition-transform shadow-xs">
+                  <img src="/marklab/thumb-up-iso-gradient.svg" alt="Proctoring" className="w-8 h-8" />
+                </div>
+                <h4 className="text-lg font-bold text-[#202342] dark:text-white mb-2.5">
+                  Zero-Friction Proctored Test Rooms
+                </h4>
+                <p className="text-xs sm:text-sm text-[#4e516a] dark:text-slate-300 leading-relaxed">
+                  Instant link-based access with zero app downloads. Enforces full-screen lock and flags tab-switch anomalies in real time.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#c2d4ff]/60 dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Anti-Cheat Guard</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="marklab-card p-6 flex flex-col justify-between hover:border-[#4555fd] group">
+              <div>
+                <div className="w-14 h-14 rounded-2xl bg-[#edf2ff] flex items-center justify-center p-3 mb-6 group-hover:scale-110 transition-transform">
+                  <img src="/marklab/bell-dynamic-gradient.svg" alt="Grading" className="w-8 h-8" />
+                </div>
+                <h4 className="text-lg font-bold text-[#202342] dark:text-white mb-2.5">
+                  Dual-Engine Auto Grading &amp; Rubrics
+                </h4>
+                <p className="text-xs sm:text-sm text-[#4e516a] dark:text-slate-400 leading-relaxed">
+                  Instant scoring for objective tests paired with AI subjective rubric scoring and one-click teacher review queues.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>View Evaluation</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="marklab-card-tint p-6 flex flex-col justify-between hover:border-[#4555fd] group bg-[#edf2ff] dark:bg-[#1a214d]">
+              <div>
+                <div className="w-14 h-14 rounded-2xl bg-white dark:bg-white/10 flex items-center justify-center p-3 mb-6 group-hover:scale-110 transition-transform shadow-xs">
+                  <img src="/marklab/copy-dynamic-gradient.svg" alt="NCERT Reader" className="w-8 h-8" />
+                </div>
+                <h4 className="text-lg font-bold text-[#202342] dark:text-white mb-2.5">
+                  Interactive NCERT &amp; Board Reader
+                </h4>
+                <p className="text-xs sm:text-sm text-[#4e516a] dark:text-slate-300 leading-relaxed">
+                  Digital textbook shelf with inline AI explanations, formula sheets, bilingual translations, and voice read-aloud.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#c2d4ff]/60 dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Explore Textbooks</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────────
+          SECTION 4: 4 SIMPLE STEPS (quick 4 Simple Steps)
+          Matches Marklab how-works-wrapper layout with interactive tabs
+          ────────────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            
+            {/* Left Card: 3D Flash Gradient + Stats badge */}
+            <div className="lg:col-span-5 marklab-card p-8 sm:p-12 bg-white dark:bg-[#161a35] text-center relative overflow-hidden flex flex-col items-center justify-center min-h-[420px]">
+              <div className="w-28 h-28 mx-auto mb-6 relative">
+                <div className="absolute inset-0 bg-[#4555fd]/20 blur-2xl rounded-full" />
+                <img 
+                  src="/marklab/flash-dynamic-gradient.svg" 
+                  alt="Lightning Fast" 
+                  className="w-full h-full object-contain relative z-10 animate-soft-bounce" 
+                />
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#edf2ff] text-[#4555fd] text-xs font-bold mb-3 border border-[#c2d4ff]">
+                <Star className="w-3.5 h-3.5 fill-current" />
+                <span>4.95 Rating • 1,200+ Educators</span>
+              </div>
+
+              <h4 className="text-xl sm:text-2xl font-bold text-[#202342] dark:text-white">
+                Ultra-Fast <span className="itlic text-[#4555fd]">Assessment Engine</span>
+              </h4>
+              <p className="text-xs sm:text-sm text-[#4e516a] dark:text-slate-400 mt-2 max-w-xs">
+                Over 12,000 examination papers generated and 450,000 questions blueprinted seamlessly.
+              </p>
+            </div>
+
+            {/* Right Card: Title + Interactive 4 Steps Accordion */}
+            <div className="lg:col-span-7">
+              <h2 className="text-3xl sm:text-5xl font-bold text-[#202342] dark:text-white leading-tight mb-8">
+                Academic Excellence in <span className="itlic text-[#4555fd]">quick 4 Simple</span> Steps
+              </h2>
+
+              <div className="space-y-3">
+                {stepsData.map((step, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => setActiveStep(idx)}
+                    className={`p-5 rounded-2xl border transition-all cursor-pointer ${
+                      activeStep === idx
+                        ? 'bg-white dark:bg-[#1a214d] border-[#4555fd] shadow-md'
+                        : 'bg-[#edf2ff]/50 dark:bg-white/[0.03] border-[#dcdde2] dark:border-white/10 hover:border-[#9fb6ff]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className={`w-8 h-8 rounded-xl font-bold text-xs flex items-center justify-center transition-colors ${
+                          activeStep === idx
+                            ? 'bg-[#4555fd] text-white'
+                            : 'bg-white dark:bg-white/10 text-[#4e516a]'
+                        }`}>
+                          {step.step}
+                        </span>
+                        <h4 className="text-sm sm:text-base font-bold text-[#202342] dark:text-white">
+                          {step.title}
+                        </h4>
+                      </div>
+                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${
+                        activeStep === idx ? 'rotate-180 text-[#4555fd]' : ''
+                      }`} />
+                    </div>
+
+                    {activeStep === idx && (
+                      <div className="mt-3.5 pt-3 border-t border-[#efeff1] dark:border-white/10 text-xs sm:text-sm text-[#4e516a] dark:text-slate-300 leading-relaxed">
+                        <span className="inline-block px-2.5 py-0.5 rounded-md bg-[#edf2ff] text-[#4555fd] text-[10px] font-semibold uppercase mb-2">
+                          {step.badge}
+                        </span>
+                        <p>{step.description}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <MarklabButton
+                  onClick={() => setCurrentView('paper-builder')}
+                  variant="primary"
+                >
+                  Start Your Assessment Blueprint
+                </MarklabButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────────
+          SECTION 5: "WE HAVE BUILT" SHOWCASE GALLERY (propertie-v1)
+          Matches Marklab project showcase scroll-section
+          ────────────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-white dark:bg-[#12162e] border-y border-[#dcdde2] dark:border-white/10">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#202342] dark:text-white leading-tight">
+              We have <span className="itlic text-[#4555fd]">built</span>
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-[#4e516a] dark:text-slate-300">
+              We go beyond traditional question papers. We deliver value with cutting-edge, board-aligned academic intelligence tools.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* Project 1 */}
+            <div 
+              onClick={() => setCurrentView('paper-builder')}
+              className="marklab-card p-6 flex flex-col justify-between cursor-pointer group hover:border-[#4555fd]"
+            >
+              <div>
+                <div className="h-44 rounded-xl bg-gradient-to-br from-[#4555fd]/15 to-[#4555fd]/5 p-4 flex flex-col justify-between border border-[#c2d4ff]/50 mb-5 relative overflow-hidden group-hover:scale-[1.02] transition-transform">
+                  <span className="px-2.5 py-1 rounded-full bg-white dark:bg-[#202342] text-[10px] font-bold text-[#4555fd] self-start shadow-xs">
+                    CBSE Blueprint Spec
+                  </span>
+                  <div>
+                    <span className="text-xs font-mono text-[#4555fd] block">Full 80 Marks Matrix</span>
+                    <span className="text-sm font-bold text-[#202342] dark:text-white block mt-0.5">
+                      Class 10 Science (Physics, Chem, Bio)
+                    </span>
+                  </div>
+                </div>
+                <h4 className="text-base font-bold text-[#202342] dark:text-white group-hover:text-[#4555fd] transition-colors">
+                  Complete 80-Marks CBSE Board Paper Assembly
+                </h4>
+                <p className="text-xs text-[#4e516a] dark:text-slate-400 mt-2 leading-relaxed">
+                  Strict Section A through E allocation with assertion-reason and case studies.
+                </p>
+              </div>
+              <div className="mt-6 pt-3 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Launch in Studio</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+
+            {/* Project 2 */}
+            <div 
+              onClick={() => setCurrentView('books')}
+              className="marklab-card p-6 flex flex-col justify-between cursor-pointer group hover:border-[#4555fd]"
+            >
+              <div>
+                <div className="h-44 rounded-xl bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 p-4 flex flex-col justify-between border border-emerald-500/20 mb-5 relative overflow-hidden group-hover:scale-[1.02] transition-transform">
+                  <span className="px-2.5 py-1 rounded-full bg-white dark:bg-[#202342] text-[10px] font-bold text-emerald-700 dark:text-emerald-400 self-start shadow-xs">
+                    NCERT Split Reader
+                  </span>
+                  <div>
+                    <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 block">AI Inline Explainer</span>
+                    <span className="text-sm font-bold text-[#202342] dark:text-white block mt-0.5">
+                      Life Processes &amp; Chemical Reactions
+                    </span>
+                  </div>
+                </div>
+                <h4 className="text-base font-bold text-[#202342] dark:text-white group-hover:text-[#4555fd] transition-colors">
+                  Interactive NCERT Digital Textbook Shelf
+                </h4>
+                <p className="text-xs text-[#4e516a] dark:text-slate-400 mt-2 leading-relaxed">
+                  Split-screen reading with instant AI concept summaries, formulas, and mock drills.
+                </p>
+              </div>
+              <div className="mt-6 pt-3 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Open Reader</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+
+            {/* Project 3 */}
+            <div 
+              onClick={() => setCurrentView('ai-paper-gen')}
+              className="marklab-card p-6 flex flex-col justify-between cursor-pointer group hover:border-[#4555fd]"
+            >
+              <div>
+                <div className="h-44 rounded-xl bg-gradient-to-br from-purple-500/15 to-purple-500/5 p-4 flex flex-col justify-between border border-purple-500/20 mb-5 relative overflow-hidden group-hover:scale-[1.02] transition-transform">
+                  <span className="px-2.5 py-1 rounded-full bg-white dark:bg-[#202342] text-[10px] font-bold text-purple-700 dark:text-purple-400 self-start shadow-xs">
+                    Auto-Grading &amp; Rubrics
+                  </span>
+                  <div>
+                    <span className="text-xs font-mono text-purple-700 dark:text-purple-400 block">99.4% Precision</span>
+                    <span className="text-sm font-bold text-[#202342] dark:text-white block mt-0.5">
+                      Hybrid Subjective Review Queue
+                    </span>
+                  </div>
+                </div>
+                <h4 className="text-base font-bold text-[#202342] dark:text-white group-hover:text-[#4555fd] transition-colors">
+                  Dual-Engine Auto Grading &amp; Marks Dashboard
+                </h4>
+                <p className="text-xs text-[#4e516a] dark:text-slate-400 mt-2 leading-relaxed">
+                  Step-marking rubric scoring with teacher-in-the-loop review and mastery heatmaps.
+                </p>
+              </div>
+              <div className="mt-6 pt-3 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Try Generator</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────────
+          SECTION 6: TESTIMONIALS (Client take some lovely words)
+          Matches Marklab feedback-block layout
+          ────────────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#202342] dark:text-white leading-tight">
+              Educators <span className="itlic text-[#4555fd]">share some</span> lovely words
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-[#4e516a] dark:text-slate-300">
+              Heartfelt Feedback from Leading Principals, HODs and Examination Coordinators
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Testimonial 1 */}
+            <div className="marklab-card p-8 bg-white dark:bg-[#161a35] flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-1 text-amber-500 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-base sm:text-lg text-[#202342] dark:text-slate-200 font-medium leading-relaxed italic">
+                  “EduPulse AI cut our mid-term exam paper generation time from 3 weeks to 40 minutes while strictly following CBSE marking schemes. The Word export saved our DTP team countless hours.”
+                </p>
+              </div>
+              <div className="mt-6 pt-5 border-t border-[#efeff1] dark:border-white/10 flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-full bg-[#edf2ff] text-[#4555fd] font-bold text-sm flex items-center justify-center">
+                  SS
+                </div>
+                <div>
+                  <h5 className="text-sm font-bold text-[#202342] dark:text-white">Dr. Shalini Sharma</h5>
+                  <p className="text-xs text-[#4e516a] dark:text-slate-400">Principal, Delhi Public School</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="marklab-card-tint p-8 bg-[#edf2ff] dark:bg-[#1a214d] flex flex-col justify-between border-[#c2d4ff]">
+              <div>
+                <div className="flex items-center gap-1 text-amber-500 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-base sm:text-lg text-[#202342] dark:text-slate-200 font-medium leading-relaxed italic">
+                  “The zero-install student test room with tab-switch logging gave us 100% integrity during our online assessments. Zero app installs meant parents were ecstatic.”
+                </p>
+              </div>
+              <div className="mt-6 pt-5 border-t border-[#c2d4ff]/60 dark:border-white/10 flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-full bg-white dark:bg-white/10 text-[#4555fd] font-bold text-sm flex items-center justify-center shadow-xs">
+                  RP
+                </div>
+                <div>
+                  <h5 className="text-sm font-bold text-[#202342] dark:text-white">Prof. Rajesh Pillai</h5>
+                  <p className="text-xs text-[#4e516a] dark:text-slate-400">Academic Dean, Ryan Group of Schools</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="marklab-card-tint p-8 bg-[#edf2ff] dark:bg-[#1a214d] flex flex-col justify-between border-[#c2d4ff]">
+              <div>
+                <div className="flex items-center gap-1 text-amber-500 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-base sm:text-lg text-[#202342] dark:text-slate-200 font-medium leading-relaxed italic">
+                  “The split-screen NCERT reader helped our Class 12 students master complex Physics concepts with instant step-by-step guidance. Our term test scores rose by 14%.”
+                </p>
+              </div>
+              <div className="mt-6 pt-5 border-t border-[#c2d4ff]/60 dark:border-white/10 flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-full bg-white dark:bg-white/10 text-[#4555fd] font-bold text-sm flex items-center justify-center shadow-xs">
+                  SM
+                </div>
+                <div>
+                  <h5 className="text-sm font-bold text-[#202342] dark:text-white">S. Meenakshi</h5>
+                  <p className="text-xs text-[#4e516a] dark:text-slate-400">HOD Science, DAV Educational Society</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 4 */}
+            <div className="marklab-card p-8 bg-white dark:bg-[#161a35] flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-1 text-amber-500 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-base sm:text-lg text-[#202342] dark:text-slate-200 font-medium leading-relaxed italic">
+                  “DPDPA 2023 compliance and role-based access control gave our school management complete peace of mind regarding student data privacy.”
+                </p>
+              </div>
+              <div className="mt-6 pt-5 border-t border-[#efeff1] dark:border-white/10 flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-full bg-[#edf2ff] text-[#4555fd] font-bold text-sm flex items-center justify-center">
+                  VR
+                </div>
+                <div>
+                  <h5 className="text-sm font-bold text-[#202342] dark:text-white">Vikramaditya Rao</h5>
+                  <p className="text-xs text-[#4e516a] dark:text-slate-400">Trustee &amp; Board Member, Modern Academy</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────────
+          SECTION 7: FREQUENTLY ASKED QUESTIONS (pricing-details-section)
+          Matches Marklab FAQ accordion
+          ────────────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-white dark:bg-[#12162e] border-y border-[#dcdde2] dark:border-white/10">
+        <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#202342] dark:text-white leading-tight">
+              Frequently asked <span className="itlic text-[#4555fd]">questions</span>
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-[#4e516a] dark:text-slate-400">
+              Everything you need to know about EduPulse AI assessment authoring, proctoring, and board compliance.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqData.map((faq, idx) => (
               <div
                 key={idx}
-                className={`rounded-2xl border shadow-xs overflow-hidden transition-all ${
-                  isDark ? 'border-purple-900/40 bg-[#120f26]' : 'border-slate-200 bg-white'
-                }`}
+                className="rounded-2xl border border-[#dcdde2] dark:border-white/10 bg-[#fbfbfe] dark:bg-white/[0.03] overflow-hidden transition-colors"
               >
                 <button
+                  type="button"
                   onClick={() => toggleFaq(idx)}
-                  className={`w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 text-xs sm:text-sm font-bold transition-colors ${
-                    isDark ? 'text-white hover:text-orange-400' : 'text-slate-900 hover:text-orange-700'
-                  }`}
+                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-[#202342] dark:text-white hover:text-[#4555fd] transition-colors"
                 >
                   <span>{faq.q}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
-                      activeFaq === idx ? 'rotate-180 text-orange-600' : ''
-                    }`}
-                  />
-                </button>
-                {activeFaq === idx && (
-                  <div className={`px-4 pb-5 sm:px-5 text-xs leading-relaxed border-t pt-3 ${
-                    isDark ? 'text-slate-400 border-white/5' : 'text-slate-600 border-slate-100'
+                  <div className={`w-8 h-8 rounded-full border border-[#dcdde2] dark:border-white/15 flex items-center justify-center shrink-0 transition-transform ${
+                    activeFaq === idx ? 'bg-[#4555fd] text-white rotate-180 border-[#4555fd]' : 'text-[#4e516a]'
                   }`}>
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
+
+                {activeFaq === idx && (
+                  <div className="px-6 pb-6 pt-2 text-xs sm:text-sm text-[#4e516a] dark:text-slate-300 leading-relaxed border-t border-[#efeff1] dark:border-white/10">
                     {faq.a}
                   </div>
                 )}
@@ -764,79 +991,269 @@ export const PaperWebsiteHome: React.FC = () => {
       </section>
 
       {/* ──────────────────────────────────────────────────────────
-          7. BOTTOM CALL TO ACTION
+          SECTION 8: ARTICLES & INSIGHTS (Read article)
+          Matches Marklab article section
           ────────────────────────────────────────────────────────── */}
-      <section className={`py-16 sm:py-20 text-center border-t transition-colors duration-300 ${
-        isDark ? 'bg-[#090714] border-purple-950/60' : 'bg-white border-slate-200'
-      }`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
-          <h2 className={`text-3xl sm:text-4xl font-display font-black ${
-            isDark ? 'text-white' : 'text-slate-900'
-          }`}>
-            Ready to Generate Professional Examination Papers?
-          </h2>
-          <p className={`text-sm sm:text-base max-w-xl mx-auto ${
-            isDark ? 'text-slate-400' : 'text-slate-600'
-          }`}>
-            Join hundreds of teachers and examination coordinators saving hours every test session.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <button
+      <section className="py-20 md:py-28">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <h2 className="text-3xl sm:text-5xl font-bold text-[#202342] dark:text-white leading-tight">
+                Read <span className="itlic text-[#4555fd]">article</span>
+              </h2>
+              <p className="mt-3 text-sm sm:text-base text-[#4e516a] dark:text-slate-400">
+                Real pedagogy results, board guidelines, and expert insights to help your institution.
+              </p>
+            </div>
+
+            <MarklabButton
               onClick={() => setCurrentView('paper-builder')}
-              className="px-8 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-2"
+              variant="outline"
             >
-              <Layers className="w-4 h-4" />
-              <span>Open QP-M Studio</span>
-            </button>
-            <button
-              onClick={() => setCurrentView('ai-paper-gen')}
-              className={`px-7 py-3.5 rounded-xl border font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
-                isDark
-                  ? 'bg-purple-950/40 hover:bg-purple-900/60 border-purple-800 text-purple-200'
-                  : 'bg-white hover:bg-purple-50 border-purple-300 text-purple-900'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-orange-500" />
-              <span>AI Blueprint Generator</span>
-            </button>
+              All Articles &amp; Guides
+            </MarklabButton>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* Article 1 */}
+            <div className="marklab-card p-6 flex flex-col justify-between group cursor-pointer hover:border-[#4555fd]">
+              <div>
+                <span className="px-2.5 py-1 rounded-full bg-[#edf2ff] text-[#4555fd] text-[10px] font-bold uppercase tracking-wide">
+                  CBSE 2026 Guidelines
+                </span>
+                <h4 className="text-lg font-bold text-[#202342] dark:text-white mt-4 group-hover:text-[#4555fd] transition-colors leading-snug">
+                  Designing Competency-Based Assessment Under CBSE 2026 Directives
+                </h4>
+                <p className="text-xs text-[#4e516a] dark:text-slate-400 mt-2.5 leading-relaxed">
+                  How case-based questions and real-world problem scenarios are weighted in the new 80-mark curriculum.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Read Full Article</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+
+            {/* Article 2 */}
+            <div className="marklab-card p-6 flex flex-col justify-between group cursor-pointer hover:border-[#4555fd]">
+              <div>
+                <span className="px-2.5 py-1 rounded-full bg-[#edf2ff] text-[#4555fd] text-[10px] font-bold uppercase tracking-wide">
+                  Exam Proctoring
+                </span>
+                <h4 className="text-lg font-bold text-[#202342] dark:text-white mt-4 group-hover:text-[#4555fd] transition-colors leading-snug">
+                  Top 5 Online Exam Proctoring Blind Spots and How to Eliminate Them
+                </h4>
+                <p className="text-xs text-[#4e516a] dark:text-slate-400 mt-2.5 leading-relaxed">
+                  Overcoming tab-switch bypasses, secondary monitors, and unauthorized communication during school remote tests.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Read Full Article</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
+
+            {/* Article 3 */}
+            <div className="marklab-card p-6 flex flex-col justify-between group cursor-pointer hover:border-[#4555fd]">
+              <div>
+                <span className="px-2.5 py-1 rounded-full bg-[#edf2ff] text-[#4555fd] text-[10px] font-bold uppercase tracking-wide">
+                  Study Science
+                </span>
+                <h4 className="text-lg font-bold text-[#202342] dark:text-white mt-4 group-hover:text-[#4555fd] transition-colors leading-snug">
+                  Boosting Student Retention with Spaced Repetition and PYQ Practice Drills
+                </h4>
+                <p className="text-xs text-[#4e516a] dark:text-slate-400 mt-2.5 leading-relaxed">
+                  How previous 10 years board questions coupled with SM-2 spaced repetition algorithms lock in recall before finals.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#efeff1] dark:border-white/10 flex items-center justify-between text-xs font-semibold text-[#4555fd]">
+                <span>Read Full Article</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ──────────────────────────────────────────────────────────
-          8. FOOTER
+          SECTION 9: HIGH-IMPACT CALL TO ACTION & FOOTER (footer)
+          Matches Marklab footer layout, background graphic & typography
           ────────────────────────────────────────────────────────── */}
-      <footer className={`border-t py-8 text-xs transition-colors duration-300 ${
-        isDark ? 'border-purple-950/60 bg-[#06040e] text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-500'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-purple-700 text-white p-1.5 flex items-center justify-center shadow-xs">
-              <FileText className="w-4 h-4" />
+      <footer className="relative bg-[#202342] text-white pt-24 pb-12 overflow-hidden">
+        
+        {/* Background Graphic Overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay">
+          <img 
+            src="/marklab/footer-image.webp" 
+            alt="Footer Graphic" 
+            className="w-full h-full object-cover" 
+          />
+        </div>
+
+        {/* Ambient Top Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-radial from-[#4555fd]/30 via-transparent to-transparent blur-3xl pointer-events-none" />
+
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          
+          {/* Big CTA Banner Area */}
+          <div className="text-center max-w-4xl mx-auto pb-20 border-b border-white/15">
+            <p className="text-xs sm:text-sm font-semibold text-[#9fb6ff] uppercase tracking-widest mb-3">
+              Start building now
+            </p>
+            <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">
+              Transform your school curriculum into <span className="itlic text-[#9fb6ff]">exceptional assessments</span>
+            </h2>
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mt-4 mb-8">
+              Ready to <span className="itlic text-[#9fb6ff]">see real</span> Results
+            </h1>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <MarklabButton
+                onClick={() => setCurrentView('paper-builder')}
+                variant="primary"
+                className="text-base px-8 py-4"
+              >
+                Launch Free Studio
+              </MarklabButton>
+
+              <MarklabButton
+                onClick={() => setCurrentView('books')}
+                variant="white"
+                className="text-base px-8 py-4"
+              >
+                Read NCERT Library
+              </MarklabButton>
             </div>
-            <span className={`font-display font-black text-sm ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              QP-<span className="text-orange-600">M</span>
-            </span>
-            <span className={`text-[11px] ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>• Professional Question Paper Generator</span>
           </div>
 
-          <div className={`flex items-center gap-6 text-[11px] font-medium ${
-            isDark ? 'text-slate-400' : 'text-slate-600'
-          }`}>
-            <button onClick={() => setCurrentView('paper-builder')} className="hover:text-orange-600 transition-colors">
-              Canvas Studio
-            </button>
-            <button onClick={() => setCurrentView('books')} className="hover:text-orange-600 transition-colors">
-              My Textbooks
-            </button>
-            <button onClick={() => setCurrentView('ai-paper-gen')} className="hover:text-orange-600 transition-colors">
-              AI Blueprint
-            </button>
-            <span>CBSE &amp; ICSE Compliant</span>
-            <span>© {new Date().getFullYear()} QP-M Studio</span>
+          {/* Navigation & Details Columns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 py-16 border-b border-white/15">
+            
+            {/* Col 1 & 2: Brand Info */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-white/10 p-2 flex items-center justify-center border border-white/20">
+                  <img src="/marklab/flash-dynamic-gradient.svg" alt="EduPulse" className="w-6 h-6 object-contain" />
+                </div>
+                <span className="text-2xl font-bold tracking-tight text-white">
+                  EduPulse <span className="text-[#768eff]">AI</span>
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm leading-relaxed">
+                India's next-generation dual-sided K-12 AI assessment and academic intelligence platform for CBSE, ICSE, and State Boards.
+              </p>
+              
+              {/* Offices */}
+              <div className="pt-2 space-y-2 text-xs text-slate-300">
+                <p>
+                  <strong className="text-white">Academic Innovation Hub:</strong> Sector 44, Cyber City, Gurugram, Haryana 122003
+                </p>
+                <p>
+                  <strong className="text-white">Tech Engineering Lab:</strong> 100 Feet Road, Indiranagar, Bengaluru, Karnataka 560038
+                </p>
+                <p>
+                  <strong className="text-white">Direct Support:</strong> support@edupulse.ai
+                </p>
+              </div>
+            </div>
+
+            {/* Col 3: Platform Tools */}
+            <div className="space-y-3 text-xs">
+              <h5 className="font-bold text-white uppercase tracking-wider text-xs mb-4">Platform Studio</h5>
+              <ul className="space-y-2.5 text-slate-300">
+                <li>
+                  <button onClick={() => setCurrentView('paper-builder')} className="hover:text-[#768eff] transition-colors">
+                    Canvas Paper Studio (QP-M)
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('books')} className="hover:text-[#768eff] transition-colors">
+                    NCERT &amp; Board Book Reader
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('ai-paper-gen')} className="hover:text-[#768eff] transition-colors">
+                    AI Blueprint Generator
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('textbook-paper')} className="hover:text-[#768eff] transition-colors">
+                    Textbook Exercise Papers
+                  </button>
+                </li>
+                <li>
+                  <a href="#Service" className="hover:text-[#768eff] transition-colors">
+                    Proctoring Telemetry HUD
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 4: Boards & Standards */}
+            <div className="space-y-3 text-xs">
+              <h5 className="font-bold text-white uppercase tracking-wider text-xs mb-4">Board Blueprints</h5>
+              <ul className="space-y-2.5 text-slate-300">
+                <li><span className="text-slate-400">CBSE Class 10 &amp; 12 Board Spec</span></li>
+                <li><span className="text-slate-400">ICSE &amp; ISC Council 2026</span></li>
+                <li><span className="text-slate-400">State Boards (MSBSHSE, Karnataka)</span></li>
+                <li><span className="text-slate-400">Section A-E Marking Schemes</span></li>
+                <li><span className="text-slate-400">Bloom's Taxonomy Difficulty Balancing</span></li>
+              </ul>
+            </div>
+
+            {/* Col 5: Newsletter */}
+            <div className="space-y-3 text-xs">
+              <h5 className="font-bold text-white uppercase tracking-wider text-xs mb-4">Exam Updates</h5>
+              <p className="text-slate-300 leading-relaxed text-xs">
+                Subscribe for weekly board question bank additions, revised blueprints, and sample papers.
+              </p>
+
+              <form onSubmit={handleNewsletterSubmit} className="space-y-2 pt-1">
+                <input
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  placeholder="Enter educator email"
+                  required
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-[#768eff]"
+                />
+                <button
+                  type="submit"
+                  className="w-full py-2.5 rounded-xl bg-[#4555fd] hover:bg-[#3343e0] text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Subscribe</span>
+                </button>
+              </form>
+              {newsletterSubmitted && (
+                <p className="text-[11px] text-emerald-400 font-medium">
+                  ✓ Thank you! You will receive weekly board updates.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Copyright & Disclaimer */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+            <p>
+              © {new Date().getFullYear()} EduPulse AI. Built for CBSE, ICSE &amp; State Board Academic Institutions.
+            </p>
+            <div className="flex items-center gap-6">
+              <span>DPDPA 2023 Compliant</span>
+              <span>•</span>
+              <span>100% Offline Generation Ready</span>
+              <span>•</span>
+              <button onClick={() => setCurrentView('marketing')} className="hover:text-white transition-colors">
+                Back to Top ↑
+              </button>
+            </div>
           </div>
         </div>
       </footer>
     </div>
   );
 };
+
+export default PaperWebsiteHome;

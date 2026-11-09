@@ -8,18 +8,35 @@ export default {
   theme: {
     extend: {
       colors: {
+        marklab: {
+          primary: '#4555fd',
+          'primary-dark': '#303fd6',
+          'primary-hover': '#3b4bf0',
+          50: '#edf2ff',
+          100: '#dde9ff',
+          200: '#c2d4ff',
+          300: '#9fb6ff',
+          400: '#768eff',
+          500: '#4555fd',
+          navy: '#202342',
+          slate: '#4e516a',
+          muted: '#a2a3b1',
+          border: '#dcdde2',
+          surface: '#efeff1',
+          bg: '#f7f8fc',
+        },
         brand: {
-          50:  '#f0f7ff',
-          100: '#e0effe',
-          200: '#bae0fd',
-          300: '#7cc5fb',
-          400: '#38a5f8',
-          500: '#0071e3', // Apple Blue
-          600: '#0058b6',
-          700: '#00438c',
-          800: '#033a75',
-          900: '#083161',
-          950: '#041c38',
+          50:  '#edf2ff',
+          100: '#dde9ff',
+          200: '#c2d4ff',
+          300: '#9fb6ff',
+          400: '#768eff',
+          500: '#4555fd', // Marklab Blue
+          600: '#303fd6',
+          700: '#2330b8',
+          800: '#1b2693',
+          900: '#202342',
+          950: '#0f1225',
         },
         apple: {
           black: '#000000',
@@ -33,26 +50,26 @@ export default {
           text: '#f5f5f7',
           muted: '#86868b',
           secondary: '#a1a1a6',
-          blue: '#0071e3',
+          blue: '#4555fd',
           neonBlue: '#2997ff',
-          purple: '#bf5af2',
-          green: '#30d158',
+          purple: '#7c3aed',
+          green: '#10b981',
           orange: '#ff9f0a',
           red: '#ff453a',
           teal: '#64d2ff',
         },
         accent: {
-          50:  '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#5e5ce6', // Apple Purple / Indigo
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          950: '#1e1b4b',
+          50:  '#edf2ff',
+          100: '#dde9ff',
+          200: '#c2d4ff',
+          300: '#9fb6ff',
+          400: '#768eff',
+          500: '#4555fd',
+          600: '#303fd6',
+          700: '#2330b8',
+          800: '#1b2693',
+          900: '#202342',
+          950: '#0f1225',
         },
         obsidian: {
           950: '#000000',
@@ -68,7 +85,7 @@ export default {
           200: '#fecdd3',
           300: '#fda4af',
           400: '#fb7185',
-          500: '#ff453a', // Apple System Red
+          500: '#ff453a',
           600: '#e11d48',
           700: '#be123c',
           800: '#9f1239',
@@ -77,8 +94,10 @@ export default {
         },
       },
       fontFamily: {
-        sans:    ['"Plus Jakarta Sans"', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'system-ui', 'sans-serif'],
-        display: ['Outfit', '"Plus Jakarta Sans"', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'sans-serif'],
+        sans:    ['Tasaorbiterdeck', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        display: ['Tasaorbiterdeck', 'Outfit', 'sans-serif'],
+        serif:   ['"Instrument Serif"', 'Georgia', 'serif'],
+        itlic:   ['"Instrument Serif"', 'Georgia', 'serif'],
         mono:    ['"JetBrains Mono"', '"SF Mono"', 'Fira Code', 'Menlo', 'monospace'],
       },
       borderRadius: {
@@ -90,13 +109,7 @@ export default {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'grid-pattern': `
-          linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
-        `,
-      },
-      backgroundSize: {
-        'grid': '60px 60px',
+        'marklab-mesh': 'radial-gradient(at 0% 0%, rgba(69, 85, 253, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(69, 85, 253, 0.05) 0px, transparent 50%)',
       },
       animation: {
         'pulse-subtle':   'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -104,15 +117,13 @@ export default {
         'fade-in-up':     'fade-in-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both',
         'fade-in-down':   'fade-in-down 0.4s cubic-bezier(0.4, 0, 0.2, 1) both',
         'scale-in':       'scale-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both',
-        'spin-slow':      'spin 8s linear infinite',
+        'spin-slow':      'spin 12s linear infinite',
         'glow-pulse':     'glow-pulse 2.5s ease-in-out infinite',
-        'soft-bounce':    'soft-bounce 1.8s ease-in-out infinite',
+        'soft-bounce':    'soft-bounce 2s ease-in-out infinite',
         'ping-ripple':    'ping-ripple 1.5s ease-out infinite',
         'shimmer':        'skeleton-shimmer 1.5s infinite',
-        'gradient-shift': 'gradient-shift 4s linear infinite',
-        'bar-fill':       'bar-fill 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both',
-        'blink':          'blink 1s step-end infinite',
-        'fadeIn':         'fade-in-up 0.5s ease both',
+        'marquee':        'marquee 28s linear infinite',
+        'marquee-reverse':'marquee-reverse 28s linear infinite',
       },
       keyframes: {
         float: {
@@ -132,8 +143,8 @@ export default {
           to:   { opacity: '1', transform: 'scale(1)' },
         },
         'glow-pulse': {
-          '0%, 100%': { boxShadow: '0 0 8px rgba(16,185,129,0.3)' },
-          '50%':      { boxShadow: '0 0 24px rgba(16,185,129,0.6)' },
+          '0%, 100%': { boxShadow: '0 0 8px rgba(69, 85, 253, 0.3)' },
+          '50%':      { boxShadow: '0 0 24px rgba(69, 85, 253, 0.6)' },
         },
         'soft-bounce': {
           '0%, 100%': { transform: 'translateY(0)',    animationTimingFunction: 'cubic-bezier(0.8,0,1,1)' },
@@ -143,30 +154,20 @@ export default {
           '0%':   { transform: 'scale(1)',  opacity: '0.8' },
           '100%': { transform: 'scale(2)',  opacity: '0' },
         },
-        'skeleton-shimmer': {
-          from: { backgroundPosition: '200% 0' },
-          to:   { backgroundPosition: '-200% 0' },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
-        'gradient-shift': {
-          '0%':   { backgroundPosition: '0% center' },
-          '50%':  { backgroundPosition: '100% center' },
-          '100%': { backgroundPosition: '0% center' },
-        },
-        'bar-fill': {
-          from: { transform: 'scaleX(0)' },
-          to:   { transform: 'scaleX(1)' },
-        },
-        blink: {
-          '0%, 100%': { opacity: '1' },
-          '50%':      { opacity: '0' },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
         },
       },
       boxShadow: {
-        'glow-sm':  '0 0 10px rgba(16,185,129,0.2)',
-        'glow':     '0 0 20px rgba(16,185,129,0.3)',
-        'glow-lg':  '0 0 40px rgba(16,185,129,0.4)',
-        'glow-indigo': '0 0 20px rgba(99,102,241,0.3)',
-        'inner-glow': 'inset 0 1px 0 rgba(255,255,255,0.06)',
+        'marklab-sm': '0 2px 8px rgba(32, 35, 66, 0.04)',
+        'marklab-card': '0 8px 30px rgba(32, 35, 66, 0.06)',
+        'marklab-hover': '0 20px 40px rgba(69, 85, 253, 0.12)',
+        'marklab-glow': '0 10px 30px rgba(69, 85, 253, 0.25)',
       },
       transitionTimingFunction: {
         'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
