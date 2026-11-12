@@ -4,32 +4,52 @@
 
 @layer base {
   :root {
-    --bg-canvas: #f8fafc;
-    --bg-surface: #ffffff;
-    --bg-surface-elevated: #ffffff;
-    --bg-surface-muted: #f1f5f9;
-    --border-subtle: #e2e8f0;
-    --border-strong: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
+    --color-bg-canvas: #fafaf9;
+    --color-bg-surface: #ffffff;
+    --color-bg-surface-elevated: #ffffff;
+    --color-bg-surface-muted: #f5f5f4;
+    --color-border-subtle: #e7e5e4;
+    --color-border-strong: #d6d3d1;
+    --color-text-primary: #1c1917;
+    --color-text-secondary: #57534e;
+    --color-text-muted: #78716c;
+
+    /* Brand base: Deep Indigo / Ink-Blue (#4338ca) */
+    --color-brand-primary: #4338ca;
+    --color-brand-hover: #3730a3;
+    --color-brand-light: #eef2ff;
+
+    /* Accent base: Warm Amber / Saffron (#f59e0b) */
+    --color-accent-primary: #f59e0b;
+    --color-accent-hover: #d97706;
+    --color-accent-light: #fef3c7;
   }
 
   .dark {
-    --bg-canvas: #090d16;
-    --bg-surface: #111625;
-    --bg-surface-elevated: #182033;
-    --bg-surface-muted: #151b2c;
-    --border-subtle: #1e293b;
-    --border-strong: #334155;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --color-bg-canvas: #0c0a09;
+    --color-bg-surface: #1c1917;
+    --color-bg-surface-elevated: #292524;
+    --color-bg-surface-muted: #24201e;
+    --color-border-subtle: #292524;
+    --color-border-strong: #44403c;
+    --color-text-primary: #fafaf9;
+    --color-text-secondary: #d6d3d1;
+    --color-text-muted: #a8a29e;
+
+    /* Brand in dark mode: Lighter ink-blue for high contrast on warm dark stone */
+    --color-brand-primary: #6366f1;
+    --color-brand-hover: #818cf8;
+    --color-brand-light: rgba(99, 102, 241, 0.15);
+
+    /* Accent in dark mode */
+    --color-accent-primary: #fbbf24;
+    --color-accent-hover: #f59e0b;
+    --color-accent-light: rgba(245, 158, 11, 0.15);
   }
 
   body {
-    background-color: var(--bg-canvas);
-    color: var(--text-primary);
+    background-color: var(--color-bg-canvas);
+    color: var(--color-text-primary);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -37,12 +57,12 @@
 
   /* Accessible focus visible ring across all interactive controls */
   *:focus-visible {
-    outline: 2px solid #ea580c;
+    outline: 2px solid var(--color-brand-primary);
     outline-offset: 2px;
   }
 }
 
-/* Custom Scrollbars */
+/* Custom Scrollbars in Warm Stone */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -51,17 +71,17 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #d6d3d1;
   border-radius: 9999px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #44403c;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a8a29e;
 }
 
-/* Reduced Motion preferences */
+/* Reduced Motion Preferences */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-delay: -1ms !important;
@@ -74,7 +94,15 @@
   }
 }
 
-/* Professional Print Stylesheet for Question Papers & Answer Keys */
+/* Single subtle hero wash gradient */
+.hero-wash {
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08) 0%, rgba(245, 158, 11, 0.03) 40%, transparent 70%);
+}
+.dark .hero-wash {
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.14) 0%, rgba(245, 158, 11, 0.04) 40%, transparent 70%);
+}
+
+/* Professional Print Stylesheet for Question Papers & Answer Keys (Always Black & White) */
 @media print {
   body {
     background: #ffffff !important;

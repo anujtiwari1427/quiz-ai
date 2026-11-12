@@ -1,0 +1,17 @@
+# EduPulse AI
+
+> Local-first exam paper and blueprint generation suite for Indian school teachers.
+
+- **URL**: https://edupulse.ai
+- **Repository**: https://github.com/anujtiwari1427/quiz-ai
+- **Architecture**: 100% Client-side Local-First (IndexedDB via Dexie, Web Workers, client-side PDF/DOCX export)
+- **Primary Boards**: CBSE, ICSE, Maharashtra State Board, State Boards
+- **Languages**: English, Hindi, Marathi
+- **Privacy**: Zero server uploads. Textbooks, question banks, and generated test papers stay strictly on the user's device.
+
+## Core Capabilities
+- In-browser textbook ingestion (PDF, DOCX, TXT)
+- Blueprint design (marks allocation, question type distribution, Bloom's taxonomy balance)
+- In-browser LLM orchestration (Google Gemini client API with local BYOK API key)
+- Split Question Paper & Answer Key Editor with live sync
+- Export to high-res PDF and editable DOCX formatted to standard Indian school examination templates

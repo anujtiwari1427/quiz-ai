@@ -48,28 +48,28 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'nav-dash',
       title: 'Go to Dashboard',
       category: 'Navigation',
-      icon: <FileText className="w-4 h-4 text-structure-600" />,
+      icon: <FileText className="w-4 h-4 text-brand-700 dark:text-brand-400" />,
       onSelect: () => { onNavigate('dashboard'); onClose(); }
     },
     {
       id: 'nav-lib',
       title: 'Go to Textbook Library',
       category: 'Navigation',
-      icon: <BookOpen className="w-4 h-4 text-structure-600" />,
+      icon: <BookOpen className="w-4 h-4 text-brand-700 dark:text-brand-400" />,
       onSelect: () => { onNavigate('library'); onClose(); }
     },
     {
       id: 'nav-qb',
       title: 'Go to Question Bank',
       category: 'Navigation',
-      icon: <Database className="w-4 h-4 text-structure-600" />,
+      icon: <Database className="w-4 h-4 text-brand-700 dark:text-brand-400" />,
       onSelect: () => { onNavigate('question-bank'); onClose(); }
     },
     {
       id: 'nav-bp',
       title: 'Create Paper / Blueprint Wizard',
       category: 'Navigation',
-      icon: <Plus className="w-4 h-4 text-brand-600" />,
+      icon: <Plus className="w-4 h-4 text-brand-700 dark:text-brand-400" />,
       shortcut: 'N',
       onSelect: () => { onNavigate('create-paper'); onClose(); }
     },
@@ -77,14 +77,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'nav-papers',
       title: 'Saved Exam Papers Hub',
       category: 'Navigation',
-      icon: <FileText className="w-4 h-4 text-structure-600" />,
+      icon: <FileText className="w-4 h-4 text-brand-700 dark:text-brand-400" />,
       onSelect: () => { onNavigate('saved-papers'); onClose(); }
     },
     {
       id: 'nav-tpl',
       title: 'Blueprint Templates',
       category: 'Navigation',
-      icon: <Sliders className="w-4 h-4 text-structure-600" />,
+      icon: <Sliders className="w-4 h-4 text-brand-700 dark:text-brand-400" />,
       onSelect: () => { onNavigate('templates'); onClose(); }
     },
     {

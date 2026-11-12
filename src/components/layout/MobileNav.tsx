@@ -46,10 +46,11 @@ export const MobileDrawer: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
       <div className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 p-5 shadow-soft-lg flex flex-col z-50">
         <div className="flex items-center justify-between pb-4 border-b border-neutral-100 dark:border-neutral-800 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white">
+            <div className="w-8 h-8 rounded-xl bg-brand-700 text-white flex items-center justify-center relative shadow-soft-xs">
               <FileText className="w-4 h-4" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent-500 ring-2 ring-white dark:ring-neutral-900" />
             </div>
-            <span className="font-bold text-sm text-neutral-900 dark:text-white">EduPulse AI</span>
+            <span className="font-bold text-sm text-neutral-900 dark:text-white">EduPulse <span className="text-brand-700 dark:text-brand-400">AI</span></span>
           </div>
           <button 
             onClick={onClose}
@@ -74,11 +75,11 @@ export const MobileDrawer: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                 className={clsx(
                   'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors',
                   isActive
-                    ? 'bg-structure-50 text-structure-800 dark:bg-structure-950 dark:text-structure-300'
+                    ? 'bg-brand-50 text-brand-900 dark:bg-brand-950 dark:text-brand-200 font-bold'
                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'
                 )}
               >
-                <Icon className="w-4 h-4 shrink-0" />
+                <Icon className={clsx("w-4 h-4 shrink-0", isActive ? "text-brand-700 dark:text-brand-300" : "text-neutral-500")} />
                 <span>{item.label}</span>
               </button>
             );
@@ -113,10 +114,10 @@ export const MobileBottomBar: React.FC = () => {
               onClick={() => openCreatePaper()}
               className="flex flex-col items-center justify-center -mt-5 focus:outline-none"
             >
-              <div className="w-11 h-11 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-soft-md border-2 border-white dark:border-neutral-900 active:scale-95 transition-transform">
+              <div className="w-11 h-11 rounded-full bg-brand-700 text-white flex items-center justify-center shadow-soft border-2 border-white dark:border-neutral-900 active:scale-95 transition-transform">
                 <PlusCircle className="w-6 h-6" />
               </div>
-              <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400 mt-0.5">
+              <span className="text-[10px] font-bold text-brand-700 dark:text-brand-400 mt-0.5">
                 {item.label}
               </span>
             </button>
@@ -130,7 +131,7 @@ export const MobileBottomBar: React.FC = () => {
             className={clsx(
               'flex flex-col items-center justify-center py-1 px-3 rounded-lg text-[10px] font-medium transition-colors',
               isActive
-                ? 'text-structure-700 dark:text-structure-300 font-bold'
+                ? 'text-brand-700 dark:text-brand-300 font-bold'
                 : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
             )}
           >

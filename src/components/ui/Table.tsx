@@ -31,7 +31,7 @@ export const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttribut
       ref={ref}
       className={clsx(
         'transition-colors hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40',
-        isSelected && 'bg-structure-50/60 dark:bg-structure-950/30',
+        isSelected && 'bg-brand-50/60 dark:bg-brand-950/30',
         className
       )}
       {...props}

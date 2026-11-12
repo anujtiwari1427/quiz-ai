@@ -23,7 +23,7 @@ export const ProductTourModal: React.FC<ProductTourModalProps> = ({ isOpen, onCl
       description: 'Upload textbook PDFs, DOCX, or PYQ papers. Our built-in worker extracts pages, detects chapters and exercises, and uses tesseract.js OCR for scanned pages without freezing your screen.',
     },
     {
-      icon: <Sliders className="w-8 h-8 text-structure-600" />,
+      icon: <Sliders className="w-8 h-8 text-brand-700 dark:text-brand-400" />,
       title: 'Deterministic Blueprint Validation',
       description: 'You control the exact question counts, marks, and chapter weightages. The system validates arithmetic in code, ensuring totals match 100% before generation begins.',
     },

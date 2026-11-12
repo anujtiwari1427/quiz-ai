@@ -296,7 +296,7 @@ export const CreatePaperWizard: React.FC<CreatePaperWizardProps> = ({
                                 }}
                                 className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex items-start gap-2.5 ${
                                   isChecked
-                                    ? 'bg-structure-50/80 border-structure-300 dark:bg-structure-950/40 dark:border-structure-800'
+                                    ? 'bg-brand-50/80 border-brand-300 dark:bg-brand-950/40 dark:border-brand-800'
                                     : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300'
                                 }`}
                               >

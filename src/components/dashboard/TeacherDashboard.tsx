@@ -145,7 +145,7 @@ export const TeacherDashboard: React.FC = () => {
               </div>
               <span className="text-[11px] text-neutral-400 mt-0.5 block">Indexed for retrieval</span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-structure-50 dark:bg-structure-950/60 text-structure-700 dark:text-structure-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 flex items-center justify-center">
               <BookOpen className="w-5 h-5" />
             </div>
           </CardContent>

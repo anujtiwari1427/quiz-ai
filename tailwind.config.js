@@ -8,62 +8,92 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary Brand Action Scale (Warm Orange - Linear/Canva style)
+        // Semantic surface tokens
+        surface: {
+          canvas: 'var(--color-bg-canvas)',
+          DEFAULT: 'var(--color-bg-surface)',
+          elevated: 'var(--color-bg-surface-elevated)',
+          muted: 'var(--color-bg-surface-muted)',
+        },
+        border: {
+          subtle: 'var(--color-border-subtle)',
+          strong: 'var(--color-border-strong)',
+        },
+        text: {
+          primary: 'var(--color-text-primary)',
+          secondary: 'var(--color-text-secondary)',
+          muted: 'var(--color-text-muted)',
+        },
+        // Primary Brand Scale: Deep Indigo / Ink-Blue (Linear / Notion / Stripe feel)
         brand: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          200: '#fed7aa',
-          300: '#fdba74',
-          400: '#fb923c',
-          500: '#f97316',
-          600: '#ea580c', // Main Primary Action
-          700: '#c2410c',
-          800: '#9a3412',
-          900: '#7c2d12',
-          950: '#431407',
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#4f46e5',
+          700: '#4338ca', // Primary Base Action
+          800: '#3730a3',
+          900: '#312e81',
+          950: '#1e1b4b',
         },
-        // Secondary Structural & Navigation Scale (Royal Purple - SaaS Architecture)
+        // Accent Scale: Warm Amber / Saffron (Used sparingly <= 2%, Indian context nod)
+        accent: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b', // Accent Base
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+          950: '#451a03',
+        },
+        // Secondary structure alias mapped to brand for backward-compatibility
         structure: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          200: '#e9d5ff',
-          300: '#d8b4fe',
-          400: '#c084fc',
-          500: '#a855f7',
-          600: '#9333ea',
-          700: '#7e22ce',
-          800: '#6d28d9', // Structural / Active Item
-          900: '#581c87',
-          950: '#3b0764',
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#4f46e5',
+          700: '#4338ca',
+          800: '#3730a3',
+          900: '#312e81',
+          950: '#1e1b4b',
         },
-        // Warm Slate Neutrals (90% of UI)
+        // Warm Stone Neutrals (90% of UI: #fafaf9 page background, #ffffff cards)
         neutral: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
+          50: '#fafaf9',
+          100: '#f5f5f4',
+          200: '#e7e5e4',
+          300: '#d6d3d1',
+          400: '#a8a29e',
+          500: '#78716c',
+          600: '#57534e',
+          700: '#44403c',
+          800: '#292524',
+          900: '#1c1917',
+          950: '#0c0a09',
         },
         // Semantic Scales
         success: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
         },
         warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
+          50: '#fefce8',
+          100: '#fef9c3',
+          500: '#eab308', // Distinct yellow-amber
+          600: '#ca8a04',
+          700: '#a16207',
         },
         danger: {
           50: '#fef2f2',
@@ -95,11 +125,11 @@ export default {
         '2xl': '20px',
       },
       boxShadow: {
-        'soft-xs': '0 1px 2px 0 rgba(15, 23, 42, 0.04)',
-        'soft-sm': '0 2px 4px 0 rgba(15, 23, 42, 0.05)',
-        'soft': '0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04)',
-        'soft-md': '0 8px 20px -4px rgba(15, 23, 42, 0.1), 0 3px 6px -2px rgba(15, 23, 42, 0.05)',
-        'soft-lg': '0 16px 32px -6px rgba(15, 23, 42, 0.14), 0 6px 12px -3px rgba(15, 23, 42, 0.06)',
+        'soft-xs': '0 1px 2px 0 rgba(28, 25, 23, 0.04)',
+        'soft-sm': '0 2px 4px 0 rgba(28, 25, 23, 0.05)',
+        'soft': '0 4px 12px -2px rgba(28, 25, 23, 0.07), 0 2px 4px -1px rgba(28, 25, 23, 0.04)',
+        'soft-md': '0 8px 20px -4px rgba(28, 25, 23, 0.09), 0 3px 6px -2px rgba(28, 25, 23, 0.04)',
+        'soft-lg': '0 16px 32px -6px rgba(28, 25, 23, 0.12), 0 6px 12px -3px rgba(28, 25, 23, 0.05)',
       },
       transitionTimingFunction: {
         'smooth': 'cubic-bezier(0.16, 1, 0.3, 1)',

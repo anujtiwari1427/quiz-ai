@@ -47,10 +47,16 @@ import {
   BookOpen, 
   Sliders, 
   ShieldCheck, 
-  MoreVertical 
+  MoreVertical,
+  Sun,
+  Moon,
+  CheckCircle2
 } from 'lucide-react';
+import { CONTRAST_RATIOS, COLOR_TOKENS } from '../../styles/tokens';
+import { useApp } from '../../context/AppContext';
 
 export const DesignSystemShowcase: React.FC = () => {
+  const { theme, toggleTheme } = useApp();
   const { success, error, info } = useToast();
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -63,46 +69,59 @@ export const DesignSystemShowcase: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-12 text-left">
-      {/* Header */}
-      <div>
-        <Breadcrumbs
-          items={[
-            { label: 'EduPulse AI' },
-            { label: 'Design System', isCurrent: true }
-          ]}
-          className="mb-3"
-        />
-        <h1 className="text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight">
-          Design System & Component Catalog
-        </h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-2xl">
-          Single source of truth for EduPulse AI. 4px base grid, WCAG AA contrast, warm slate neutrals (90%),
-          focused brand orange actions, structural royal purple, and Devanagari typography support.
-        </p>
+      {/* Header with Theme Toggle */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-6">
+        <div>
+          <Breadcrumbs
+            items={[
+              { label: 'EduPulse AI' },
+              { label: 'Design System', isCurrent: true }
+            ]}
+            className="mb-2"
+          />
+          <h1 className="text-3xl font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight">
+            Design Tokens & Component Catalog
+          </h1>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 max-w-2xl">
+            Education + craft aesthetic for EduPulse AI. Warm stone neutrals (90%), deep indigo/ink-blue brand action (8%),
+            and warm saffron accent (2%). Strict WCAG AA & AAA contrast compliant.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            onClick={toggleTheme}
+          >
+            {theme === 'light' ? 'Dark Theme' : 'Light Theme'}
+          </Button>
+        </div>
       </div>
 
-      {/* 1. Brand Color Tokens */}
+      {/* 1. Color Palette & Tokens */}
       <section className="space-y-4">
         <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-brand-600" />
+          <span className="w-2.5 h-2.5 rounded-full bg-brand-700" />
           Color Scales & Tokens
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card>
             <CardHeader>
               <CardTitle>Brand Primary (Action)</CardTitle>
-              <CardDescription>Orange scale (#ea580c base) for hero actions</CardDescription>
+              <CardDescription>Deep Indigo / Ink-Blue (#4338ca base) for primary CTAs & focus</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <div className="h-10 rounded-lg bg-brand-600 text-white font-mono text-xs flex items-center justify-between px-3">
-                <span>brand-600</span>
-                <span>#ea580c (Primary)</span>
+              <div className="h-10 rounded-lg bg-brand-700 text-white font-mono text-xs flex items-center justify-between px-3 shadow-xs">
+                <span>brand-700</span>
+                <span>#4338ca (Base)</span>
               </div>
               <div className="grid grid-cols-5 gap-1 text-[10px] text-center font-mono text-neutral-700">
+                <div className="p-2 rounded bg-brand-50">50</div>
                 <div className="p-2 rounded bg-brand-100">100</div>
-                <div className="p-2 rounded bg-brand-200">200</div>
-                <div className="p-2 rounded bg-brand-400 text-white">400</div>
-                <div className="p-2 rounded bg-brand-700 text-white">700</div>
+                <div className="p-2 rounded bg-brand-300">300</div>
+                <div className="p-2 rounded bg-brand-500 text-white">500</div>
                 <div className="p-2 rounded bg-brand-900 text-white">900</div>
               </div>
             </CardContent>
@@ -110,39 +129,39 @@ export const DesignSystemShowcase: React.FC = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Structure Secondary</CardTitle>
-              <CardDescription>Royal purple scale (#6d28d9 base) for navigation</CardDescription>
+              <CardTitle>Accent (Warm Saffron)</CardTitle>
+              <CardDescription>Warm Amber (#f59e0b base) used sparingly (&le; 2%)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <div className="h-10 rounded-lg bg-structure-800 text-white font-mono text-xs flex items-center justify-between px-3">
-                <span>structure-800</span>
-                <span>#6d28d9 (Structure)</span>
+              <div className="h-10 rounded-lg bg-accent-500 text-white font-mono text-xs flex items-center justify-between px-3 shadow-xs">
+                <span>accent-500</span>
+                <span>#f59e0b (Saffron)</span>
               </div>
               <div className="grid grid-cols-5 gap-1 text-[10px] text-center font-mono text-neutral-700">
-                <div className="p-2 rounded bg-structure-100">100</div>
-                <div className="p-2 rounded bg-structure-200">200</div>
-                <div className="p-2 rounded bg-structure-400 text-white">400</div>
-                <div className="p-2 rounded bg-structure-700 text-white">700</div>
-                <div className="p-2 rounded bg-structure-900 text-white">900</div>
+                <div className="p-2 rounded bg-accent-50">50</div>
+                <div className="p-2 rounded bg-accent-100">100</div>
+                <div className="p-2 rounded bg-accent-300">300</div>
+                <div className="p-2 rounded bg-accent-700 text-white">700</div>
+                <div className="p-2 rounded bg-accent-900 text-white">900</div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Warm Slate Neutrals</CardTitle>
-              <CardDescription>90% of surfaces, borders & text</CardDescription>
+              <CardTitle>Warm Stone Neutrals</CardTitle>
+              <CardDescription>90% of surfaces, borders & text (#fafaf9 canvas, #ffffff card)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <div className="h-10 rounded-lg bg-neutral-900 text-white font-mono text-xs flex items-center justify-between px-3">
+              <div className="h-10 rounded-lg bg-neutral-900 text-white font-mono text-xs flex items-center justify-between px-3 shadow-xs">
                 <span>neutral-900</span>
-                <span>#0f172a</span>
+                <span>#1c1917</span>
               </div>
               <div className="grid grid-cols-5 gap-1 text-[10px] text-center font-mono text-neutral-700">
+                <div className="p-2 rounded bg-neutral-50 border border-neutral-200">50</div>
                 <div className="p-2 rounded bg-neutral-100">100</div>
-                <div className="p-2 rounded bg-neutral-200">200</div>
-                <div className="p-2 rounded bg-neutral-400 text-white">400</div>
-                <div className="p-2 rounded bg-neutral-700 text-white">700</div>
+                <div className="p-2 rounded bg-neutral-300">300</div>
+                <div className="p-2 rounded bg-neutral-600 text-white">600</div>
                 <div className="p-2 rounded bg-neutral-950 text-white">950</div>
               </div>
             </CardContent>
@@ -150,266 +169,193 @@ export const DesignSystemShowcase: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. Typography & Devanagari */}
+      {/* 2. WCAG Contrast Ratios Report */}
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-          Typography & Multilingual Script
+        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+          WCAG Contrast Ratios Verification
         </h2>
         <Card>
-          <CardContent className="space-y-4 pt-5">
-            <div>
-              <span className="text-[11px] font-mono uppercase text-neutral-400">Headings (Plus Jakarta Sans)</span>
-              <h3 className="text-2xl font-bold text-neutral-900 dark:text-white">
-                Exam Paper Blueprint: Class 10 Science Mid-Term
-              </h3>
-            </div>
-            <div>
-              <span className="text-[11px] font-mono uppercase text-neutral-400">Body UI (Inter)</span>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                All questions in Section A are compulsory. Each multiple-choice question carries exactly 1 mark.
-              </p>
-            </div>
-            <div>
-              <span className="text-[11px] font-mono uppercase text-neutral-400">Devanagari Support (Hindi & Marathi)</span>
-              <p className="text-base font-devanagari text-neutral-800 dark:text-neutral-200">
-                प्रश्न १. खालीलपैकी योग्य पर्याय निवडून विधाने पूर्ण करा: (गुरुत्वाकर्षण सिद्धांत)
-              </p>
-            </div>
-          </CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>UI Element & Combination</TableHead>
+                <TableHead>Contrast Ratio</TableHead>
+                <TableHead>WCAG Level</TableHead>
+                <TableHead>Target Usage</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {CONTRAST_RATIOS.map((item, i) => (
+                <TableRow key={i}>
+                  <TableCell className="font-medium text-neutral-900 dark:text-neutral-100">
+                    {item.element}
+                  </TableCell>
+                  <TableCell className="font-mono text-brand-700 dark:text-brand-400 font-bold">
+                    {item.ratio}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="success" size="xs">{item.wcagRating}</Badge>
+                  </TableCell>
+                  <TableCell className="text-neutral-500 text-xs">
+                    {item.usage}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </Card>
       </section>
 
-      {/* 3. Buttons & Interactive Controls */}
+      {/* 3. Buttons & Actions */}
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-          Buttons & Actions
-        </h2>
+        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">Buttons & Actions</h2>
         <Card>
-          <CardContent className="space-y-6 pt-5">
+          <CardContent className="space-y-6 pt-6">
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="primary" leftIcon={<Sparkles className="w-4 h-4" />}>
-                Primary Action
+              <Button variant="primary" leftIcon={<Plus className="w-4 h-4" />}>
+                Primary Button
               </Button>
-              <Button variant="secondary" leftIcon={<BookOpen className="w-4 h-4" />}>
-                Secondary Structure
+              <Button variant="secondary">
+                Secondary Button
               </Button>
-              <Button variant="outline">
-                Outline Action
+              <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
+                Outline Button
               </Button>
               <Button variant="ghost">
-                Ghost Action
+                Ghost Button
               </Button>
               <Button variant="danger" leftIcon={<Trash2 className="w-4 h-4" />}>
-                Danger Action
+                Danger Button
               </Button>
               <Button variant="primary" isLoading>
-                Loading State
-              </Button>
-              <Button variant="primary" disabled>
-                Disabled
+                Loading
               </Button>
             </div>
 
-            <div className="flex items-center gap-3 pt-4 border-t border-neutral-100 dark:border-neutral-800">
-              <span className="text-xs text-neutral-500 font-medium">Icon Buttons:</span>
-              <IconButton ariaLabel="Edit" icon={<Edit3 className="w-4 h-4" />} variant="outline" />
-              <IconButton ariaLabel="Delete" icon={<Trash2 className="w-4 h-4" />} variant="danger" />
-              <IconButton ariaLabel="Add" icon={<Plus className="w-4 h-4" />} variant="primary" />
-              <IconButton ariaLabel="Options" icon={<MoreVertical className="w-4 h-4" />} variant="ghost" />
-            </div>
-
-            <div className="flex items-center gap-3 pt-4 border-t border-neutral-100 dark:border-neutral-800">
-              <span className="text-xs text-neutral-500 font-medium">Toasts:</span>
-              <Button variant="outline" size="sm" onClick={() => success('Exam paper saved locally.', () => alert('Undone!'))}>
-                Trigger Undo Toast
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => error('Failed to parse document format.')}>
-                Trigger Error Toast
-              </Button>
+            <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-neutral-100 dark:border-neutral-800">
+              <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider w-full">Sizes</span>
+              <Button size="xs" variant="primary">Extra Small</Button>
+              <Button size="sm" variant="primary">Small</Button>
+              <Button size="md" variant="primary">Medium (Default)</Button>
+              <Button size="lg" variant="primary">Large Hero</Button>
+              <IconButton icon={<Edit3 className="w-4 h-4" />} ariaLabel="Edit item" variant="outline" />
             </div>
           </CardContent>
         </Card>
       </section>
 
-      {/* 4. Form Inputs */}
+      {/* 4. Badges & Chips */}
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-          Form Elements & Inputs
-        </h2>
+        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">Badges & Indicators</h2>
         <Card>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-5">
-            <Input
-              label="School Name"
-              placeholder="e.g. Delhi Public School"
-              helperText="Printed in the top header of all exam papers."
-              defaultValue="Delhi Public School"
-              required
-            />
+          <CardContent className="flex flex-wrap items-center gap-2.5 pt-6">
+            <Badge variant="brand">Brand Badge</Badge>
+            <Badge variant="accent">Warm Saffron Accent</Badge>
+            <Badge variant="neutral">Neutral Slate</Badge>
+            <Badge variant="success">Pass / Completed</Badge>
+            <Badge variant="warning">Warning Notice</Badge>
+            <Badge variant="danger">High Risk / Error</Badge>
+            <Badge variant="info">Local Sync</Badge>
+            <Badge variant="brand" onRemove={() => info('Removed badge')}>Removable</Badge>
+          </CardContent>
+        </Card>
+      </section>
 
-            <Input
-              label="Exam With Error State"
-              placeholder="Total Marks"
-              error="Marks total must equal sum of section questions."
-              defaultValue="75"
-            />
-
-            <Select
-              label="Educational Board"
-              value={selectVal}
-              onValueChange={setSelectVal}
-              options={[
-                { value: 'cbse', label: 'CBSE (Central Board)', description: 'Standard 80 Marks pattern' },
-                { value: 'icse', label: 'ICSE (Council for Indian Certificate)', description: 'Analytical marking rubric' },
-                { value: 'maharashtra', label: 'Maharashtra State Board', description: 'Activity-sheet based format' },
-              ]}
-            />
-
-            <div className="space-y-4">
-              <Switch
-                label="Shuffle Questions for Set B and Set C"
-                description="Synchronizes multiple permutations with matching answer keys."
-                checked={switchVal}
-                onCheckedChange={setSwitchVal}
+      {/* 5. Inputs & Form Controls */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">Form Inputs & Accessible Controls</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Text Inputs</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Input
+                label="Examination Title"
+                placeholder="e.g. Mid-Term Science Assessment"
+                helperText="Stored locally on device"
+                required
               />
+              <Select
+                label="Educational Board"
+                value={selectVal}
+                onValueChange={setSelectVal}
+                options={[
+                  { value: 'cbse', label: 'CBSE (Central Board)' },
+                  { value: 'icse', label: 'ICSE / CISCE' },
+                  { value: 'state', label: 'Maharashtra State Board' },
+                ]}
+              />
+              <Textarea
+                label="General Instructions"
+                rows={3}
+                placeholder="All questions are compulsory..."
+              />
+            </CardContent>
+          </Card>
 
+          <Card>
+            <CardHeader>
+              <CardTitle>Selection Controls</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-5">
               <Checkbox
-                label="Educational Fair Use Rights Confirmed"
-                description="I confirm this textbook content is used for school assessment purposes."
+                label="Auto-generate Answer Key"
+                description="Creates aligned model solution sheet"
                 checked={checkVal}
                 onCheckedChange={setCheckVal}
               />
-            </div>
-
-            <div className="md:col-span-2">
+              <Switch
+                label="High-Density Question Layout"
+                description="Save printer paper during examination printing"
+                checked={switchVal}
+                onCheckedChange={setSwitchVal}
+              />
               <Slider
-                label="Chapter 1 Weightage Distribution"
+                label="Difficulty Split (% Medium/Hard)"
                 value={sliderVal}
                 onChange={setSliderVal}
+                min={0}
+                max={100}
               />
-            </div>
-
-            <div className="md:col-span-2">
-              <Textarea
-                label="General Exam Instructions"
-                defaultValue="1. All questions are compulsory.&#10;2. Use of scientific calculators is not permitted."
-                showCount
-                maxLength={200}
-                rows={3}
-              />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </section>
 
-      {/* 5. Badges, Chips & Alerts */}
+      {/* 6. Alerts & Callouts */}
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-          Badges, Steppers & Alerts
-        </h2>
-        <Card>
-          <CardContent className="space-y-6 pt-5">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="brand">Brand 80 Marks</Badge>
-              <Badge variant="structure">CBSE Class 10</Badge>
-              <Badge variant="success">Saved Locally ✓</Badge>
-              <Badge variant="warning">Draft Unsaved</Badge>
-              <Badge variant="danger">Duplicate (92%)</Badge>
-              <Badge variant="info">3 Chunks Grounded</Badge>
-              <Badge variant="neutral" onRemove={() => alert('Removed')}>
-                Removable Tag
-              </Badge>
-            </div>
-
-            <div className="space-y-3 pt-4 border-t border-neutral-100 dark:border-neutral-800">
-              <Alert variant="info" title="Local Storage Security">
-                All uploaded textbooks and generated questions are stored purely in client-side IndexedDB.
-              </Alert>
-              <Alert variant="warning" title="Blueprint Validation Inconsistency">
-                Section questions sum to 45 marks, but total marks target is 50. Adjust Section C count.
-              </Alert>
-            </div>
-
-            <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800">
-              <span className="text-xs text-neutral-500 font-medium block mb-4">Wizard Stepper:</span>
-              <Stepper
-                currentStepIndex={activeStep}
-                onStepClick={setActiveStep}
-                steps={[
-                  { id: '1', title: 'Source Books', description: 'Textbooks & PYQs' },
-                  { id: '2', title: 'Blueprint', description: 'Sections & Marks' },
-                  { id: '3', title: 'Review & Generate', description: 'Deterministic check' },
-                ]}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">Alerts & Status Callouts</h2>
+        <div className="space-y-3">
+          <Alert variant="info" title="100% Local-First Storage">
+            All textbooks, question items, and generated papers remain stored exclusively inside this browser's IndexedDB.
+          </Alert>
+          <Alert variant="success" title="Paper Generated Successfully">
+            Set A, Set B, and Set C permutations are ready for inspection and Word/PDF export.
+          </Alert>
+          <Alert variant="warning" title="Blueprint Arithmetic Warning">
+            Section B requires 30 marks, but selected question slots total 25 marks. Please adjust marks allocation.
+          </Alert>
+          <Alert variant="danger" title="Storage Quota Alert">
+            Browser storage is exceeding 80% capacity. Please export a full backup ZIP.
+          </Alert>
+        </div>
       </section>
 
-      {/* 6. Tables & Skeletons */}
+      {/* 7. Dialogs & Overlays Trigger */}
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-          Data Table & Skeletons
-        </h2>
+        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">Modals, Drawers & Toast Feedback</h2>
         <Card>
-          <CardContent className="space-y-4 pt-5">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead sortable sortDirection="asc">Question Title</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Marks</TableHead>
-                  <TableHead>Bloom Level</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">Define oxidation and reduction with chemical equations.</TableCell>
-                  <TableCell><Badge variant="neutral">Short Answer</Badge></TableCell>
-                  <TableCell className="font-mono">3M</TableCell>
-                  <TableCell><Badge variant="structure">Understand</Badge></TableCell>
-                  <TableCell><Badge variant="success">Verified</Badge></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Which metal is in liquid state at room temperature?</TableCell>
-                  <TableCell><Badge variant="neutral">MCQ</Badge></TableCell>
-                  <TableCell className="font-mono">1M</TableCell>
-                  <TableCell><Badge variant="structure">Remember</Badge></TableCell>
-                  <TableCell><Badge variant="success">Verified</Badge></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-
-            <Pagination
-              currentPage={tablePage}
-              totalPages={3}
-              pageSize={2}
-              totalItems={6}
-              onPageChange={setTablePage}
-            />
-
-            <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-2">
-              <span className="text-xs text-neutral-500 font-medium block">Skeleton Loaders:</span>
-              <Skeleton variant="text" width="60%" />
-              <Skeleton variant="text" width="90%" />
-              <Skeleton variant="rectangular" height={40} />
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* 7. Modal & Drawer Triggers */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-          Modals & Drawers
-        </h2>
-        <Card>
-          <CardContent className="flex items-center gap-4 pt-5">
+          <CardContent className="flex flex-wrap items-center gap-4 pt-6">
             <Button variant="outline" onClick={() => setModalOpen(true)}>
-              Open Demo Modal
+              Open Sample Modal
             </Button>
             <Button variant="outline" onClick={() => setDrawerOpen(true)}>
-              Open Demo Drawer
+              Open Slide-Over Drawer
+            </Button>
+            <Button variant="secondary" onClick={() => success('Saved locally in IndexedDB ✓')}>
+              Trigger Toast (with Undo)
             </Button>
           </CardContent>
         </Card>
@@ -417,31 +363,35 @@ export const DesignSystemShowcase: React.FC = () => {
         <Modal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
-          title="Sample Dialog Title"
-          description="Accessible Radix UI dialog with smooth focus trap and backdrop blur."
+          title="Sample Radix Dialog"
+          description="Standard accessible modal dialog for blueprint and export workflows."
           footer={
-            <>
-              <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancel</Button>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setModalOpen(false)}>Cancel</Button>
               <Button variant="primary" onClick={() => setModalOpen(false)}>Confirm Action</Button>
-            </>
+            </div>
           }
         >
-          <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-            This dialog provides a standardized, accessible modal pattern for settings, confirmations, and exports.
+          <p className="text-sm text-neutral-600 dark:text-neutral-300">
+            This dialog passes focus management, backdrop dismiss, and keyboard escape trapping cleanly.
           </p>
         </Modal>
 
         <Drawer
           isOpen={drawerOpen}
           onClose={() => setDrawerOpen(false)}
-          title="Side Inspector Drawer"
-          description="Slide-over sheet for inspecting question metadata and source textbook chunks."
+          title="Slide-over Drawer"
+          description="Useful for chapter trees and tag inspectors."
         >
-          <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-            Teachers can inspect textbook citations, Bloom taxonomy distribution, and question alternatives in this drawer.
-          </p>
+          <div className="py-4 space-y-3">
+            <p className="text-sm text-neutral-600 dark:text-neutral-300">
+              Drawers slide smoothly from the right side and adapt nicely to mobile viewports.
+            </p>
+          </div>
         </Drawer>
       </section>
     </div>
   );
 };
+
+export default DesignSystemShowcase;

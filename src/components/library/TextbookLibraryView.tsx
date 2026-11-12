@@ -230,7 +230,7 @@ export const TextbookLibraryView: React.FC<TextbookLibraryViewProps> = ({
                   <Button
                     variant="outline"
                     size="xs"
-                    leftIcon={<Layers className="w-3.5 h-3.5 text-structure-600" />}
+                    leftIcon={<Layers className="w-3.5 h-3.5 text-brand-700 dark:text-brand-400" />}
                     onClick={() => onSelectChapterManager(tb.id)}
                   >
                     Manage Chapters

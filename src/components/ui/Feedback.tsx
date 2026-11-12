@@ -34,7 +34,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       )}
       <div className="w-full h-2 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden relative">
         {isIndeterminate ? (
-          <div className={clsx('h-full w-1/3 rounded-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-brand-500 to-transparent', barColors[variant])} />
+          <div className={clsx('h-full w-1/3 rounded-full animate-pulse opacity-90', barColors[variant])} />
         ) : (
           <div
             className={clsx('h-full rounded-full transition-all duration-300 ease-out', barColors[variant])}

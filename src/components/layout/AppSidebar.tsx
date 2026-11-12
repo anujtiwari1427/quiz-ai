@@ -85,15 +85,16 @@ export const AppSidebar: React.FC = () => {
           onClick={() => setCurrentView('dashboard')}
           className="flex items-center gap-3 text-left focus:outline-none group overflow-hidden"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white shadow-soft-xs group-hover:scale-105 transition-transform shrink-0">
-            <FileText className="w-4 h-4 stroke-[2.5]" />
+          <div className="w-8 h-8 rounded-xl bg-brand-700 text-white flex items-center justify-center relative shadow-soft-xs group-hover:scale-105 transition-transform shrink-0">
+            <FileText className="w-4 h-4 stroke-[2.2]" />
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent-500 ring-2 ring-white dark:ring-neutral-900" />
           </div>
           {!sidebarCollapsed && (
             <div className="flex flex-col truncate">
               <span className="font-extrabold text-sm tracking-tight text-neutral-900 dark:text-neutral-100 leading-tight">
-                EduPulse AI
+                EduPulse <span className="text-brand-700 dark:text-brand-400">AI</span>
               </span>
-              <span className="text-[10px] text-neutral-400 font-medium tracking-wide">
+              <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium tracking-wide">
                 Local-First Exam Suite
               </span>
             </div>
@@ -130,7 +131,7 @@ export const AppSidebar: React.FC = () => {
                       'text-brand-700 dark:text-brand-300 bg-brand-50/70 hover:bg-brand-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/60 border border-brand-200/60 dark:border-brand-800/60',
                     ],
                     isActive && [
-                      'bg-structure-50 text-structure-800 dark:bg-structure-950/70 dark:text-structure-200 shadow-soft-xs font-bold border border-structure-200/80 dark:border-structure-800/80',
+                      'bg-brand-50 text-brand-900 dark:bg-brand-950/70 dark:text-brand-200 shadow-soft-xs font-bold border border-brand-200/80 dark:border-brand-800/80',
                     ],
                     !isActive && !item.isHeroAction && [
                       'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/70 dark:hover:bg-neutral-800/60',
@@ -141,14 +142,14 @@ export const AppSidebar: React.FC = () => {
                   <Icon
                     className={clsx(
                       'w-4 h-4 shrink-0 transition-colors',
-                      isActive ? 'text-structure-700 dark:text-structure-300' : item.isHeroAction ? 'text-brand-600 dark:text-brand-400' : 'text-neutral-500'
+                      isActive ? 'text-brand-700 dark:text-brand-300' : item.isHeroAction ? 'text-brand-600 dark:text-brand-400' : 'text-neutral-500'
                     )}
                   />
                   {!sidebarCollapsed && (
                     <>
                       <span className="truncate flex-1 text-left">{item.label}</span>
                       {item.badge && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider bg-brand-600 text-white shrink-0">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider bg-brand-700 text-white shrink-0">
                           {item.badge}
                         </span>
                       )}

@@ -202,13 +202,13 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onClos
 
         {step === 0 && (
           <div className="space-y-4 pt-2 text-left">
-            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-structure-50 dark:bg-structure-950/40 border border-structure-200 dark:border-structure-800/60">
-              <Globe className="w-5 h-5 text-structure-600 dark:text-structure-400 shrink-0" />
+            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-brand-50 dark:bg-brand-950/40 border border-brand-200 dark:border-brand-800/60">
+              <Globe className="w-5 h-5 text-brand-700 dark:text-brand-400 shrink-0" />
               <div>
-                <h4 className="text-xs font-bold text-structure-900 dark:text-structure-200">
+                <h4 className="text-xs font-bold text-brand-900 dark:text-brand-200">
                   Select Primary Exam Language
                 </h4>
-                <p className="text-[11px] text-structure-600 dark:text-structure-400">
+                <p className="text-[11px] text-brand-700 dark:text-brand-400">
                   Used for Devanagari font rendering, OCR models, and exam header formatting.
                 </p>
               </div>

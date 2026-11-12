@@ -29,21 +29,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       'inline-flex items-center justify-center font-medium transition-all duration-150 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
 
     const variants = {
-      // Primary Action: Orange (Linear/Canva hero action)
+      // Primary Action: Deep Indigo / Ink-Blue (#4338ca)
       primary:
-        'bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-soft-xs hover:shadow-soft border border-brand-700/50 focus-visible:ring-brand-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-950',
-      // Secondary/Structure: Purple
+        'bg-brand-700 hover:bg-brand-800 active:bg-brand-900 text-white shadow-soft-xs hover:shadow-soft border border-brand-800/80 focus-visible:ring-brand-600 focus-visible:ring-offset-white dark:bg-brand-600 dark:hover:bg-brand-500 dark:border-brand-500/80 dark:focus-visible:ring-offset-neutral-950',
+      // Secondary: Warm Stone Neutral
       secondary:
-        'bg-structure-50 hover:bg-structure-100 text-structure-800 border border-structure-200 dark:bg-structure-950/60 dark:hover:bg-structure-900/80 dark:text-structure-300 dark:border-structure-800/80 focus-visible:ring-structure-500',
-      // Outline: Neutral border
+        'bg-neutral-100 hover:bg-neutral-200/80 text-neutral-800 border border-neutral-200/80 dark:bg-neutral-800 dark:hover:bg-neutral-700/80 dark:text-neutral-200 dark:border-neutral-700 focus-visible:ring-brand-500',
+      // Outline: Clean Neutral border
       outline:
-        'bg-white hover:bg-neutral-50 text-neutral-800 border border-neutral-300 shadow-soft-xs hover:border-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-700 focus-visible:ring-neutral-400',
+        'bg-white hover:bg-neutral-50 text-neutral-800 border border-neutral-300 shadow-soft-xs hover:border-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-700 focus-visible:ring-brand-500',
       // Ghost: Subtly flat
       ghost:
-        'bg-transparent hover:bg-neutral-100 text-neutral-700 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-300 dark:hover:text-white focus-visible:ring-neutral-400',
+        'bg-transparent hover:bg-neutral-100 text-neutral-700 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-300 dark:hover:text-white focus-visible:ring-brand-500',
       // Danger: Red
       danger:
-        'bg-danger-500 hover:bg-danger-600 active:bg-danger-700 text-white shadow-soft-xs border border-danger-600 focus-visible:ring-danger-500',
+        'bg-danger-600 hover:bg-danger-700 active:bg-danger-800 text-white shadow-soft-xs border border-danger-700 focus-visible:ring-danger-500',
     };
 
     const sizes = {
@@ -100,13 +100,13 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 
     const variants = {
       primary:
-        'bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-soft-xs border border-brand-700/50 focus-visible:ring-brand-500',
+        'bg-brand-700 hover:bg-brand-800 active:bg-brand-900 text-white shadow-soft-xs border border-brand-800/80 focus-visible:ring-brand-600',
       secondary:
-        'bg-structure-50 hover:bg-structure-100 text-structure-800 border border-structure-200 dark:bg-structure-950/60 dark:hover:bg-structure-900/80 dark:text-structure-300 dark:border-structure-800/80 focus-visible:ring-structure-500',
+        'bg-neutral-100 hover:bg-neutral-200/80 text-neutral-800 border border-neutral-200/80 dark:bg-neutral-800 dark:hover:bg-neutral-700/80 dark:text-neutral-200 dark:border-neutral-700 focus-visible:ring-brand-500',
       outline:
-        'bg-white hover:bg-neutral-50 text-neutral-700 border border-neutral-300 shadow-soft-xs hover:border-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700 focus-visible:ring-neutral-400',
+        'bg-white hover:bg-neutral-50 text-neutral-700 border border-neutral-300 shadow-soft-xs hover:border-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700 focus-visible:ring-brand-500',
       ghost:
-        'bg-transparent hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-400 dark:hover:text-white focus-visible:ring-neutral-400',
+        'bg-transparent hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-400 dark:hover:text-white focus-visible:ring-brand-500',
       danger:
         'bg-danger-50 hover:bg-danger-100 text-danger-700 border border-danger-200 dark:bg-danger-950/40 dark:hover:bg-danger-900/60 dark:text-danger-400 dark:border-danger-800/60 focus-visible:ring-danger-500',
     };

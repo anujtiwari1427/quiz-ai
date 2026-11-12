@@ -460,9 +460,9 @@ export class PaperExportService {
   </style>
 </head>
 <body>
-  <div class="no-print" style="padding: 12px; background: #4555fd; color: white; text-align: center; font-weight: bold; margin-bottom: 16px;">
+  <div class="no-print" style="padding: 12px; background: #4338ca; color: white; text-align: center; font-weight: bold; margin-bottom: 16px;">
     <span>Click "Print / Save PDF" to generate print-ready examination paper.</span>
-    <button onclick="window.print()" style="margin-left: 16px; padding: 6px 16px; font-weight: bold; cursor: pointer; border-radius: 6px; border: none; background: white; color: #4555fd;">Print / Save PDF</button>
+    <button onclick="window.print()" style="margin-left: 16px; padding: 6px 16px; font-weight: bold; cursor: pointer; border-radius: 6px; border: none; background: white; color: #4338ca;">Print / Save PDF</button>
   </div>
 
   <div class="header-box">

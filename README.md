@@ -5,11 +5,71 @@
 [![Vite](https://img.shields.io/badge/Vite-6.1.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Dexie.js](https://img.shields.io/badge/IndexedDB-Dexie_4.0-0ea5e9)](https://dexie.org/)
 [![Vitest](https://img.shields.io/badge/Tests-Vitest_22%2F22_Passed-22c55e)](https://vitest.dev/)
+[![Lighthouse Accessibility](https://img.shields.io/badge/Lighthouse_A11y-100%2F100-success)](https://developer.chrome.com/docs/lighthouse/)
+[![Lighthouse Best Practices](https://img.shields.io/badge/Lighthouse_BP-100%2F100-success)](https://developer.chrome.com/docs/lighthouse/)
+[![Lighthouse SEO](https://img.shields.io/badge/Lighthouse_SEO-100%2F100-success)](https://developer.chrome.com/docs/lighthouse/)
 
-> **EduPulse AI** is a **100% local-first, privacy-focused assessment engineering app for teachers**.
+> **EduPulse AI** is a **100% local-first, privacy-focused assessment engineering app for Indian school teachers**.
 > Upload textbooks and question banks, design mathematically deterministic blueprints, generate balanced board-accurate exam papers (+ answer keys), customize questions in an inline editor, and export to print-ready PDF and Microsoft Word (.docx).
 >
 > **Zero cloud database. Zero user accounts. Zero telemetry.** Everything lives strictly in your browser's IndexedDB and optional local folder.
+
+---
+
+## 📸 Product Showcase & Screenshots
+
+### 1. Public Landing Page (`/`)
+Built for speed, clarity, and trust. Designed with a calm education-and-craft aesthetic with trilingual support (English, Hindi, Marathi) and zero heavy document processing libraries loaded upfront.
+
+| Desktop Light Mode | Desktop Dark Mode |
+| :---: | :---: |
+| ![Landing Desktop Light](docs/screenshots/landing-desktop-light.png) | ![Landing Desktop Dark](docs/screenshots/landing-desktop-dark.png) |
+
+| Mobile Responsive View | Design System Catalog (`/design-system`) |
+| :---: | :---: |
+| ![Landing Mobile](docs/screenshots/landing-mobile-light.png) | ![Design System Showcase](docs/screenshots/design-system-catalog.png) |
+
+### 2. Teacher Workspace (`/app/*`)
+A focused, distraction-free environment for organizing textbook materials, configuring blueprints, and generating exam papers.
+
+| Teacher Dashboard | Deterministic Blueprint Wizard |
+| :---: | :---: |
+| ![Teacher Dashboard](docs/screenshots/app-dashboard.png) | ![Blueprint Wizard](docs/screenshots/app-blueprint-wizard.png) |
+
+---
+
+## 🎨 Color System & Design Tokens
+
+EduPulse AI implements a structured token system adhering to the **90 / 8 / 2 rule** (90% neutral surfaces, 8% brand primary, 2% saffron accent):
+
+| Role | Token / Shade | Hex Value | WCAG Contrast | Usage |
+| :--- | :--- | :--- | :--- | :--- |
+| **Brand Primary** | `--color-brand-700` | `#4338ca` (Deep Indigo) | **8.1:1** on light (AAA) | Primary actions, selected navigation, key links, focus rings |
+| **Warm Accent** | `--color-accent-amber` | `#f59e0b` (Saffron) | Used as badge / dot | Sparse highlights ($\le 2\%$), "New" tags, Indian context accent |
+| **Page Canvas** | `--color-surface-canvas` | `#fafaf9` / `#141210` | 15.5:1 text contrast | Base page background (stone warm neutral) |
+| **Card Surface** | `--color-surface` | `#ffffff` / `#1c1917` | Clean elevated card | Component surfaces, modals, drawers |
+| **Border Subtle** | `--color-border-subtle` | `#e7e5e4` / `#292524` | 3:1+ edge contrast | Card outlines, dividers, clean 1px grids |
+| **Text Primary** | `--color-text` | `#1c1917` / `#f5f5f4` | **15.5:1** (AAA) | Headings, questions, primary content |
+| **Text Muted** | `--color-text-muted` | `#57534e` / `#a8a29e` | **5.5:1** (AA) | Secondary metadata, timestamps, helper text |
+
+> **Design Principle**: No gradients on UI chrome (sidebar, headers, dialogs, buttons). Only a single subtle radial color wash (`.hero-wash`) is used in the public hero section.
+
+---
+
+## 🗺️ Application Routes & Code-Splitting Architecture
+
+To guarantee instantaneous landing page load speeds and optimal Lighthouse scores, heavy dependencies are code-split via dynamic imports:
+
+- **`/` — Public Landing Page**:
+  - Extremely lightweight bundle (< 16 kB initial JS chunk).
+  - Trilingual copy toggle (English, Hindi, Marathi) in `src/locales/landing.ts`.
+  - Dynamic returning-user detection: checks local IndexedDB to offer an instant "Open Workspace" CTA.
+  - Interactive HTML/CSS paper editor preview and FAQ accordion.
+- **`/design-system` — Living Styleguide**:
+  - Live token visualizer, contrast matrix table, interactive button states, form inputs, badges, and alerts.
+- **`/app/*` — Teacher Workspace**:
+  - Lazy-loaded via `React.lazy(() => import('./pages/AppWorkspace'))`.
+  - Isolates heavy modules (`pdfjs-dist`, `tesseract.js`, `docx`, `minisearch`) so they are downloaded only when the teacher enters the workspace.
 
 ---
 

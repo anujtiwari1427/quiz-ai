@@ -72,13 +72,13 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               'transition-all duration-200 animate-in slide-in-from-bottom-2 fade-in-0',
               t.type === 'success' && 'bg-neutral-900 dark:bg-neutral-800 text-white border-neutral-700/80',
               t.type === 'error' && 'bg-danger-600 text-white border-danger-700',
-              t.type === 'info' && 'bg-structure-900 text-white border-structure-800'
+              t.type === 'info' && 'bg-brand-900 text-white border-brand-800'
             )}
           >
             <div className="flex items-center gap-2.5">
               {t.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
               {t.type === 'error' && <AlertCircle className="w-4 h-4 text-white shrink-0" />}
-              {t.type === 'info' && <Info className="w-4 h-4 text-structure-300 shrink-0" />}
+              {t.type === 'info' && <Info className="w-4 h-4 text-brand-300 shrink-0" />}
               <span className="leading-snug">{t.message}</span>
             </div>
 
