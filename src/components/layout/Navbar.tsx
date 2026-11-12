@@ -1,297 +1,184 @@
 import React, { useState } from 'react';
 import { 
+  BookOpen, 
+  Database, 
+  Sliders, 
   FileText, 
-  Sparkles, 
-  Cpu, 
-  Layers,
-  Menu,
+  Edit3, 
+  Settings, 
+  Sun, 
+  Moon, 
+  ShieldCheck, 
+  Menu, 
   X,
-  ChevronRight,
-  Home,
-  Sun,
-  Moon,
-  BookOpen,
-  Shield,
-  HelpCircle
+  HardDrive
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { LIVE_AI_SERVICE } from '../../services/liveAiService';
-import { AiSettingsModal } from '../studio/AiSettingsModal';
-import { MarklabButton } from '../common/MarklabButton';
 
 export const Navbar: React.FC = () => {
   const { 
     currentView, 
     setCurrentView, 
-    textSizeTheme,
-    setTextSizeTheme,
-    theme,
-    toggleTheme
+    activePaperId, 
+    setIsSettingsOpen, 
+    theme, 
+    toggleTheme 
   } = useApp();
 
-  const [showAiSettings, setShowAiSettings] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isLive = LIVE_AI_SERVICE.isLiveAiAvailable();
-  const isLight = theme === 'light';
 
-  const cycleTextSize = () => {
-    const order: Array<'normal' | 'large' | 'extra-large'> = ['normal', 'large', 'extra-large'];
-    const nextIndex = (order.indexOf(textSizeTheme) + 1) % order.length;
-    setTextSizeTheme(order[nextIndex]);
-  };
+  const navItems = [
+    { id: 'library', label: 'Textbooks', icon: BookOpen },
+    { id: 'question-bank', label: 'Question Bank', icon: Database },
+    { id: 'blueprints', label: 'Blueprints', icon: Sliders },
+    { id: 'saved-papers', label: 'Saved Papers', icon: FileText },
+  ] as const;
 
   return (
-    <>
-      <header className={`sticky top-0 z-50 w-full transition-all duration-200 border-b ${
-        isLight 
-          ? 'bg-white/90 backdrop-blur-md border-[#dcdde2] text-[#202342] shadow-[0_2px_12px_rgba(32,35,66,0.04)]' 
-          : 'bg-[#202342]/95 backdrop-blur-md border-white/10 text-white shadow-md'
-      }`}>
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-          
-          {/* Brand Logo with Marklab styling */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setCurrentView('marketing')}
-              className="flex items-center gap-3 focus:outline-none group text-left"
-            >
-              <div className="relative w-10 h-10 rounded-2xl bg-[#edf2ff] border border-[#c2d4ff] p-2 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
-                <img 
-                  src="/marklab/flash-dynamic-gradient.svg" 
-                  alt="EduPulse AI Logo" 
-                  className="w-6 h-6 object-contain"
-                />
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className={`font-['Tasaorbiterdeck',sans-serif] font-bold text-xl tracking-tight leading-none ${
-                    isLight ? 'text-[#202342]' : 'text-white'
-                  }`}>
-                    EduPulse <span className="text-[#4555fd]">AI</span>
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-[#edf2ff] text-[#4555fd] border border-[#c2d4ff]">
-                    K-12 Board
-                  </span>
-                </div>
-                <span className={`text-[11px] font-medium hidden sm:block ${
-                  isLight ? 'text-[#4e516a]' : 'text-[#a2a3b1]'
-                }`}>
-                  AI Assessment &amp; Intelligence
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        
+        {/* Brand */}
+        <div className="flex items-center gap-6">
+          <button
+            onClick={() => setCurrentView('library')}
+            className="flex items-center gap-2.5 focus:outline-none group text-left"
+          >
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+              <FileText className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="font-bold text-base leading-none text-slate-900 dark:text-white flex items-center gap-1.5">
+                EduPulse AI
+                <span className="text-[10px] uppercase tracking-wider font-extrabold px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                  Local-First
                 </span>
               </div>
-            </button>
-          </div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                Teacher Exam Generator
+              </div>
+            </div>
+          </button>
 
-          {/* Center Navigation Links (Marklab pill-tab design) */}
-          <nav className={`hidden lg:flex items-center gap-1.5 p-1.5 rounded-full border transition-colors ${
-            isLight 
-              ? 'bg-[#efeff1]/80 border-[#dcdde2]' 
-              : 'bg-white/[0.06] border-white/10'
-          }`}>
-            <button
-              onClick={() => setCurrentView('marketing')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all ${
-                currentView === 'marketing'
-                  ? 'bg-[#4555fd] text-white shadow-sm font-semibold'
-                  : isLight
-                    ? 'text-[#202342] hover:text-[#4555fd] hover:bg-white'
-                    : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>Overview</span>
-            </button>
+          {/* Desktop Nav Items */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentView === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentView(item.id)}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                    isActive
+                      ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {item.label}
+                </button>
+              );
+            })}
 
-            <button
-              onClick={() => setCurrentView('paper-builder')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all ${
-                currentView === 'paper-builder'
-                  ? 'bg-[#4555fd] text-white shadow-sm font-semibold'
-                  : isLight
-                    ? 'text-[#202342] hover:text-[#4555fd] hover:bg-white'
-                    : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Canvas Studio</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentView('books')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all ${
-                currentView === 'books'
-                  ? 'bg-[#4555fd] text-white shadow-sm font-semibold'
-                  : isLight
-                    ? 'text-[#202342] hover:text-[#4555fd] hover:bg-white'
-                    : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>NCERT Reader</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentView('ai-paper-gen')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all ${
-                currentView === 'ai-paper-gen'
-                  ? 'bg-[#4555fd] text-white shadow-sm font-semibold'
-                  : isLight
-                    ? 'text-[#202342] hover:text-[#4555fd] hover:bg-white'
-                    : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#4555fd] group-hover:text-white" />
-              <span>AI Blueprint</span>
-            </button>
+            {/* Active Editor Tab if paper is active */}
+            {activePaperId && (
+              <button
+                onClick={() => setCurrentView('editor')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  currentView === 'editor'
+                    ? 'bg-violet-50 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300 shadow-sm ring-1 ring-violet-400/40'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                }`}
+              >
+                <Edit3 className="w-4 h-4 text-violet-500 animate-pulse" />
+                Paper Editor
+              </button>
+            )}
           </nav>
-
-          {/* Right Action Elements */}
-          <div className="flex items-center gap-3">
-            {/* Live AI Status Pill */}
-            <button
-              onClick={() => setShowAiSettings(true)}
-              className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                isLive
-                  ? 'bg-[#edf2ff] text-[#4555fd] border-[#c2d4ff] hover:bg-[#dde9ff]'
-                  : isLight
-                    ? 'bg-[#efeff1] text-[#4e516a] border-[#dcdde2] hover:border-[#4555fd]'
-                    : 'bg-white/5 text-slate-300 border-white/10'
-              }`}
-              title="Configure Gemini 2.0 AI API Key"
-            >
-              <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-[#4555fd] animate-pulse' : 'bg-amber-500'}`} />
-              <Cpu className="w-3.5 h-3.5" />
-              <span>{isLive ? 'Gemini AI Active' : 'Configure AI'}</span>
-            </button>
-
-            {/* Light / Dark Mode Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-full border transition-colors ${
-                isLight 
-                  ? 'bg-white text-[#202342] border-[#dcdde2] hover:bg-[#edf2ff] hover:text-[#4555fd]' 
-                  : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
-              }`}
-              title={isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-              aria-label="Toggle Theme"
-            >
-              {isLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4 text-amber-300" />}
-            </button>
-
-            {/* Launch Studio Button with Marklab Rolling Text Effect */}
-            <MarklabButton
-              onClick={() => setCurrentView('paper-builder')}
-              variant="primary"
-              className="hidden sm:inline-flex"
-            >
-              Launch Studio
-            </MarklabButton>
-
-            {/* Mobile Menu Trigger */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-xl border transition-colors ${
-                isLight 
-                  ? 'bg-white border-[#dcdde2] text-[#202342]' 
-                  : 'bg-white/10 border-white/20 text-white'
-              }`}
-              aria-label="Toggle Menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className={`lg:hidden border-t px-4 py-4 space-y-2 ${
-            isLight ? 'bg-white border-[#dcdde2]' : 'bg-[#202342] border-white/10'
-          }`}>
-            <button
-              onClick={() => {
-                setCurrentView('marketing');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold hover:bg-[#edf2ff] text-[#202342]"
-            >
-              <span className="flex items-center gap-2">
-                <Home className="w-4 h-4 text-[#4555fd]" />
-                <span>Overview (Home)</span>
-              </span>
-              <ChevronRight className="w-4 h-4 text-[#a2a3b1]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setCurrentView('paper-builder');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold hover:bg-[#edf2ff] text-[#202342]"
-            >
-              <span className="flex items-center gap-2">
-                <Layers className="w-4 h-4 text-[#4555fd]" />
-                <span>Canvas Studio (QP-M)</span>
-              </span>
-              <ChevronRight className="w-4 h-4 text-[#a2a3b1]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setCurrentView('books');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold hover:bg-[#edf2ff] text-[#202342]"
-            >
-              <span className="flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-[#4555fd]" />
-                <span>NCERT Textbook Reader</span>
-              </span>
-              <ChevronRight className="w-4 h-4 text-[#a2a3b1]" />
-            </button>
-
-            <button
-              onClick={() => {
-                setCurrentView('ai-paper-gen');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold hover:bg-[#edf2ff] text-[#202342]"
-            >
-              <span className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#4555fd]" />
-                <span>AI Blueprint Generator</span>
-              </span>
-              <ChevronRight className="w-4 h-4 text-[#a2a3b1]" />
-            </button>
-
-            <div className="pt-3 border-t border-[#dcdde2] flex items-center justify-between">
-              <button
-                onClick={() => {
-                  setShowAiSettings(true);
-                  setMobileMenuOpen(false);
-                }}
-                className="text-xs font-semibold text-[#4555fd] flex items-center gap-1.5"
-              >
-                <Cpu className="w-3.5 h-3.5" />
-                <span>{isLive ? 'Gemini 2.0 Live' : 'AI Setup'}</span>
-              </button>
-              <MarklabButton
-                onClick={() => {
-                  setCurrentView('paper-builder');
-                  setMobileMenuOpen(false);
-                }}
-                variant="primary"
-              >
-                Launch Studio
-              </MarklabButton>
-            </div>
+        {/* Right Actions */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          
+          {/* Local-First Privacy Pill */}
+          <div 
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 text-xs font-medium"
+            title="100% offline-ready & stored strictly in IndexedDB on this device."
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Zero Cloud DB</span>
           </div>
-        )}
-      </header>
 
-      {/* AI Key Settings Modal */}
-      <AiSettingsModal isOpen={showAiSettings} onClose={() => setShowAiSettings(false)} />
-    </>
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
+            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+            aria-label="Toggle color theme"
+          >
+            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+          </button>
+
+          {/* Settings Modal Button */}
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-xl transition-all border border-slate-200 dark:border-slate-700"
+            title="Configure API Keys, Storage, & Backups"
+          >
+            <Settings className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+            <span className="hidden sm:inline">Settings</span>
+          </button>
+
+          {/* Mobile menu trigger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 space-y-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = currentView === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setCurrentView(item.id);
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  isActive
+                    ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {item.label}
+              </button>
+            );
+          })}
+          {activePaperId && (
+            <button
+              onClick={() => {
+                setCurrentView('editor');
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-violet-600 dark:text-violet-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              <Edit3 className="w-4 h-4" />
+              Active Paper Editor
+            </button>
+          )}
+        </div>
+      )}
+    </header>
   );
 };
-
-export default Navbar;

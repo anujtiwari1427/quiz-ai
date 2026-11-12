@@ -1,377 +1,187 @@
-# EduPulse AI — Next-Gen K-12 AI Assessment & Intelligence Platform
+# EduPulse AI — Local-First Teacher Exam & Paper Generation Suite
 
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.1.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.4.7-black?logo=framer&logoColor=white)](https://www.framer.com/motion/)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/anujtiwari1427/quiz-ai)
+[![Dexie.js](https://img.shields.io/badge/IndexedDB-Dexie_4.0-0ea5e9)](https://dexie.org/)
+[![Vitest](https://img.shields.io/badge/Tests-Vitest_22%2F22_Passed-22c55e)](https://vitest.dev/)
 
-> **EduPulse AI** is a production-grade, dual-sided K-12 assessment and academic intelligence platform tailored for Indian educational boards (**CBSE**, **ICSE**, and **State Boards**). It bridges teachers, students, parents, and school administrators with AI-assisted test authoring, real-time proctored test execution, automated subjective grading, and comprehensive student learning analytics.
-
----
-
-## 🚀 Key Highlights & Capabilities
-
-- ⚡ **AI-Powered Assessment Authoring**: Draft chapter-wise MCQs, short answer, and analytical questions aligned with board guidelines, complete with marking schemes and rubric blueprints.
-- 🛡️ **Zero-Friction, Proctored Student Environment**: Link-based student access (no clunky account creation required). Features anti-cheat safeguards including fullscreen enforcement, tab-switch logging, idle timeouts, and copy-paste interception.
-- 📝 **Dual-Engine Auto Grading**: Instant evaluation for objective questions paired with AI rubric scoring for subjective responses, backed by human-in-the-loop review queues.
-- 📈 **360° Academic Intelligence & Marks Dashboard**: Granular historical trends, subject mastery heatmaps, early at-risk student detection, and exportable report cards.
-- 📖 **Interactive Book Reader ("Read the Book")**: Integrated NCERT/board textbook reader with side-by-side AI explanations, concept simplifications, and key term summaries.
-- 🎯 **Question Sets & PYQ Practice Hub**: Filterable question bank with previous years' board questions, real-time practice simulations, and detailed instant result sheets.
-- 📑 **Curriculum & Syllabus Progress Tracker**: Chapter-by-chapter weightage tracking, document upload with automatic chapter extraction, and study completion tracking.
-- 👨‍👩‍👧 **Parent Engagement Portal**: WhatsApp-first authentication, multi-child tracking, real-time exam notifications, and an AI tutor grounded in the child's past mistakes.
-- 🔒 **DPDPA Compliance & Institutional Console**: Role-based access control (RBAC), multi-school analytics, CSV roster imports, and grade change audit logs aligned with India's Digital Personal Data Protection Act.
+> **EduPulse AI** is a **100% local-first, privacy-focused assessment engineering app for teachers**.
+> Upload textbooks and question banks, design mathematically deterministic blueprints, generate balanced board-accurate exam papers (+ answer keys), customize questions in an inline editor, and export to print-ready PDF and Microsoft Word (.docx).
+>
+> **Zero cloud database. Zero user accounts. Zero telemetry.** Everything lives strictly in your browser's IndexedDB and optional local folder.
 
 ---
 
-## 🏛️ Architecture & Core Modules
-
-The platform is designed around a modular view-driven architecture managed through a central context state (`AppContext`):
+## 🧭 The Teacher Workflow
 
 ```
-├── 🌐 Marketing Landing       # Conversion hero, platform overview, feature demos, and tier comparison
-├── 👨‍🏫 Teacher Console        # Test authoring wizard, live proctoring dashboard, grading queue
-├── ✍️ Student Test Room       # Secure exam delivery, timed interface, anti-cheat detection, instant submission
-├── 👨‍👩‍👦 Parent Portal          # Child progress tracking, attendance overview, personalized AI tutoring
-├── 📊 Marks Dashboard         # Comprehensive academic analytics, exam breakdown, printable grade cards
-├── 📚 Syllabus Dashboard      # Board curriculum tracking, chapter progress, syllabus document parser
-├── 📖 Book Library & Reader   # Digital textbook shelf, split-screen reading, inline AI concept explainer
-├── 🎯 Question Sets Hub       # Practice test generator, difficulty-based PYQ sets, test review sheets
-└── 🛡️ Admin Console           # School management, bulk CSV rosters, DPDPA compliance & audit logging
+[ 1. Upload ] ──────> [ 2. Extract & Tag ] ──────> [ 3. Blueprint ]
+  Textbook PDFs,        Client-side extraction,     Sections, marks,
+  DOCX, or TXT          OCR fallback, chunks,       chapter weightage,
+                        discrete question parser    deterministic math
+                              │
+                              ▼
+[ 6. Saved Papers ] <─── [ 5. Edit & Export ] <─── [ 4. Generate ]
+  Local paper hub,        Inline editor, swap,        Slot selection +
+  filter, duplicate,      reorder, AI regen,          grounded textbook chunks,
+  re-export, reuse        Word (.docx) & PDF          multi-set (Sets A/B/C)
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## 🌟 Core Features
 
-| Domain | Technology / Library | Description |
-|---|---|---|
-| **Core Framework** | [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) | Strict type checking, modern component design |
-| **Bundler & Tooling** | [Vite 6](https://vitejs.dev/) | Sub-millisecond HMR and optimized production bundles |
-| **Styling & Design System** | [Tailwind CSS](https://tailwindcss.com/) + Custom Tokens | Modern dark aesthetic with glassmorphism and refined typography |
-| **Animations** | [Framer Motion](https://www.framer.com/motion/) | Smooth layout transitions, micro-interactions, and modal animations |
-| **Icons** | [Lucide React](https://lucide.dev/) | Clean, consistent SVG icon set |
-| **Effects & Gamification** | [canvas-confetti](https://www.npmjs.com/package/canvas-confetti) | Visual celebration on exam submission and milestone achievements |
-| **Hosting & Deployment** | [Vercel](https://vercel.com/) | Edge network, automatic SSL, and SPA route rewrites |
+- 🔒 **100% Local-First Storage**:
+  - Primary store: **IndexedDB (via Dexie.js v4)** for textbooks, raw blobs, chunks, question items, blueprints, and papers.
+  - Native file sync: **File System Access API** (Chrome / Edge) directly writes to your chosen `EduPulse Library` folder (`/Textbooks`, `/QuestionBanks`, `/Papers`, `/Exports`).
+  - Safari & Firefox fallback: One-click full **Backup ZIP** and **Restore from Backup** with data integrity validation.
+  - Automatic persistence check: Calls `navigator.storage.persist()` on first launch.
+  - Debounced 1-second autosave in Paper Editor with visual `Saved locally ✓` feedback.
+- 📚 **In-Browser Ingestion Pipeline**:
+  - Extracts text page-by-page using `pdfjs-dist`.
+  - Scanned page detection (< 25 characters) with automatic `tesseract.js` OCR fallback for English, Hindi, and Marathi.
+  - Automatic regex detection of chapter headers and exercise / practice sets.
+  - In-browser BM25 semantic chunk retrieval powered by `MiniSearch` (no external vector database needed).
+  - Question Bank parser with token-based Jaccard deduplication to eliminate repeated questions.
+- 📐 **Deterministic Blueprint Builder**:
+  - Code-enforced arithmetic: Section marks, question counts, and choice slots are computed deterministically.
+  - Real-time arithmetic validation: Generation is strictly blocked if section marks do not equal total marks, or if chapter weightages / difficulty splits do not equal 100%.
+  - Built-in starter templates for **CBSE Class 10 Science (80M)**, **CBSE Class 10 Math (80M)**, and **Maharashtra State Board Class 9 Algebra (40M)**.
+- 🤖 **Bring-Your-Own-Key (BYOK) AI Engine**:
+  - Supports **Google Gemini 2.0 Flash / Pro**, **OpenAI GPT-4o / GPT-4o-mini**, and **Anthropic Claude 3.5 Sonnet**.
+  - Keys are stored securely in client-side IndexedDB with a one-click connection test button.
+  - Grounded prompts: Only retrieved textbook chunks are sent to the AI; whole textbooks never leave the device.
+  - Strict Zod schema validation with automatic JSON repair for trailing commas and formatting quirks.
+  - **MCQ Invariant Enforcement**: All multiple-choice questions are guaranteed to have exactly 4 options and exactly 1 correct answer.
+  - **Offline Fallback**: Seamlessly generates complete exam papers strictly from the local question bank if offline or without an API key.
+- 📝 **Live Paper Editor**:
+  - Inline question text, marks, explanation, and option editing.
+  - Swap questions directly with matches from the question bank.
+  - Single-question AI regeneration with difficulty and Bloom level tuning.
+  - Move questions up/down and delete with undo/redo history.
+  - Shuffled multi-set generation (**Set A, Set B, Set C**) with synchronized answer keys.
+- 🖨️ **Professional Print & Document Export**:
+  - **Print-ready PDF** formatted with standard Indian school exam layout (School header, Roll No box, general instructions, section headings, and page marks).
+  - **Devanagari Font Support**: Embeds `Noto Sans Devanagari` to guarantee Hindi and Marathi text renders crisply without missing glyphs.
+  - **Microsoft Word (.docx)** export using the `docx` library for both Question Paper and Model Answer Key / Marking Scheme.
+  - **JSON Export / Import** for paper portability.
 
 ---
 
-## 📁 Repository Structure
+## 🏛️ Local-First Architecture
 
-```text
-├── index.html                   # HTML5 template with Inter, Outfit & JetBrains Mono typography
-├── package.json                 # Project dependencies and npm scripts
-├── tailwind.config.js           # Extended design tokens, colors, animations, and glass styles
-├── tsconfig.json                # TypeScript compiler configuration
-├── vercel.json                  # Vercel deployment and SPA client-side rewrite rules
-├── vite.config.ts               # Vite configuration with alias paths (@/ -> src/)
-├── src/
-│   ├── main.tsx                 # React DOM mount point
-│   ├── App.tsx                  # Main router shell and dynamic view renderer
-│   ├── index.css                # Base design system, custom utilities, scrollbars, and animations
-│   ├── types/
-│   │   └── index.ts             # Domain models (Tests, Questions, Grades, Syllabus, Books, AuditLogs)
-│   ├── context/
-│   │   └── AppContext.tsx       # Global application state, active view, and persistence engine
-│   ├── services/
-│   │   └── storageService.ts    # Local storage persistence for tests, submissions, books, and syllabus
-│   ├── mock/
-│   │   └── studentFeaturesData.ts # Demo datasets for NCERT books, question sets, marks, and syllabus
-│   ├── utils/
-│   │   └── gradeUtils.ts        # CBSE/ICSE grading schemes, GPA calculators, and percentage helpers
-│   └── components/
-│       ├── layout/              # Universal Navigation bar, notifications, and footer
-│       ├── marketing/           # Landing page with interactive portals preview
-│       ├── teacher/             # Test creation stepper, proctoring grid, grading queue
-│       ├── student/             # Timed exam test room with anti-cheat monitoring
-│       ├── parent/              # Child academic reports and RAG-based AI tutor
-│       ├── marks/               # Marks dashboard, subject cards, and performance trends
-│       ├── syllabus/            # Syllabus dashboard, chapter tracker, and syllabus uploader
-│       ├── books/               # Book library and split-screen digital reader
-│       ├── questions/           # Question sets hub, practice room, and exam result sheet
-│       └── admin/               # Institutional metrics, CSV import, and DPDP audit logs
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        EduPulse AI Client (Browser)                    │
+│                                                                        │
+│   React 18 + Tailwind UI ──► AppContext (View & State Management)       │
+│                                                                        │
+│   ┌──────────────────────────┐      ┌──────────────────────────────┐   │
+│   │ Ingestion Pipeline       │      │ Deterministic Engine         │   │
+│   │ • pdfjs-dist extraction  │      │ • Blueprint Arithmetic Check │   │
+│   │ • tesseract.js OCR       │      │ • Jaccard Similarity Dedupe  │   │
+│   │ • Semantic Chunker       │      │ • MiniSearch BM25 Retrieval  │   │
+│   │ • Discrete QB Parser     │      │ • Multi-Set Shuffler (A/B/C) │   │
+│   └────────────┬─────────────┘      └──────────────┬───────────────┘   │
+│                │                                   │                   │
+│   ┌────────────▼───────────────────────────────────▼───────────────┐   │
+│   │                  IndexedDB (Dexie.js v4)                       │   │
+│   │  Tables: textbooks, chapters, textbookChunks, questionBank,   │   │
+│   │          blueprints, savedPapers, drafts, settings             │   │
+│   └────────────┬───────────────────────────────────────────────────┘   │
+│                │                                                       │
+│   ┌────────────▼──────────────┐             ┌──────────────────────┐   │
+│   │ File System Access API    │             │ External AI (BYOK)   │   │
+│   │ /EduPulse Library         │             │ Minimal snippets only│   │
+│   │  ├── /Textbooks           │             │ • Google Gemini      │   │
+│   │  ├── /QuestionBanks       │             │ • OpenAI             │   │
+│   │  ├── /Papers              │             │ • Anthropic          │   │
+│   │  └── /Exports             │             └──────────────────────┘   │
+│   └───────────────────────────┘                                        │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 💻 Getting Started Locally
+## 💻 Quick Start for Teachers
+
+1. **Upload Textbook / Question Bank**:
+   - Navigate to the **Textbooks** tab and drop your textbook PDF.
+   - Wait for client-side text extraction and chapter indexing.
+   - Review or customize chapter ranges in the **Chapter Manager**.
+2. **Configure AI Key (Optional)**:
+   - Click the **Settings** gear in the top right.
+   - Enter your Gemini, OpenAI, or Anthropic API key and click **Test Key**.
+   - *(Note: If you have no key, you can still assemble papers from your Question Bank!)*
+3. **Pick or Customize a Blueprint**:
+   - Go to **Blueprints** and select a template (e.g. CBSE Class 10 Science 80M).
+   - Adjust question counts, marks, and chapter weightages. Watch the live arithmetic validation pill turn green.
+4. **Generate & Edit**:
+   - Click **Generate Examination Paper**.
+   - The app matches questions from your question bank and generates new textbook-grounded questions for remaining slots.
+   - In the **Paper Editor**, tweak wording, swap questions from your bank, or regenerate questions.
+5. **Export & Print**:
+   - Click **Export DOCX** for an editable Word document or **Print PDF** for a print-ready exam paper and answer key.
+
+---
+
+## 💾 Backup, Restore, and Local Storage Details
+
+### Chromium (Chrome, Edge, Brave, Opera)
+- Click **Settings** -> **Select Library Folder** to choose a folder on your computer (e.g., `Documents/EduPulse Library`).
+- All uploaded textbooks, parsed question banks, blueprints, and exported Word/PDF papers will be written directly to your disk.
+
+### Safari & Firefox (or when folder access is not granted)
+- EduPulse persists everything in your browser's IndexedDB.
+- To prevent accidental browser data clearing (e.g. clearing browser cache), click **Backup All Data (ZIP)** in Settings.
+- You can restore your entire library on any computer at any time using **Restore from Backup ZIP**.
+
+### Storage Quota & Eviction Protection
+- EduPulse calls `navigator.storage.persist()` on launch to request that the browser treat your storage as persistent.
+- You can view your exact storage quota and usage in the **Settings** dialog.
+- A reminder banner automatically notifies you if you have not created a backup in over 7 days or after generating 3 new papers.
+
+---
+
+## 🛠️ Development & Testing
 
 ### Prerequisites
+- Node.js 18+ or 20+
+- npm 9+
 
-- [Node.js](https://nodejs.org/) (version `18.x` or higher recommended)
-- `npm` (version `9.x` or higher) or `pnpm` / `yarn`
-
-### Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/anujtiwari1427/quiz-ai.git
-   cd quiz-ai
-   ```
-
-2. **Install project dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-   Open your browser and navigate to `http://localhost:3000` (or the port specified in terminal output).
-
-4. **Build for production**:
-   ```bash
-   npm run build
-   ```
-   The production-ready assets will be compiled into the `dist/` directory.
-
-5. **Preview the production build locally**:
-   ```bash
-   npm run preview
-   ```
-
----
-
-## 🚢 Deployment
-
-### Deploying to Vercel (1-Click)
-
-The repository includes a ready-to-use [`vercel.json`](./vercel.json) configured for Vite with client-side SPA routing:
-
-1. Push your latest changes to GitHub:
-   ```bash
-   git push origin main
-   ```
-2. Navigate to [vercel.com/new](https://vercel.com/new).
-3. Import the repository `anujtiwari1427/quiz-ai`.
-4. Vercel will auto-detect the configuration:
-   - **Framework Preset**: `Vite`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-5. Click **Deploy**.
-
-### Deploying via Vercel CLI
-
-Alternatively, deploy directly from your local terminal:
-
+### Installation & Run
 ```bash
-# Login and preview deployment
-npx vercel
+# Clone the repository
+git clone https://github.com/anujtiwari1427/quiz-ai.git
+cd quiz-ai
 
-# Deploy to production
-npx vercel --prod
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
----
-
-## 🌟 EduPulse AI Features (v1.2 Release)
-
-### 📚 Feature 1: Upload & Read Books (RAG Vector Store)
-- **Multi-Format Ingestion**: Upload PDF, EPUB, DOCX, and TXT files up to 50 MB with strict client and server-side Zod validation.
-- **Copyright & Right-to-Use Protection**: Mandatory user certification certifying lawful educational use.
-- **Background Ingestion Pipeline**: Asynchronous background lifecycle:
-  `Uploading` (20%) → `Extracting` (50%) → `Indexing` (80%) → `Ready` (100%) or `Failed` (with automatic Tesseract OCR fallback for scanned non-selectable PDFs).
-- **Chapter Detection & Management**: Automatic regex heading detection (`Chapter \d+`, `Unit \d+`) with an interactive **Chapter Manager** to rename, add, or merge chapters.
-- **Vector Embedding & Chunking**: Splits chapters into ~500-800 token chunks with 100-token overlap and vector similarity search.
-- **In-App Reader & RAG Chat**: Chapter sidebar, page navigation, keyword search, and an interactive **"Ask this book"** RAG drawer citing exact Chapter + Page, or explicitly reporting when a concept is outside the book.
-- **Row-Level Security (RLS)**: Enforces strict user data isolation so students only access their own uploaded books.
-
-### 📝 Feature 2: AI Exam Paper Generator (By User Preference)
-- **Granular Customization**: Source book(s) and chapter selector, question types (MCQ with 4 options and plausible distractors, True/False, Fill in blanks, Short answer, Long answer, Numerical), difficulty distribution (Easy / Medium / Hard or Adaptive), Bloom's Taxonomy mix, time limit, negative marking, and weak chapter targeting.
-- **RAG Generation Constraint**: Questions are generated strictly from retrieved book chapter chunks.
-- **JSON Schema Validation**: Validated against strict Zod schemas with retry logic to ensure marks sum exactly to requested totals.
-- **Preview & Edit Screen**: Swap, regenerate, or delete individual questions prior to finalizing.
-- **PDF Paper Export**: 1-click export generating a clean examination paper and a separate confidential Teacher Answer Key with rubrics.
-- **Active Exam Runner**: Distraction-free exam room with countdown timer, question navigator palette (Answered, Marked for Review, Skipped), autosave, and question-level telemetry (time spent, times changed).
-- **Security Rule**: Correct answers are strictly hidden and never exposed to the client prior to final submission.
-
-### 📊 Feature 3: Performance Analysis & Improvement Plan
-- **Multi-Factor Difficulty Scoring Formula**:
-  $$\text{Difficulty Score} = 40 \times \left(1 - \frac{\text{marks\_awarded}}{\text{marks}}\right) + 30 \times \frac{\min\left(\frac{\text{time\_spent}}{\text{estimatedTime}}, 2\right)}{2} + 15 \times \frac{\min(\text{times\_changed}, 3)}{3} + 15 \times (\text{skipped} \,?\, 1 : 0)$$
-  *(Weights are configurable constants; verified via unit tests).*
-- **Top 5 Hardest Questions**: Deep-dive review of the most challenging questions faced, showing student answer, correct textbook answer, explanation, time spent, chapter, page reference, and class-wide % accuracy.
-- **Chapter-Wise Mastery**: Recharts interactive Bar and Radar charts categorizing chapters as **Weak** (<50%), **Average** (50-75%), or **Strong** (>75%).
-- **Targeted Improvement Plan**: Prioritized list of weak chapters detailing exact reasons ("3 of 4 wrong, avg time 2x expected"), missed sub-topics, exact pages to revisit, and a 1-click **"Practice this chapter"** exam generator.
-- **AI Study Coaching Plan**: Structured diagnostic sent to LLM returning priority chapters, topics to revise, daily time cadence, and 3 tailored coaching tips distinguishing careless slips vs concept gaps vs time pressure.
-- **Progress Over Time**: Historical score trend line chart tracking attempt-over-attempt progress.
-
----
-
-## ⚙️ Environment Variables
-
-Create a `.env` file in the root directory (API keys remain server-side only in Vercel Serverless Functions):
-
+### Production Build & Typecheck
 ```bash
-# AI Providers (Server-Side Only)
-OPENAI_API_KEY=sk-proj-your-openai-api-key-here
-ANTHROPIC_API_KEY=sk-ant-your-claude-api-key-here
-
-# Supabase & PostgreSQL with pgvector (Optional for Cloud Persistence)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOi...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
-
-# Cloud Storage
-STORAGE_PUBLIC_URL=https://storage.edupulse.internal
+npm run build
 ```
 
----
-
-## 🗄️ Database Migrations (PostgreSQL + pgvector)
-
-Run the SQL migration script located at [`supabase/migrations/20261005_edupulse_features.sql`](./supabase/migrations/20261005_edupulse_features.sql) on your Supabase or PostgreSQL instance:
-
-```bash
-# Using Supabase CLI
-supabase db push
-
-# Or execute directly via psql:
-psql -h <host> -U <user> -d <database> -f supabase/migrations/20261005_edupulse_features.sql
-```
-
-The migration defines:
-- `public.books`: Book metadata, cloud storage URLs, total pages, and status (`uploading`, `extracting`, `indexing`, `ready`, `failed`).
-- `public.chapters`: Chapter structure, order index, page ranges.
-- `public.chunks`: Text chunks with 1536-dimensional vector embeddings and ivfflat cosine distance indexing.
-- `public.exams`: Exam definitions, chapter selections, and configuration JSON.
-- `public.exam_questions`: Question stems, Bloom's level, marks, options, server-side correct answers, explanations, and page references.
-- `public.attempts`: Exam attempt logs, total scores, time spent, and submission timestamps.
-- `public.attempt_answers`: Per-question answer telemetry, correctness, marks awarded, time spent, times changed, review flags, and calculated difficulty scores.
-- **Row Level Security (RLS)**: Strictly restricts all read/write operations to authenticated users (`auth.uid() = user_id`).
-
----
-
----
-
-## ⚡ Strata AI Learning Platform (Strater-Inspired AI Workspace)
-
-EduPulse now integrates **Strata AI Study OS**, an all-in-one AI study workspace transforming raw media and documents into high-yield active recall systems:
-
-### 📥 1. Omnichannel Ingestion Pipeline
-- **YouTube Ingestion**: Extract video metadata, simulate/fetch synchronized timestamped transcripts, and jump directly to key video moments via synchronized chapter anchors.
-- **PDF & Academic Papers**: Token calculation, page-by-page chunking, and reading time estimation.
-- **Word Documents (DOCX)**: Structured section extraction.
-- **PowerPoint Decks (PPTX)**: Slide-by-slide titles and speaker notes decomposition.
-- **Web Articles & Research URLs**: Reader-mode clean text extraction.
-- **Progressive Background Processing**: Real states (`validating` 15% → `extracting` 40% → `chunking` 70% → `synthesizing` 95% → `ready` 100%).
-
-### 🧠 2. AI Study Synthesizer Studio
-- **Executive Summaries**: TL;DR callout, 5 high-yield takeaways, concept cards with real-world analogies, domain glossary, and simulated 3-minute audio briefing.
-- **Smart Cornell Notes**: Two-column layout with left recall cues, rich Markdown notes column with diagrams/callouts, and bottom summary area with action items.
-- **Interactive Flashcards & 3D Player**: Card flip animation, hint reveals, audio pronunciation, and keyboard navigation (`Space` to flip, `1-4` to rate).
-- **SuperMemo SM-2 Spaced Repetition**: Canonical SM-2 algorithm calculating Ease Factors ($EF$), repetitions ($n$), and review intervals ($I$), with a dedicated "Due Today" review queue.
-- **Interactive Visual Mind Map**: SVG concept graph with cubic Bezier curves, zoom/pan controls, and click-to-open concept deep-dive drawers.
-- **Contextual AI Tutor**: Multi-turn chat strictly grounded in the ingested source with clickable timestamp and page citations, prompt chips ("Explain simply", "Give an analogy"), and model selection.
-- **Practice Assessment Quizzes**: MCQs, True/False, and Fill-in-the-blanks with Bloom's Taxonomy ratings, instant grading, and thorough explanations.
-
-### 📚 3. Courses, Analytics & Exports
-- **Course Pathways**: Organize sources into syllabus modules with checklist completion tracking.
-- **Retention Analytics**: Ebbinghaus forgetting curve mathematical visualization, 7-day study heatmap, and streak tracking.
-- **Multi-Format Exports**: 1-click downloads to universal Markdown (`.md`), Anki flashcard decks (`.txt`), high-contrast printable study sheets, and JSON data archives.
-- **Bring Your Own Key (BYOK)**: Client-side encrypted API key storage for OpenAI, Anthropic Claude, Google Gemini, and Groq with live ping tests and high-fidelity offline fallback.
-- **Multi-Persona Testing**: 1-click test personas for Software Engineering, Medicine (USMLE), Law (Bar Exam), and High School Scholars with isolated data stores.
-
----
-
-## 🧪 Testing
-
-Run empirical unit tests for both the assessment scoring and the Strater SM-2 spaced repetition engine:
-
+### Run Unit Tests
 ```bash
 npm test
 ```
 
-Expected output:
-```text
-🧪 Running EduPulse Assessment & Difficulty Scoring Tests...
-  ✓ Test 1: Swift perfect answer score = 7.5 (Time factor only)
-  ✓ Test 2: Maximum difficulty struggle = 100 (Full penalty capped)
-  ✓ Test 3: Custom configurable weights respected (50 marks weight)
-  ✓ Test 4: Objective grading for MCQ, True/False, and Numerical tolerance passed
-
-🎉 ALL 4 DIFFICULTY SCORING AND GRADING TESTS PASSED EMPIRICALLY!
-
-🧪 Starting Strata AI Learning Platform Algorithmic Verification Suite...
-▶ TEST 1: SuperMemo SM-2 Spaced Repetition Algorithm Validation
-  ✓ 1.1 Fresh card rated "good": interval = 1d, repetition = 1
-  ✓ 1.2 Second review rated "good": interval = 6d, repetition = 2 (reviewing state)
-  ✓ 1.3 Third review rated "easy": interval = 16d, EF boosted to 2.6
-  ✓ 1.4 Failure rated "again": repetition resets to 0, interval = 1d
-  ✓ 1.5 Minimum ease factor floor is strictly enforced at 1.3
-▶ TEST 2: YouTube Video ID & Multi-Format Ingestion Parsing
-  ✓ 2.1 Standard watch, youtu.be shortlinks, and embed URLs extracted correctly
-▶ TEST 3: Anki Tab-Separated Exporter Compliance
-  ✓ 3.1 Anki tab-delimited format with HTML breaks and tags validated
-▶ TEST 4: Ebbinghaus Forgetting Curve Mathematical Projection
-  ✓ 4.1 Memory decay verified: Unassisted Day 10 (8%) vs SM-2 Spaced Day 30 (94%)
-
-🎉 ALL 4 EMPIRICAL VERIFICATION TESTS PASSED SUCCESSFULLY! 🚀
-```
+Unit test coverage verifies:
+- Deterministic blueprint arithmetic and section marks totals.
+- MCQ invariants (4 options, exactly 1 correct answer).
+- Token-based Jaccard deduplication.
+- Chapter header and exercise regex extraction.
+- Backup ZIP manifest serialization and round-trip parsing.
 
 ---
 
-## 🎨 Professional Orange · White · Purple Design System
-
-The application features a modern, solid design system:
-- **Default Theme**: Crisp White (`#ffffff`) background with slate typography for optimal reading clarity.
-- **Brand Colors**:
-  - **Royal Purple** (`#7c3aed` / `#6d28d9`): Navigation badges, structural accents, and secondary actions.
-  - **Vibrant Orange** (`#ea580c` / `#f97316`): Primary call-to-actions, highlight badges, and focus indicators.
-  - **No Gradients**: Strictly maintains clean, solid professional corporate colors without distracting gradients.
-
----
-
-## 📚 Feature 1: Textbook Upload & Extraction
-
-Educators can upload school textbooks and have them automatically structured and tagged:
-- **Upload UI**: Drag-and-drop file picker supporting PDF (required), DOCX, TXT, and EPUB.
-- **Validation**: Enforces strict 50 MB limit and client/server filename sanitization.
-- **Page-by-Page Extraction**: Powered by `pdfjs-dist` extracting text page by page.
-- **Scanned PDF Detection**: Detects non-extractable / scanned documents (<15 chars/page) and shows clear alert banners.
-- **Structure & Exercise Detection**: Regex engine detects chapter headings and automatically tags exercise sections:
-  `"Practice set"`, `"Exercises"`, `"Practice Problems"`, `"Review Questions"`, `"Problems"`, and `"Questions"`.
-- **"My Textbooks" Management**: View uploaded textbooks with page counts, chapter tree, tagged exercise badges, rename, delete, and re-process buttons.
-
----
-
-## 📝 Feature 2: Generate Test Papers from Textbook Exercises
-
-Synthesize board-standard examination question papers directly from textbook exercises:
-- **Generator Form**:
-  - Select textbook, target chapters, and tagged exercise sets.
-  - 6 Question Types: Multiple Choice (MCQ), True / False, Fill in Blanks, Short Answer (2-3M), Long Answer (4-5M), Numerical / Problem Solving.
-  - Live auto-calculated total questions and total marks balance.
-  - Difficulty selection: Easy, Medium, Hard, or Mixed.
-  - Test Duration (15m to 180m).
-  - Exercise Grounding Mode: *"Use exercise questions as-is"*, *"Create new similar questions based on exercises"*, or *"Mix of both"*.
-- **Strictly Grounded AI Synthesizer**:
-  - Prompts model strictly with textbook exercise text.
-  - JSON validation and auto-repair utility (`extractAndRepairJson`).
-  - Strict MCQ validation: exactly 4 options (A, B, C, D) and exactly 1 correct answer with plausible distractors.
-  - High-fidelity offline heuristic fallback if no API key is configured.
-- **Interactive Paper Preview & Editor**:
-  - Section-based board examination layout (Section A through Section D).
-  - Inline question edit modal, single question delete, up/down reordering.
-  - **Regenerate Single Question**: One-click AI regeneration for any specific question.
-  - **Dual PDF Export**:
-    - **Question Paper (PDF)**: Clean official examination copy with roll number box, general instructions, marks, and zero answers.
-    - **Answer Key & Marking Scheme (PDF)**: Complete step-wise solutions, rubrics, and Bloom level tags.
-  - **"Take this test online" Mode**: Launches interactive exam room with real countdown timer, question palette, answer submission, auto-scoring, and diagnostic review sheet.
-  - **Saved Test Papers Hub**: Reopen, duplicate, delete, or re-export previous papers.
-
----
-
-## 🔒 Security & Compliance
-
-- **DPDP Act Aligned**: Adheres to the principles of India's Digital Personal Data Protection Act, including parental consent verification and student data minimization.
-- **Role-Based Isolation**: Distinct operational domains for School Admins, Subject Teachers, Parents, and Students.
-- **Audit Logs**: Comprehensive, tamper-evident logs for grade modifications, score overrides, and data access.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
+## 📄 License & Privacy
+- **Privacy First**: No telemetry, no third-party tracker, no cloud database.
+- **Fair Use**: Teachers must confirm educational fair-use rights for copyrighted textbook materials upon upload. Text snippets are transmitted strictly to the teacher's selected AI provider endpoint.

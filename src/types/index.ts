@@ -1,67 +1,38 @@
-export type BoardType = 'CBSE' | 'ICSE' | 'State Board (Maharashtra)' | 'State Board (Karnataka)' | 'State Board (Tamil Nadu)';
+// EduPulse AI — Local-First Teacher Paper-Generation Platform Domain Types
 
-export type UserRole = 'teacher' | 'admin' | 'parent' | 'student';
+export type BoardType = 
+  | 'CBSE' 
+  | 'ICSE' 
+  | 'State Board (Maharashtra)' 
+  | 'State Board (Karnataka)' 
+  | 'State Board (Tamil Nadu)'
+  | 'General';
 
-export type ActiveAppView = 
-  | 'marketing' 
-  | 'teacher' 
-  | 'student' 
-  | 'parent' 
-  | 'admin' 
-  | 'admin-login' 
-  | 'parent-login' 
-  | 'marks' 
-  | 'syllabus' 
-  | 'books' 
-  | 'textbook-paper'
-  | 'questions' 
-  | 'create-exam' 
-  | 'take-exam' 
-  | 'exam-analysis' 
-  | 'ai-paper-gen'
-  | 'paper-builder'
-  | 'smart-attendance'
-  | 'score-upload'
-  | 'strata-studio' 
-  | 'strata-courses' 
-  | 'strata-repetition' 
-  | 'strata-analytics' 
-  | 'strata-billing';
-
-export type TextSizeTheme = 'normal' | 'large' | 'extra-large';
-
-export type AppTheme = 'light' | 'dark';
-
-export interface AdminUser {
-  name: string;
-  email: string;
-  role: string;
-  branch: string;
-  schoolCode: string;
-  avatar?: string;
-}
-
-export interface ParentUser {
-  name: string;
-  phone: string;
-  activeChildGsid: string;
-  childName: string;
-}
-
-export type QuestionType = 'mcq' | 'short_answer' | 'long_answer' | 'case_study' | 'assertion_reason';
+export type QuestionType = 
+  | 'mcq' 
+  | 'true_false' 
+  | 'fill_blank' 
+  | 'short_answer' 
+  | 'long_answer' 
+  | 'case_study' 
+  | 'assertion_reason'
+  | 'numerical';
 
 export type DifficultyLevel = 'easy' | 'medium' | 'hard';
 
 export type BloomsLevel = 'Remember' | 'Understand' | 'Apply' | 'Analyze' | 'Evaluate' | 'Create';
 
-export type ProctorEventStatus = 'active' | 'flagged' | 'submitted' | 'disconnected';
+export type SupportedLanguage = 'English' | 'Hindi' | 'Marathi';
 
-export interface RubricCriterion {
-  id: string;
-  criterion: string;
-  maxMarks: number;
-  description: string;
-}
+export type AppView = 
+  | 'library'           // Textbooks & Uploads
+  | 'chapter-manager'   // Edit chapters and page ranges
+  | 'question-bank'     // Ingest, review & tag questions
+  | 'blueprints'        // Manage & create blueprints
+  | 'generator'         // Run paper generation
+  | 'editor'            // Split-screen canvas paper editor
+  | 'saved-papers'      // Hub of saved papers
+  | 'settings';         // AI keys, File System Folder, backup/restore, delete all
 
 export interface QuestionOption {
   id: string;
@@ -69,452 +40,189 @@ export interface QuestionOption {
   isCorrect?: boolean;
 }
 
-export interface Question {
+export interface QuestionItem {
   id: string;
-  testId?: string;
+  text: string;
   type: QuestionType;
-  questionText: string;
   marks: number;
   difficulty: DifficultyLevel;
-  bloomsLevel: BloomsLevel;
-  chapter: string;
-  topic?: string;
-  options?: QuestionOption[]; // For MCQ
-  correctAnswer?: string; // For MCQ or reference
-  sampleAnswer?: string; // For subjective
-  markingScheme?: string; // For subjective
-  rubric?: RubricCriterion[];
+  bloomLevel?: BloomsLevel;
+  options?: QuestionOption[];
+  answer?: string;
   explanation?: string;
-  language?: string;
+  subject?: string;
+  grade?: number;
+  board?: BoardType;
+  chapter?: string;
+  topic?: string;
+  sourceBookId?: string;
+  sourceBookTitle?: string;
+  sourcePage?: number;
+  tags?: string[];
+  createdAt?: number;
+  updatedAt?: number;
 }
 
-export interface Test {
+export interface SectionBlueprint {
   id: string;
-  title: string;
+  name: string;               // e.g., "Section A", "Section B"
+  title: string;              // e.g., "Multiple Choice Questions"
+  questionType: QuestionType;
+  questionCount: number;
+  marksPerQuestion: number;
+  internalChoiceCount?: number; // e.g. "Attempt any 5 of 6"
+  instructions?: string;
+  sourceMode?: 'bank_only' | 'generate_new' | 'mix';
+  exerciseMode?: 'as_is' | 'similar' | 'mix';
+}
+
+export interface ChapterWeightage {
+  chapterId?: string;
+  chapterName: string;
+  weightagePercent: number; // 0 - 100
+  targetMarks?: number;
+}
+
+export interface DifficultySplit {
+  easy: number;    // percentage, e.g. 30
+  medium: number;  // percentage, e.g. 50
+  hard: number;    // percentage, e.g. 20
+}
+
+export interface BloomSplit {
+  remember: number;
+  understand: number;
+  apply: number;
+  analyze: number;
+}
+
+export interface PaperBlueprint {
+  id: string;
+  name: string;
   board: BoardType;
-  classGrade: number; // e.g., 9, 10, 11, 12
+  grade: number;
   subject: string;
-  chapters: string[];
-  totalMarks: number;
+  examName: string;            // e.g. "Term 1 Periodic Assessment"
+  schoolName: string;
+  schoolLogoBlob?: Blob;
+  schoolLogoDataUrl?: string;
+  date?: string;
   durationMinutes: number;
-  createdAt: string;
-  scheduledEnd: string;
-  status: 'draft' | 'published' | 'completed';
-  accessCode: string;
-  shareableLink: string;
-  questions: Question[];
-  blueprint: {
-    chapterWeightages: { chapter: string; marks: number }[];
-    difficultyMix: { easy: number; medium: number; hard: number };
-  };
-  proctoringSettings: {
-    enforceFullscreen: boolean;
-    detectTabSwitch: boolean;
-    blockCopyPaste: boolean;
-    maxTabSwitchesAllowed: number;
-  };
+  totalMarks: number;
+  generalInstructions: string[];
+  sections: SectionBlueprint[];
+  chapterWeightages: ChapterWeightage[];
+  difficultySplit: DifficultySplit;
+  bloomSplit?: BloomSplit;
+  language: SupportedLanguage;
+  isBuiltIn?: boolean;
+  createdAt: number;
+  updatedAt: number;
 }
 
-export interface StudentAnswer {
-  questionId: string;
-  answerText: string;
-  selectedOptionId?: string;
-  isCorrect?: boolean;
-  scoreAwarded?: number;
-  aiGraded?: boolean;
-  aiConfidence?: 'High' | 'Medium' | 'Low';
-  aiFeedback?: string;
-  teacherOverridden?: boolean;
-  teacherRemarks?: string;
-  gradedAt?: string;
+export interface PaperQuestion extends QuestionItem {
+  sectionId: string;
+  questionNumber: number;
+  subNumber?: string;
+  isInternalChoice?: boolean;
+  choicePairId?: string; // Links questions in "OR" choices
 }
 
-export interface ProctorViolation {
-  id: string;
-  timestamp: string;
-  type: 'tab_switch' | 'fullscreen_exit' | 'paste_attempt' | 'offline_anomaly' | 'idle_timeout';
-  description: string;
-  severity: 'low' | 'medium' | 'high';
-}
-
-export interface TestAttempt {
-  id: string;
-  testId: string;
-  studentGsid: string;
-  studentName: string;
-  rollNumber: string;
-  schoolName: string;
-  startTime: string;
-  submitTime?: string;
-  status: ProctorEventStatus;
-  answers: StudentAnswer[];
-  totalScore?: number;
-  maxScore: number;
-  percentage?: number;
-  violations: ProctorViolation[];
-  currentQuestionIndex?: number;
-  ipAddress?: string;
-  deviceInfo?: string;
-  timeSpentSeconds: number;
-  isReviewedByTeacher?: boolean;
-}
-
-export interface Student {
-  gsid: string; // Global Student ID
-  name: string;
-  rollNumber: string;
-  classGrade: number;
-  section: string;
-  board: BoardType;
-  schoolId: string;
-  schoolName: string;
-  parentPhone: string;
-  parentName: string;
-  avatarUrl?: string;
-  overallMasteryPercentage: number;
-  subjectMastery: {
-    [subject: string]: number; // Percentage
-  };
-  isAtRisk?: boolean;
-  riskReason?: string;
-}
-
-export interface Organization {
+export interface PaperSection {
   id: string;
   name: string;
-  branch: string;
-  city: string;
-  state: string;
-  board: BoardType;
-  studentCount: number;
-  teacherCount: number;
-  plan: 'Trial' | 'Standard' | 'Enterprise';
+  title: string;
+  instructions?: string;
+  questionType: QuestionType;
+  marksPerQuestion: number;
+  totalMarks: number;
+  questions: PaperQuestion[];
 }
 
-export interface ParentStudentLink {
-  parentPhone: string;
-  parentName: string;
-  studentGsids: string[];
+export interface PaperSet {
+  setName: 'Set A' | 'Set B' | 'Set C';
+  sections: PaperSection[];
+  answerKey: Record<string, string>; // questionId -> answer
 }
 
-export interface AuditLog {
-  id: string;
-  timestamp: string;
-  actorRole: UserRole;
-  actorName: string;
-  action: string;
-  entityType: 'Test' | 'Grade' | 'Student' | 'DPDP_Consent' | 'Subscription';
-  details: string;
-  ipAddress?: string;
-}
-
-export interface NotificationItem {
+export interface SavedPaper {
   id: string;
   title: string;
-  message: string;
-  timestamp: string;
-  type: 'test_published' | 'proctor_alert' | 'result_ready' | 'at_risk_alert' | 'billing';
-  read: boolean;
-  actionUrl?: string;
-}
-
-export interface SubscriptionPlan {
-  id: string;
-  name: string;
-  audience: 'parent' | 'school';
-  priceMonthlyINR: number;
-  priceAnnualINR: number;
-  gstRate: number; // 0.18
-  features: string[];
-  isPopular?: boolean;
-}
-
-export interface TutorChatMessage {
-  id: string;
-  sender: 'student' | 'tutor';
-  text: string;
-  timestamp: string;
-  language?: string;
-  suggestedPrompts?: string[];
-  relatedQuestionId?: string;
-}
-
-// ──────────────────────────────────────────────
-// STUDENT FEATURE 1: MARKS & SCORES
-// ──────────────────────────────────────────────
-export interface MarkRecord {
-  id: string;
-  testId: string;
-  testName: string;
+  blueprintId?: string;
+  grade: number;
   subject: string;
-  date: string;
+  board: BoardType;
+  examName: string;
+  schoolName: string;
+  durationMinutes: number;
   totalMarks: number;
-  obtainedMarks: number;
-  percentage: number;
-  grade: string;
-  examType?: 'Unit Test' | 'Mid-Term' | 'Pre-Board' | 'Practice Set' | 'Board Exam' | 'Offline Assessment';
-  remarks?: string;
-  negativeMarksDeducted?: number;
-  timeSpentSeconds?: number;
-  questionCount?: number;
-  correctCount?: number;
-  incorrectCount?: number;
-  skippedCount?: number;
+  generalInstructions: string[];
+  language: SupportedLanguage;
+  sections: PaperSection[];
+  sets?: PaperSet[];
+  answerKey?: Record<string, { answer: string; explanation?: string; marks: number }>;
+  status: 'draft' | 'final';
+  createdAt: number;
+  updatedAt: number;
 }
 
-export interface SubjectMarksSummary {
+export interface TextbookRecord {
+  id: string;
+  title: string;
+  grade: number;
   subject: string;
-  testsAttempted: number;
-  totalMarks: number;
-  marksObtained: number;
-  percentage: number;
-  grade: string;
-  highestScore: number;
-  lowestScore: number;
+  board: BoardType;
+  totalPages: number;
+  originalFileName: string;
+  fileBlob?: Blob;
+  language?: SupportedLanguage;
+  createdAt: number;
+  updatedAt: number;
 }
 
-// ──────────────────────────────────────────────
-// STUDENT FEATURE 2: SYLLABUS
-// ──────────────────────────────────────────────
-export interface SyllabusChapter {
+export interface ChapterRecord {
   id: string;
-  name: string;
-  topics: string[];
-  unitName?: string;
-  completionPercentage?: number;
-  isCompleted?: boolean;
-}
-
-export interface SyllabusSubject {
-  id: string;
-  name: string;
-  board?: string;
-  grade?: number;
-  chapters: SyllabusChapter[];
-}
-
-export interface Syllabus {
-  id: string;
-  name: string;
-  fileName: string;
-  fileSize?: string;
-  fileType?: string;
-  uploadedAt: string;
-  board?: string;
-  grade?: number;
-  subjects: SyllabusSubject[];
-}
-
-// ──────────────────────────────────────────────
-// STUDENT FEATURE 3: READ THE BOOK
-// ──────────────────────────────────────────────
-export interface BookHighlight {
-  id: string;
-  chapterId: string;
-  text: string;
-  color: 'yellow' | 'emerald' | 'indigo' | 'rose';
-  createdAt: string;
-}
-
-export interface BookNote {
-  id: string;
-  chapterId: string;
-  selectedText?: string;
-  noteText: string;
-  createdAt: string;
-}
-
-export interface BookChapter {
-  id: string;
+  textbookId: string;
   chapterNumber: number;
   title: string;
-  content: string; // Markdown or text content
-  sections?: string[];
-  isCompleted?: boolean;
-  estimatedReadTimeMinutes?: number;
-}
-
-export interface Book {
-  id: string;
-  title: string;
-  author?: string;
-  subject: string;
-  board?: string;
-  grade?: number;
-  coverGradient?: string;
-  coverIcon?: string;
-  fileName?: string;
-  progress: number; // 0-100%
-  currentChapterId?: string;
-  lastOpened?: string;
-  chapters: BookChapter[];
-  bookmarks?: string[]; // chapter IDs
-  highlights?: BookHighlight[];
-  notes?: BookNote[];
-}
-
-// ──────────────────────────────────────────────
-// STUDENT FEATURE 4: QUESTION SETS
-// ──────────────────────────────────────────────
-export type QuestionSetDifficulty = 'easy' | 'medium' | 'hard';
-export type QuestionSetPreset = 'quick' | 'chapter' | 'revision' | 'exam' | 'important' | 'previous' | 'custom';
-
-export interface QuestionSet {
-  id: string;
-  title: string;
-  subject: string;
-  chapter?: string;
-  topic?: string;
-  difficulty: QuestionSetDifficulty;
-  questionCount: number;
-  totalMarks: number;
-  timeLimit: number; // in minutes
-  marksPerQuestion?: number;
-  negativeMarksPerWrong?: number; // 0, 0.25, 0.33, 0.5, 1
-  passingMarks?: number;
-  markingSchemeTitle?: string;
-  questions: Question[];
-  createdAt: string;
-  presetType?: QuestionSetPreset;
-  attemptsCount?: number;
-  bestScore?: number;
-  isCustom?: boolean;
-}
-
-export interface QuestionSetAttempt {
-  id: string;
-  questionSetId: string;
-  questionSetTitle: string;
-  subject: string;
-  chapter?: string;
-  totalMarks: number;
-  obtainedMarks: number;
-  grossMarks?: number;
-  negativeMarksDeducted?: number;
-  passingMarks?: number;
-  isPassed?: boolean;
-  percentage: number;
-  grade: string;
-  correctAnswers: number;
-  incorrectAnswers: number;
-  unansweredQuestions: number;
-  timeTakenSeconds: number;
-  submittedAt: string;
-  userAnswers: {
-    questionId: string;
-    selectedOptionId?: string;
-    answerText: string;
-    isCorrect: boolean;
-    marksAwarded: number;
-    negativeDeducted?: number;
+  startPage: number;
+  endPage: number;
+  exerciseSections: {
+    title: string;
+    startPage: number;
+    endPage: number;
   }[];
 }
 
-// ──────────────────────────────────────────────
-// SMART ATTENDANCE TYPES
-// ──────────────────────────────────────────────
-export type AttendanceStatus = 'present' | 'absent' | 'late' | 'excused';
-export type AttendanceMethod = 'manual' | 'qr_code' | 'facial_id' | 'rfid' | 'kiosk';
-
-export interface AttendanceRecord {
+export interface TextbookChunk {
   id: string;
-  studentGsid: string;
-  studentName: string;
-  rollNumber: string;
-  classGrade: number;
-  section: string;
-  date: string; // YYYY-MM-DD
-  status: AttendanceStatus;
-  checkInTime?: string; // HH:MM:SS
-  method: AttendanceMethod;
-  remarks?: string;
-  parentNotified?: boolean;
+  textbookId: string;
+  chapterId?: string;
+  chapterTitle?: string;
+  pageNumber: number;
+  content: string;
+  tokenCount: number;
 }
 
-export interface StudentAttendanceSummary {
-  studentGsid: string;
-  studentName: string;
-  rollNumber: string;
-  classGrade: number;
-  section: string;
-  parentPhone: string;
-  totalDays: number;
-  presentDays: number;
-  absentDays: number;
-  lateDays: number;
-  excusedDays: number;
-  attendancePercentage: number;
-  isAtRisk: boolean; // < 75%
-  consecutiveAbsences: number;
-}
-
-// ──────────────────────────────────────────────
-// AI QUESTION PAPER GENERATION TYPES
-// ──────────────────────────────────────────────
-export interface PaperQuestionItem {
+export interface DraftState {
   id: string;
-  questionNumber: number;
-  section: 'A' | 'B' | 'C' | 'D';
-  type: 'mcq' | 'assertion_reason' | 'short_answer_2m' | 'short_answer_3m' | 'long_answer_5m' | 'case_study';
-  marks: number;
-  questionText: string;
-  options?: { id: string; text: string }[];
-  correctAnswer: string;
-  solutionExplanation: string;
-  markingRubric: { step: string; marks: number }[];
-  bloomsLevel: BloomsLevel;
-  difficulty: DifficultyLevel;
-  topic: string;
+  paperId?: string;
+  paper: SavedPaper;
+  lastSavedAt: number;
 }
 
-export interface PaperSectionMeta {
-  sectionId: 'A' | 'B' | 'C' | 'D';
-  title: string;
-  description: string;
-  questionCount: number;
-  marksPerQuestion: number;
-  totalMarks: number;
+export interface AIProviderConfig {
+  provider: 'gemini' | 'openai' | 'anthropic';
+  apiKey: string;
+  model?: string;
+  useProxy?: boolean;
+  proxyUrl?: string;
 }
 
-export interface AiGeneratedPaper {
-  id: string;
-  title: string;
-  board: BoardType;
-  classGrade: number;
-  subject: string;
-  topics: string[];
-  totalMarks: number;
-  durationMinutes: number;
-  createdAt: string;
-  academicYear: string;
-  generalInstructions: string[];
-  sections: PaperSectionMeta[];
-  questions: PaperQuestionItem[];
-  modelUsed: string;
-  isAiGenerated: boolean;
+export interface StorageEstimateInfo {
+  usage: number; // bytes
+  quota: number; // bytes
+  usagePercent: number; // 0-100
+  isPersistent: boolean;
+  isLowStorage: boolean; // >80% used or <100MB free
 }
-
-// ──────────────────────────────────────────────
-// STUDENT SCORE UPLOAD & BATCH DASHBOARD TYPES
-// ──────────────────────────────────────────────
-export interface StudentScoreBatchItem {
-  id: string;
-  studentGsid: string;
-  studentName: string;
-  rollNumber: string;
-  classGrade: number;
-  section: string;
-  subject: string;
-  examName: string;
-  examType: 'Unit Test' | 'Mid-Term' | 'Pre-Board' | 'Practice Set' | 'Board Exam' | 'Offline Assessment';
-  date: string;
-  maxMarks: number;
-  marksObtained: number;
-  percentage: number;
-  grade: string;
-  status: 'Pass' | 'Fail' | 'Needs Improvement';
-  rank?: number;
-  remarks?: string;
-  uploadedAt: string;
-}
-

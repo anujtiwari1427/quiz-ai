@@ -7,22 +7,24 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "node scripts/test-scoring.mjs && node scripts/test-strater-platform.mjs && node scripts/test-textbook-pipeline.mjs && node scripts/test-paper-generation.mjs",
-    "test:scoring": "node scripts/test-scoring.mjs",
-    "test:strater": "node scripts/test-strater-platform.mjs",
-    "test:textbook": "node scripts/test-textbook-pipeline.mjs",
-    "test:paper": "node scripts/test-paper-generation.mjs"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
+    "dexie": "^4.4.7",
+    "docx": "^9.15.3",
     "framer-motion": "^12.4.7",
+    "jszip": "^3.10.2",
     "lucide-react": "^1.16.0",
+    "minisearch": "^7.2.0",
     "pdfjs-dist": "^3.11.174",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^3.10.1",
     "tailwind-merge": "^3.0.2",
+    "tesseract.js": "^7.0.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -35,6 +37,7 @@
     "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vitest": "^5.1.0"
   }
 }

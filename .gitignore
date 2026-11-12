@@ -23,12 +23,19 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
+# Environment variables (Never commit real API keys)
 .env
 .env.*
 !.env.example
 
-# Temporary previews / screenshots
+# Temporary previews / screenshots / exports
 preview_*.png
-
+*.tmp
 uploads/
+
+# Tooling and legacy leftovers
+.agent
+.agents
+.gemini
+.gsd
+textbooks/
