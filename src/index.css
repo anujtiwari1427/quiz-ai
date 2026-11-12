@@ -2,267 +2,100 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ==========================================================================
-   MARKLAB DESIGN SYSTEM FONTS
-   ========================================================================== */
-@font-face {
-  font-family: 'Tasaorbiterdeck';
-  src: url('/fonts/TASAOrbiterDeck-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+@layer base {
+  :root {
+    --bg-canvas: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-surface-elevated: #ffffff;
+    --bg-surface-muted: #f1f5f9;
+    --border-subtle: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+  }
+
+  .dark {
+    --bg-canvas: #090d16;
+    --bg-surface: #111625;
+    --bg-surface-elevated: #182033;
+    --bg-surface-muted: #151b2c;
+    --border-subtle: #1e293b;
+    --border-strong: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Accessible focus visible ring across all interactive controls */
+  *:focus-visible {
+    outline: 2px solid #ea580c;
+    outline-offset: 2px;
+  }
 }
 
-@font-face {
-  font-family: 'Tasaorbiterdeck';
-  src: url('/fonts/TASAOrbiterDeck-Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Tasaorbiterdeck';
-  src: url('/fonts/TASAOrbiterDeck-SemiBold.otf') format('opentype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Tasaorbiterdeck';
-  src: url('/fonts/TASAOrbiterDeck-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ==========================================================================
-   ROOT VARIABLES (Matching Marklab Webflow Template)
-   ========================================================================== */
-:root {
-  --primary-color-500: #4555fd;
-  --primary-color-400: #768eff;
-  --primary-color-300: #9fb6ff;
-  --primary-color-200: #c2d4ff;
-  --primary-color-100: #dde9ff;
-  --primary-color-50: #edf2ff;
-  --primary-black-500: #202342;
-  --primary-black-400: #4e516a;
-  --primary-black-300: #a2a3b1;
-  --primary-black-200: #c5c6ce;
-  --primary-black-100: #dcdde2;
-  --primary-black-50: #efeff1;
-  --white: #ffffff;
-  --border-radius: 8px;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  text-rendering: optimizeLegibility;
-  font-family: 'Tasaorbiterdeck', "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-body {
-  font-family: 'Tasaorbiterdeck', "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background-color: #f7f8fc;
-  color: #202342;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ==========================================================================
-   MARKLAB SIGNATURE EDITORIAL ITALIC SERIF ACCENTS
-   ========================================================================== */
-.itlic {
-  font-family: 'Instrument Serif', Georgia, serif !important;
-  font-style: italic !important;
-  font-weight: 400 !important;
-  letter-spacing: -0.01em;
-}
-
-.itlic.primary {
-  color: #4555fd !important;
-}
-
-.itlic.black {
-  color: #202342 !important;
-}
-
-/* ==========================================================================
-   MARKLAB SIGNATURE ROLLING BUTTON EFFECT
-   ========================================================================== */
-.marklab-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 22px;
-  border-radius: 9999px;
-  font-family: 'Tasaorbiterdeck', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 1.4;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
-}
-
-.marklab-btn-primary {
-  background-color: #4555fd;
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(69, 85, 253, 0.28);
-}
-
-.marklab-btn-primary:hover {
-  background-color: #3343e0;
-  box-shadow: 0 8px 24px rgba(69, 85, 253, 0.4);
-  transform: translateY(-1px);
-}
-
-.marklab-btn-dark {
-  background-color: #202342;
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(32, 35, 66, 0.15);
-}
-
-.marklab-btn-dark:hover {
-  background-color: #16182e;
-  box-shadow: 0 8px 22px rgba(32, 35, 66, 0.25);
-  transform: translateY(-1px);
-}
-
-.marklab-btn-outline {
-  background-color: transparent;
-  color: #202342;
-  border: 1.5px solid #dcdde2;
-}
-
-.marklab-btn-outline:hover {
-  border-color: #4555fd;
-  color: #4555fd;
-  background-color: #edf2ff;
-  transform: translateY(-1px);
-}
-
-.marklab-btn-white {
-  background-color: #ffffff;
-  color: #202342;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-}
-
-.marklab-btn-white:hover {
-  background-color: #f7f8fc;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-1px);
-}
-
-/* Rolling Text Slot */
-.btn-text-roll {
-  position: relative;
-  overflow: hidden;
-  height: 1.4em;
-  display: inline-flex;
-  flex-direction: column;
-}
-
-.btn-text-roll span {
-  display: block;
-  white-space: nowrap;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.marklab-btn:hover .btn-text-roll span {
-  transform: translateY(-100%);
-}
-
-/* Sliding Arrow Slot */
-.btn-icon-slide {
-  position: relative;
-  overflow: hidden;
-  width: 14px;
-  height: 14px;
-  display: inline-flex;
-  flex-shrink: 0;
-}
-
-.btn-icon-slide svg,
-.btn-icon-slide img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 14px;
-  height: 14px;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-icon-slide .icon-1 {
-  transform: translate(0, 0);
-}
-
-.btn-icon-slide .icon-2 {
-  transform: translate(-100%, 100%);
-}
-
-.marklab-btn:hover .btn-icon-slide .icon-1 {
-  transform: translate(100%, -100%);
-}
-
-.marklab-btn:hover .btn-icon-slide .icon-2 {
-  transform: translate(0, 0);
-}
-
-/* ==========================================================================
-   CUSTOM MARKLAB CARD STYLES
-   ========================================================================== */
-.marklab-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.marklab-card:hover {
-  border-color: #c2d4ff;
-  box-shadow: 0 16px 36px rgba(69, 85, 253, 0.08);
-  transform: translateY(-3px);
-}
-
-.marklab-card-tint {
-  background: #edf2ff;
-  border: 1px solid #dde9ff;
-  border-radius: 20px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.marklab-card-tint:hover {
-  border-color: #9fb6ff;
-  box-shadow: 0 16px 36px rgba(69, 85, 253, 0.1);
-  transform: translateY(-3px);
-}
-
-/* Custom Scrollbar */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #f1f2f6;
+  background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #c5c6ce;
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #4555fd;
+/* Reduced Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+/* Professional Print Stylesheet for Question Papers & Answer Keys */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
+
+  .no-print, nav, aside, header, footer, button, .sidebar, .topbar {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
 }

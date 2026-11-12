@@ -138,6 +138,24 @@ export class FileSystemService {
   }
 
   /**
+   * Save uploaded textbook binary directly by filename
+   */
+  async saveTextbookFile(fileName: string, fileBlob: Blob) {
+    if (!this.dirHandle) return;
+    const hasPerm = await this.verifyPermission(true);
+    if (!hasPerm) return;
+    try {
+      const tbDir = await this.dirHandle.getDirectoryHandle('Textbooks', { create: true });
+      const binFileHandle = await tbDir.getFileHandle(fileName, { create: true });
+      const binWritable = await (binFileHandle as any).createWritable();
+      await binWritable.write(fileBlob);
+      await binWritable.close();
+    } catch (e) {
+      console.warn('Could not mirror textbook file to folder:', e);
+    }
+  }
+
+  /**
    * Save paper JSON into /Papers/<class>-<subject>/
    */
   async savePaperToFolder(paper: SavedPaper) {
@@ -253,9 +271,29 @@ export class FileSystemService {
   }
 
   /**
+   * One-click download of full backup ZIP
+   */
+  async exportFullBackupZip(): Promise<{ success: boolean; error?: string }> {
+    try {
+      const blob = await this.createFullBackupZip();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `EduPulse-Backup-${new Date().toISOString().slice(0, 10)}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Export backup failed' };
+    }
+  }
+
+  /**
    * Restore Full Backup from a ZIP file
    */
-  async restoreFromBackupZip(file: File, mode: 'merge' | 'overwrite'): Promise<{ success: boolean; counts?: any; error?: string }> {
+  async restoreFromBackupZip(file: File, mode: 'merge' | 'overwrite' = 'merge'): Promise<{ success: boolean; counts?: any; error?: string }> {
     try {
       const zip = await JSZip.loadAsync(file);
       const manifestFile = zip.file('manifest.json');

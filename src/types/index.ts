@@ -25,14 +25,17 @@ export type BloomsLevel = 'Remember' | 'Understand' | 'Apply' | 'Analyze' | 'Eva
 export type SupportedLanguage = 'English' | 'Hindi' | 'Marathi';
 
 export type AppView = 
-  | 'library'           // Textbooks & Uploads
-  | 'chapter-manager'   // Edit chapters and page ranges
-  | 'question-bank'     // Ingest, review & tag questions
-  | 'blueprints'        // Manage & create blueprints
-  | 'generator'         // Run paper generation
-  | 'editor'            // Split-screen canvas paper editor
-  | 'saved-papers'      // Hub of saved papers
-  | 'settings';         // AI keys, File System Folder, backup/restore, delete all
+  | 'dashboard'
+  | 'library' 
+  | 'chapter-manager' 
+  | 'question-bank' 
+  | 'create-paper' 
+  | 'editor' 
+  | 'saved-papers'
+  | 'templates'
+  | 'settings'
+  | 'design-system'
+  | 'landing';
 
 export interface QuestionOption {
   id: string;

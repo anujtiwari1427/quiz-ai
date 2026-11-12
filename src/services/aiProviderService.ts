@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { db } from '../db';
 import { AIProviderConfig, QuestionItem, QuestionType, DifficultyLevel, BloomsLevel } from '../types';
 
+export type AiProviderType = 'gemini' | 'openai' | 'anthropic';
+
 export const AI_SETTINGS_KEY = 'aiProviderConfig';
 
 export const GeneratedQuestionSchema = z.object({
@@ -51,11 +53,40 @@ export class AIProviderService {
   }
 
   /**
+   * Convenience: Get current API key for provider
+   */
+  async getApiKey(provider?: AiProviderType): Promise<string> {
+    const config = await this.getConfig();
+    if (!provider || config.provider === provider) {
+      return config.apiKey || '';
+    }
+    return '';
+  }
+
+  /**
+   * Convenience: Save API key for provider
+   */
+  async saveApiKey(provider: AiProviderType, apiKey: string): Promise<void> {
+    const current = await this.getConfig();
+    await this.saveConfig({ ...current, provider, apiKey });
+  }
+
+  /**
    * Test user API key with a small ping prompt
    */
-  async testKey(config: AIProviderConfig): Promise<{ success: boolean; message: string }> {
+  async testKey(
+    configOrProvider: AIProviderConfig | AiProviderType,
+    maybeApiKey?: string
+  ): Promise<{ success: boolean; valid: boolean; message: string }> {
+    let config: AIProviderConfig;
+    if (typeof configOrProvider === 'string') {
+      config = { provider: configOrProvider, apiKey: maybeApiKey || '' };
+    } else {
+      config = configOrProvider;
+    }
+
     if (!config.apiKey?.trim()) {
-      return { success: false, message: 'API key cannot be empty.' };
+      return { success: false, valid: false, message: 'API key cannot be empty.' };
     }
 
     try {
@@ -73,7 +104,7 @@ export class AIProviderService {
           const errData = await res.json().catch(() => ({}));
           throw new Error(errData.error?.message || `Gemini API returned status ${res.status}`);
         }
-        return { success: true, message: 'Gemini 2.0 API Key verified successfully!' };
+        return { success: true, valid: true, message: 'Gemini 2.0 API Key verified successfully!' };
       }
 
       if (config.provider === 'openai') {
@@ -84,18 +115,47 @@ export class AIProviderService {
           const errData = await res.json().catch(() => ({}));
           throw new Error(errData.error?.message || `OpenAI returned status ${res.status}`);
         }
-        return { success: true, message: 'OpenAI API Key verified successfully!' };
+        return { success: true, valid: true, message: 'OpenAI API Key verified successfully!' };
       }
 
       if (config.provider === 'anthropic') {
         // Simple test for Anthropic
-        return { success: true, message: 'Anthropic configuration saved.' };
+        return { success: true, valid: true, message: 'Anthropic configuration saved.' };
       }
 
-      return { success: true, message: 'Configuration saved.' };
+      return { success: true, valid: true, message: 'Configuration saved.' };
     } catch (err: any) {
-      return { success: false, message: err.message || 'Key validation failed.' };
+      return { success: false, valid: false, message: err.message || 'Key validation failed.' };
     }
+  }
+
+  /**
+   * Convenience wrapper for single question generation (e.g. editor regeneration)
+   */
+  async generateQuestion(params: {
+    subject: string;
+    grade: number;
+    chapterName: string;
+    questionType: QuestionType;
+    marks: number;
+    difficulty: DifficultyLevel;
+    bloomLevel?: BloomsLevel;
+    board: string;
+    contextText?: string;
+    language?: string;
+  }): Promise<z.infer<typeof GeneratedQuestionSchema>> {
+    return this.generateQuestionGrounded({
+      subject: params.subject,
+      grade: params.grade,
+      chapterName: params.chapterName,
+      questionType: params.questionType,
+      marks: params.marks,
+      difficulty: params.difficulty,
+      bloomLevel: params.bloomLevel,
+      board: params.board,
+      chunksText: params.contextText || 'Standard curriculum textbook guidelines',
+      language: params.language
+    });
   }
 
   /**
