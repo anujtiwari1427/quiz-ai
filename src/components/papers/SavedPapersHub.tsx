@@ -109,6 +109,15 @@ export const SavedPapersHub: React.FC<SavedPapersHubProps> = ({
     return matchesSearch && matchesSubject && matchesGrade;
   });
 
+  const handleExportPdf = async (p: SavedPaper, type: 'qp' | 'ak') => {
+    try {
+      await exportPrintReadyPdf(p, type);
+      success(type === 'qp' ? 'Question Paper print view opened.' : 'Answer Key print view opened.');
+    } catch (err: any) {
+      error(err.message || 'Unable to open print preview.');
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6 text-left">
       
@@ -281,12 +290,12 @@ export const SavedPapersHub: React.FC<SavedPapersHubProps> = ({
                         {
                           label: 'Print PDF Question Paper',
                           icon: <Printer className="w-4 h-4" />,
-                          onClick: () => exportPrintReadyPdf(paper, 'qp')
+                          onClick: () => handleExportPdf(paper, 'qp')
                         },
                         {
                           label: 'Print PDF Answer Key',
                           icon: <Printer className="w-4 h-4" />,
-                          onClick: () => exportPrintReadyPdf(paper, 'ak')
+                          onClick: () => handleExportPdf(paper, 'ak')
                         },
                         { separator: true, label: '' },
                         {

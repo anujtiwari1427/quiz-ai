@@ -21,12 +21,14 @@ import { useApp } from '../../context/AppContext';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
-import { ProgressBar } from '../ui/Feedback';
+import { ProgressBar, Skeleton } from '../ui/Feedback';
 import { EmptyState } from '../ui/EmptyState';
 import { FILE_SYSTEM_SERVICE } from '../../services/fileSystemService';
+import { useToast } from '../ui/Toast';
 
 export const TeacherDashboard: React.FC = () => {
   const { openCreatePaper, openLibrary, openQuestionBank, openSavedPapers, openEditor } = useApp();
+  const { success, error: toastError } = useToast();
 
   const [recentPapers, setRecentPapers] = useState<SavedPaper[]>([]);
   const [counts, setCounts] = useState({ textbooks: 0, questions: 0, blueprints: 0, papers: 0 });
@@ -75,9 +77,15 @@ export const TeacherDashboard: React.FC = () => {
   };
 
   const handleBackupNow = async () => {
-    const res = await FILE_SYSTEM_SERVICE.exportFullBackupZip();
-    if (res.success) {
-      alert('Full backup ZIP generated and downloaded successfully!');
+    try {
+      const res = await FILE_SYSTEM_SERVICE.exportFullBackupZip();
+      if (res.success) {
+        success('Full backup ZIP generated and downloaded successfully!');
+      } else if (res.error) {
+        toastError(`Backup failed: ${res.error}`);
+      }
+    } catch (err: any) {
+      toastError(`Backup error: ${err.message || 'Unknown error'}`);
     }
   };
 
@@ -117,75 +125,92 @@ export const TeacherDashboard: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <Card interactive onClick={openSavedPapers}>
-          <CardContent className="p-5 flex items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                Exam Papers
-              </span>
-              <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
-                {counts.papers}
-              </div>
-              <span className="text-[11px] text-neutral-400 mt-0.5 block">Stored locally</span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center">
-              <FileText className="w-5 h-5" />
-            </div>
-          </CardContent>
-        </Card>
+        {loading ? (
+          [1, 2, 3, 4].map((i) => (
+            <Card key={i}>
+              <CardContent className="p-5 flex items-center justify-between">
+                <div className="space-y-2">
+                  <Skeleton width={80} height={12} />
+                  <Skeleton width={50} height={28} />
+                  <Skeleton width={90} height={10} />
+                </div>
+                <Skeleton variant="circular" width={40} height={40} />
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <>
+            <Card interactive onClick={openSavedPapers}>
+              <CardContent className="p-5 flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                    Exam Papers
+                  </span>
+                  <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
+                    {counts.papers}
+                  </div>
+                  <span className="text-[11px] text-neutral-400 mt-0.5 block">Stored locally</span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+                  <FileText className="w-5 h-5" />
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card interactive onClick={openLibrary}>
-          <CardContent className="p-5 flex items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                Textbooks
-              </span>
-              <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
-                {counts.textbooks}
-              </div>
-              <span className="text-[11px] text-neutral-400 mt-0.5 block">Indexed for retrieval</span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 flex items-center justify-center">
-              <BookOpen className="w-5 h-5" />
-            </div>
-          </CardContent>
-        </Card>
+            <Card interactive onClick={openLibrary}>
+              <CardContent className="p-5 flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                    Textbooks
+                  </span>
+                  <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
+                    {counts.textbooks}
+                  </div>
+                  <span className="text-[11px] text-neutral-400 mt-0.5 block">Indexed for retrieval</span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 flex items-center justify-center">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card interactive onClick={openQuestionBank}>
-          <CardContent className="p-5 flex items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                Question Bank
-              </span>
-              <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
-                {counts.questions}
-              </div>
-              <span className="text-[11px] text-neutral-400 mt-0.5 block">Tagged & deduplicated</span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-              <Database className="w-5 h-5" />
-            </div>
-          </CardContent>
-        </Card>
+            <Card interactive onClick={openQuestionBank}>
+              <CardContent className="p-5 flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                    Question Bank
+                  </span>
+                  <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
+                    {counts.questions}
+                  </div>
+                  <span className="text-[11px] text-neutral-400 mt-0.5 block">Tagged & deduplicated</span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <Database className="w-5 h-5" />
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardContent className="p-5 flex items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                Storage Used
-              </span>
-              <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
-                {storageInfo ? `${storageInfo.usedMB} MB` : '0 MB'}
-              </div>
-              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> IndexedDB Safe
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 flex items-center justify-center">
-              <HardDrive className="w-5 h-5" />
-            </div>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardContent className="p-5 flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                    Storage Used
+                  </span>
+                  <div className="text-2xl font-extrabold text-neutral-900 dark:text-neutral-100 mt-1">
+                    {storageInfo ? `${storageInfo.usedMB} MB` : '0 MB'}
+                  </div>
+                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3" /> IndexedDB Safe
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 flex items-center justify-center">
+                  <HardDrive className="w-5 h-5" />
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
       {/* Main Grid: Recent Papers & Local-First Backup Box */}

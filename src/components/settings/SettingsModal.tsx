@@ -18,6 +18,7 @@ import { db, getStorageEstimate, deleteAllLocalData } from '../../db';
 import { FILE_SYSTEM_SERVICE } from '../../services/fileSystemService';
 import { AI_PROVIDER_SERVICE } from '../../services/aiProviderService';
 import { AIProviderConfig, StorageEstimateInfo } from '../../types';
+import { useToast } from '../ui/Toast';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ interface SettingsModalProps {
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onDataReset }) => {
+  const { success: toastSuccess, error: toastError } = useToast();
   const [activeTab, setActiveTab] = useState<'ai' | 'storage' | 'backup' | 'danger'>('ai');
   
   // AI Keys state
@@ -85,8 +87,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
     setIsSelectingFolder(false);
     if (res.success && res.name) {
       setConnectedFolder(res.name);
+      toastSuccess(`Connected folder: ${res.name}`);
     } else if (res.error && res.error !== 'User cancelled folder selection.') {
-      alert(res.error);
+      toastError(res.error);
     }
   };
 
@@ -96,8 +99,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
       const blob = await FILE_SYSTEM_SERVICE.createFullBackupZip();
       const dateStr = new Date().toISOString().slice(0, 10);
       FILE_SYSTEM_SERVICE.triggerBrowserDownload(blob, `EduPulse_AI_Backup_${dateStr}.zip`);
+      toastSuccess('Backup ZIP exported successfully!');
     } catch (e: any) {
-      alert(`Export failed: ${e.message}`);
+      toastError(`Export failed: ${e.message}`);
     } finally {
       setIsExportingZip(false);
     }
@@ -118,10 +122,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
 
     if (res.success) {
       setRestoreMessage(`✓ Backup restored successfully! Imported ${res.counts.textbooks} books and ${res.counts.savedPapers} papers.`);
+      toastSuccess(`Restored ${res.counts.textbooks} textbooks and ${res.counts.savedPapers} exam papers!`);
       await loadSettings();
       onDataReset?.();
     } else {
       setRestoreMessage(`✕ Restore failed: ${res.error}`);
+      toastError(`Restore failed: ${res.error}`);
     }
   };
 
@@ -129,7 +135,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
     if (!deleteConfirmed) return;
     if (confirm('PERMANENT ACTION: This will completely delete all your uploaded textbooks, questions, blueprints and saved papers from this device. Continue?')) {
       await deleteAllLocalData();
-      alert('All local data has been deleted.');
+      toastSuccess('All local data has been deleted.');
       onDataReset?.();
       onClose();
     }

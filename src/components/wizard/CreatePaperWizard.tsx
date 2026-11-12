@@ -36,6 +36,7 @@ import { Badge } from '../ui/Badge';
 import { ProgressBar } from '../ui/Feedback';
 import { Alert } from '../ui/Alert';
 import { Slider } from '../ui/FormControls';
+import { useToast } from '../ui/Toast';
 
 export interface CreatePaperWizardProps {
   initialBlueprintId?: string;
@@ -48,6 +49,7 @@ export const CreatePaperWizard: React.FC<CreatePaperWizardProps> = ({
   onPaperGenerated,
   onCancel
 }) => {
+  const { error: toastError, success: toastSuccess } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [blueprints, setBlueprints] = useState<PaperBlueprint[]>([]);
   const [textbooks, setTextbooks] = useState<TextbookRecord[]>([]);
@@ -168,9 +170,10 @@ export const CreatePaperWizard: React.FC<CreatePaperWizardProps> = ({
           setProgressMsg(msg);
         }
       });
+      toastSuccess('Examination paper generated successfully!');
       onPaperGenerated(res.paper.id);
     } catch (err: any) {
-      alert(`Generation failed: ${err.message}`);
+      toastError(`Generation failed: ${err.message || 'Unknown error'}`);
     } finally {
       setIsGenerating(false);
     }

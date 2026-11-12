@@ -148,8 +148,8 @@ export const SettingsView: React.FC = () => {
     const confirmText = prompt('WARNING: This will permanently delete ALL textbooks, questions, blueprints, and papers on this device. Type "DELETE" to confirm:');
     if (confirmText === 'DELETE') {
       await deleteAllLocalData();
-      alert('All local data has been wiped.');
-      window.location.reload();
+      success('All local data has been wiped.');
+      setTimeout(() => window.location.reload(), 1200);
     }
   };
 

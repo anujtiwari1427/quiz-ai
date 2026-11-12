@@ -331,8 +331,7 @@ export class PaperExportService {
   async exportPaperPdf(paper: SavedPaper, isAnswerKey = false): Promise<void> {
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
-      alert('Please allow popups to view and print the examination PDF.');
-      return;
+      throw new Error('Popup blocked by browser. Please allow popups to view and print the examination PDF.');
     }
 
     const htmlContent = `

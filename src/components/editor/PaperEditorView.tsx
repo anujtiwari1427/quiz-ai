@@ -213,6 +213,16 @@ export const PaperEditorView: React.FC<PaperEditorViewProps> = ({ paperId, onBac
     success('Swapped question from bank.');
   };
 
+  const handleExportPdf = async (type: 'qp' | 'ak') => {
+    if (!paper) return;
+    try {
+      await exportPrintReadyPdf(paper, type);
+      success(type === 'qp' ? 'Question Paper print view opened.' : 'Answer Key print view opened.');
+    } catch (err: any) {
+      error(err.message || 'Unable to open print preview.');
+    }
+  };
+
   const handleRegenerateQuestion = async (sectionId: string, q: PaperQuestion) => {
     try {
       setRegeneratingQId(q.id);
@@ -329,7 +339,7 @@ export const PaperEditorView: React.FC<PaperEditorViewProps> = ({ paperId, onBac
             variant="outline"
             size="sm"
             leftIcon={<Printer className="w-4 h-4" />}
-            onClick={() => exportPrintReadyPdf(paper, 'qp')}
+            onClick={() => handleExportPdf('qp')}
             className="hidden sm:inline-flex"
           >
             Print
@@ -346,12 +356,12 @@ export const PaperEditorView: React.FC<PaperEditorViewProps> = ({ paperId, onBac
               {
                 label: 'Question Paper (.PDF)',
                 icon: <Printer className="w-4 h-4" />,
-                onClick: () => exportPrintReadyPdf(paper, 'qp')
+                onClick: () => handleExportPdf('qp')
               },
               {
                 label: 'Model Answer Key (.PDF)',
                 icon: <Printer className="w-4 h-4" />,
-                onClick: () => exportPrintReadyPdf(paper, 'ak')
+                onClick: () => handleExportPdf('ak')
               },
               { separator: true, label: '' },
               {
@@ -548,7 +558,7 @@ export const PaperEditorView: React.FC<PaperEditorViewProps> = ({ paperId, onBac
               Print-Accurate A4 Sheet Preview
             </span>
             <button
-              onClick={() => exportPrintReadyPdf(paper, 'qp')}
+              onClick={() => handleExportPdf('qp')}
               className="text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
             >
               <Printer className="w-3.5 h-3.5" />

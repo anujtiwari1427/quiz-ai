@@ -81,6 +81,15 @@ export const LandingPage: React.FC = () => {
     navigate('/app/create');
   };
 
+  const prefetchWorkspace = () => {
+    // Smooth speculative prefetching of heavy workspace chunk
+    try {
+      import('./AppWorkspace');
+    } catch {
+      // Ignored
+    }
+  };
+
   const fadeUp = shouldReduceMotion
     ? { opacity: 1, y: 0 }
     : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.25, ease: 'easeOut' } };
@@ -157,6 +166,7 @@ export const LandingPage: React.FC = () => {
               size="sm"
               rightIcon={<ArrowRight className="w-4 h-4" />}
               onClick={hasWorkspaceData ? handleGoToApp : handleCreatePaper}
+              onMouseEnter={prefetchWorkspace}
               className="hidden sm:inline-flex shadow-soft"
             >
               {hasWorkspaceData ? t.nav.openWorkspace : t.nav.startCreating}
@@ -262,6 +272,7 @@ export const LandingPage: React.FC = () => {
                 size="lg"
                 rightIcon={<ArrowRight className="w-4 h-4" />}
                 onClick={handleCreatePaper}
+                onMouseEnter={prefetchWorkspace}
                 className="w-full sm:w-auto shadow-soft font-semibold"
               >
                 {t.hero.ctaPrimary}
@@ -829,6 +840,7 @@ export const LandingPage: React.FC = () => {
                 variant="outline"
                 size="lg"
                 onClick={handleCreatePaper}
+                onMouseEnter={prefetchWorkspace}
                 className="bg-white text-brand-900 border-white hover:bg-brand-50 shadow-soft-lg font-bold"
               >
                 {t.ctaBand.button}
