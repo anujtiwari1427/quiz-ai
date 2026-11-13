@@ -24,25 +24,35 @@ export const GeneratedQuestionSchema = z.object({
   sourcePage: z.number().optional()
 });
 
+export const DEFAULT_GEMINI_MODEL = 'gemini-3.5-flash-lite';
+
 export class AIProviderService {
   /**
    * Get active AI configuration from local IndexedDB
    */
   async getConfig(): Promise<AIProviderConfig> {
     const record = await db.settings.get(AI_SETTINGS_KEY);
-    if (record && record.value) {
-      return record.value;
+    if (record && record.value && record.value.apiKey) {
+      return {
+        ...record.value,
+        model: record.value.model || DEFAULT_GEMINI_MODEL
+      };
     }
-    // Fallback to env vars if provided (e.g. in self-hosted mode)
+    // Fallback to env vars if provided (e.g. VITE_GEMINI_API_KEY from .env)
     const envGemini = (import.meta as any).env?.VITE_GEMINI_API_KEY;
     const envOpenAI = (import.meta as any).env?.VITE_OPENAI_API_KEY;
     const envAnthropic = (import.meta as any).env?.VITE_ANTHROPIC_API_KEY;
 
-    if (envGemini) return { provider: 'gemini', apiKey: envGemini };
+    if (envGemini) {
+      const config: AIProviderConfig = { provider: 'gemini', apiKey: envGemini, model: DEFAULT_GEMINI_MODEL };
+      // Cache into local IndexedDB so all services use it seamlessly
+      await this.saveConfig(config).catch(() => {});
+      return config;
+    }
     if (envOpenAI) return { provider: 'openai', apiKey: envOpenAI };
     if (envAnthropic) return { provider: 'anthropic', apiKey: envAnthropic };
 
-    return { provider: 'gemini', apiKey: '' };
+    return { provider: 'gemini', apiKey: '', model: DEFAULT_GEMINI_MODEL };
   }
 
   /**
@@ -91,7 +101,8 @@ export class AIProviderService {
 
     try {
       if (config.provider === 'gemini') {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${config.apiKey.trim()}`;
+        const model = config.model || DEFAULT_GEMINI_MODEL;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.apiKey.trim()}`;
         const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -104,7 +115,7 @@ export class AIProviderService {
           const errData = await res.json().catch(() => ({}));
           throw new Error(errData.error?.message || `Gemini API returned status ${res.status}`);
         }
-        return { success: true, valid: true, message: 'Gemini 2.0 API Key verified successfully!' };
+        return { success: true, valid: true, message: 'Google Gemini API Key verified successfully!' };
       }
 
       if (config.provider === 'openai') {
@@ -225,7 +236,7 @@ Output JSON matching this exact structure:
    */
   private async callAI(config: AIProviderConfig, systemPrompt: string, userPrompt: string): Promise<string> {
     if (config.provider === 'gemini') {
-      const model = config.model || 'gemini-2.0-flash';
+      const model = config.model || DEFAULT_GEMINI_MODEL;
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.apiKey.trim()}`;
       
       const res = await fetch(url, {
